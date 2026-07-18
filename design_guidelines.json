@@ -1,0 +1,96 @@
+{
+  "project_name": "Interactive Insurance Comparison App",
+  "theme": "light",
+  "design_philosophy": "Clean, modern, apple-esque. Emphasize trust, clarity, and ease of use. Focus on generous negative space, crisp typography, subtle soft shadows, and glassmorphism. Use green elements thoughtfully to signify action, health, and growth.",
+  "typography": {
+    "font_family": {
+      "headings": "Manrope, -apple-system, BlinkMacSystemFont, sans-serif",
+      "body": "Inter, -apple-system, BlinkMacSystemFont, sans-serif"
+    },
+    "scale": {
+      "h1": "text-4xl sm:text-5xl lg:text-6xl font-semibold tracking-tight text-[#1D1D1F]",
+      "h2": "text-2xl sm:text-3xl lg:text-4xl font-semibold tracking-tight text-[#1D1D1F]",
+      "h3": "text-xl sm:text-2xl font-medium text-[#1D1D1F]",
+      "body": "text-base text-[#424245] leading-relaxed",
+      "small": "text-sm text-[#86868B]"
+    },
+    "rules": "Avoid generic bolding everywhere. Use varied font weights (e.g. font-medium, font-semibold). Apply 'tracking-tight' for headings larger than 32px. Line height must be tight for headers (leading-tight) and relaxed for body."
+  },
+  "colors": {
+    "background": {
+      "primary": "#FBFBFD",
+      "secondary": "#FFFFFF",
+      "tertiary": "#F5F5F7"
+    },
+    "text": {
+      "primary": "#1D1D1F",
+      "secondary": "#424245",
+      "muted": "#86868B"
+    },
+    "accent": {
+      "primary": "#34C759",
+      "primary_hover": "#28A745",
+      "secondary": "#00A86B",
+      "trust": "#E8F5E9"
+    },
+    "border": {
+      "default": "#E5E5EA",
+      "light": "#F2F2F7"
+    },
+    "rules": "Never use pure black or pure white blindly. Always use Apple's soft greys (#1D1D1F for text, #FBFBFD for background). The primary CTA color is vibrant green (#34C759). Ensure minimum 4.5:1 contrast for all text. Hover states on buttons must darken the green slightly."
+  },
+  "surfaces_and_shadows": {
+    "cards": "bg-white rounded-2xl md:rounded-3xl border border-[#E5E5EA] shadow-[0_4px_24px_rgba(0,0,0,0.04)]",
+    "glassmorphism": "bg-white/70 backdrop-blur-xl border border-white/40 shadow-sm",
+    "inputs": "bg-[#F5F5F7] border border-transparent focus:bg-white focus:border-[#34C759] focus:ring-2 focus:ring-[#34C759]/20 rounded-xl transition-all duration-200",
+    "rules": "Do NOT use transparent backgrounds for dropdowns or floating headers. Always use the glassmorphism utility classes."
+  },
+  "layout_and_spacing": {
+    "spacing_scale": "Use generous padding: p-6, p-8, p-12. Avoid cramped interfaces.",
+    "container": "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8",
+    "comparison_table": "Use CSS Grid (grid-cols-1 md:grid-cols-4) with horizontal scrolling on mobile. Hide complex details inside accordions on mobile.",
+    "rules": "Follow the 'Bento Grid' protocol for the provider detail modal and summary stats. Ensure everything is mobile-first."
+  },
+  "components": {
+    "buttons": "Pill-shaped (rounded-full) or soft rectangle (rounded-xl). Apply hover:scale-105 active:scale-95 transition-transform.",
+    "toggles": "Apple-style pill toggles with a sliding white thumb inside a grey/green track for Health vs Life insurance.",
+    "badges": "Small, rounded-full, subtle background (e.g., bg-[#E8F5E9] text-[#00A86B]) for 'Most Popular' or 'Best Coverage'.",
+    "table": "Side-by-side columns with a sticky left column (features) and sticky header (provider logos/prices) on desktop.",
+    "rules": "Customize Shadcn UI components heavily to remove the default rigid boxy 'Vercel' look and adapt it to rounded, soft Apple-style aesthetics."
+  },
+  "icons_and_assets": {
+    "library": "lucide-react",
+    "style": "Use stroke-width 1.5 or 2. Keep icons minimal and geometric.",
+    "images": {
+      "life_insurance_hero": "https://images.unsplash.com/photo-1775441522525-55c3b19ed502?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzZ8MHwxfHNlYXJjaHwyfHxoYXBweSUyMGhlYWx0aHklMjBmYW1pbHklMjBvdXRkb29yfGVufDB8fHx8MTc4NDM2ODgzNHww&ixlib=rb-4.1.0&q=85",
+      "health_insurance_hero": "https://images.unsplash.com/photo-1631217868264-e5b90bb7e133?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2MzR8MHwxfHNlYXJjaHwxfHxkb2N0b3IlMjBwYXRpZW50JTIwc21pbGV8ZW58MHx8fHwxNzg0MzY4ODM0fDA&ixlib=rb-4.1.0&q=85",
+      "abstract_green_bg": "https://images.unsplash.com/photo-1721915003690-841a33e63afa?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NTYxOTF8MHwxfHNlYXJjaHwyfHxtaW5pbWFsaXN0JTIwZ3JlZW4lMjBsZWFmJTIwYWJzdHJhY3R8ZW58MHx8fHwxNzg0MzY4ODM0fDA&ixlib=rb-4.1.0&q=85"
+    }
+  },
+  "animations": {
+    "hover": "Subtle scale up (scale-105) for cards and buttons. Smooth background color transitions.",
+    "page_transitions": "Fade in and slight upward slide for main elements on load.",
+    "rules": "Animations should feel natural, snappy, and light, exactly like an iOS interface. No bouncy or excessive spring animations."
+  },
+  "testing": {
+    "rules": "All interactive and key informational elements MUST include a `data-testid` attribute in kebab-case format (e.g., `data-testid='category-switch-health'`)."
+  },
+  "instructions_to_main_agent": [
+    "Prioritize optical alignment and generous spacing.",
+    "Implement the landing hero section with a large, beautiful category switch (Health / Life) and a glassmorphism floating quote input form over the hero image.",
+    "Create a realistic mock data array for 5-8 insurance providers.",
+    "Build the comparison table using a sticky header so users can scroll down through features while keeping provider names visible.",
+    "Implement a clean, Apple-esque side panel or modal for the 'Provider detail view', utilizing bento-style info cards.",
+    "Ensure the green color (#34C759) is used purposefully for actions (Compare, Get Quote) and trust icons (Checkmarks)."
+  ],
+  "UNIVERSAL_GUIDELINES_FOR_MAIN_AGENT": [
+    "You tend to converge toward generic, 'on distribution' outputs. Avoid this by making creative, distinctive frontend layouts.",
+    "Don't make generic centered layouts. Create depth through layered design elements with z-index hierarchy and glass-morphism.",
+    "You MUST NOT apply universal transition (e.g., 'transition: all'). Always add transitions for specific interactive elements.",
+    "You MUST NOT center align the app container. Do not add '.App { text-align: center; }'.",
+    "Use modern pill-shaped or soft rounded buttons with interaction animations.",
+    "NEVER use AI assistant Emoji characters like \ud83e\udd16\ud83e\udde0 etc for icons.",
+    "Every interaction needs micro-animations (hover states, transitions).",
+    "Use 2-3x more spacing than feels comfortable. Cramped designs look cheap."
+  ]
+}
