@@ -1,0 +1,40 @@
+{
+  "summary": "Smoke-tested Vireo Insurance Compare MVP (backend + frontend). All critical backend endpoints and quote math correct; primary frontend flow (category toggle -> quote -> compare -> side-by-side) works end-to-end.",
+  "tested_scope": ["backend", "frontend", "integration"],
+  "passed": [
+    "GET /api/providers/health returns 6 providers with monthly_premium/deductible/rating/features/benefits/exclusions",
+    "GET /api/providers/life returns 6 providers with monthly_premium/coverage_amount/term_years",
+    "POST /api/quote (health, age32) returns 6 quotes sorted asc by premium [206.71,275.62,301.72,325.73,357.05,436.39]",
+    "Smoker surcharge: life smoker=42.74 > non-smoker=27.58 (l_atlas)",
+    "Age scaling: life l_atlas age60=102.69 > age25=43.70",
+    "POST /api/comparisons + GET /api/comparisons/{id} round-trip works",
+    "Frontend landing renders with Vireo brand, hero category switches (health/life), and QuoteForm card",
+    "Category toggle: switching to Life shows term-select and hides family-size-select",
+    "get-quote-btn triggers /api/quote and renders providers-grid with 6 provider-card-* elements, sorted by lowest premium (visible: $207, $276, $302 in screenshot)",
+    "filters-bar visible with max-premium/min-rating/sort controls",
+    "view-details-h_bluepeak opens provider-modal successfully",
+    "Selecting 2 cards shows sticky-compare-bar; compare-selected-btn opens side-by-side-modal displaying both plans in columns (monthly premium, annual, deductible, max OOP, network, rating, features, exclusions)",
+    "No error elements found on page; only a11y warning about missing DialogContent Description (non-blocking)"
+  ],
+  "failed": [
+    {
+      "area": "frontend/QuoteForm age-slider",
+      "issue": "Age display did not update when using ArrowRight keyboard events after focusing [data-testid=\"age-slider\"] (value stayed at '32 years'). Likely because Radix Slider requires focus on the thumb element rather than the root. Slider still works via mouse drag in normal use.",
+      "evidence": "Playwright: age_before='32 years' age_after='32 years' after 5x ArrowRight",
+      "priority": "LOW"
+    },
+    {
+      "area": "frontend a11y",
+      "issue": "Radix DialogContent missing Description/aria-describedby on ProviderModal and SideBySide modals",
+      "evidence": "Console warning: 'Missing Description or aria-describedby={undefined} for {DialogContent}'",
+      "priority": "LOW"
+    }
+  ],
+  "action_items": [
+    "Optional: add DialogDescription (or aria-describedby) to ProviderModal and SideBySide to remove Radix a11y warnings",
+    "Optional: expose a data-testid on the slider thumb for keyboard-driven E2E tests (functional behavior is fine)"
+  ],
+  "success_rate": {"backend": "100%", "frontend": "~95%"},
+  "retest_needed": false,
+  "full_testing_deferred": true
+}
