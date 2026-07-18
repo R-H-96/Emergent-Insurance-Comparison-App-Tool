@@ -4,6 +4,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
 } from "@/components/ui/dialog";
 
 const currency = (n) =>
@@ -34,6 +35,9 @@ export default function ProviderModal({ quote, category, onClose }) {
                 <DialogTitle className="font-display text-2xl font-semibold tracking-tight text-[#1D1D1F] text-left">
                   {quote.name}
                 </DialogTitle>
+                <DialogDescription className="sr-only">
+                  Detailed information for {quote.name}: premiums, benefits, exclusions, pros and cons.
+                </DialogDescription>
                 <div className="flex items-center gap-2 mt-1.5">
                   <Star className="w-4 h-4 text-[#FFB800] fill-[#FFB800]" />
                   <span className="text-sm font-medium text-[#424245]">
