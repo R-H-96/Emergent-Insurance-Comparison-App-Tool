@@ -1,110 +1,305 @@
-@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  /* Brand — teal, never green */
+  --gmc-teal:        #14B5AF;
+  --gmc-teal-deep:   #006A66;
+  --gmc-teal-mid:    #0D8A86;
+  --gmc-grad-hero:   linear-gradient(135deg, #006A66 0%, #14B5AF 100%);
+  --gmc-grad-button: linear-gradient(135deg, #0D8A86, #14B5AF);
+  --gmc-teal-tint:   rgba(20, 181, 175, 0.06);
+  --gmc-teal-tint-2: rgba(20, 181, 175, 0.12);
+
+  /* Ink */
+  --gmc-ink:         #161C27;
+  --gmc-ink-2:       #1E293B;
+  --gmc-body:        #4B5F7F;
+  --gmc-muted:       #64748B;
+  --gmc-faint:       #94A3B8;
+
+  /* Surfaces */
+  --gmc-bg:          #F9F9FF;
+  --gmc-bg-alt:      #F1F3FF;
+  --gmc-bg-soft:     #F0F4F8;
+  --gmc-card:        #FFFFFF;
+  --gmc-line:        #E4E8F4;
+  --gmc-line-soft:   rgba(15, 23, 42, 0.10);
+
+  /* Effects */
+  --gmc-shadow:      0 12px 40px rgba(22, 28, 39, 0.06);
+  --gmc-shadow-btn:  0 4px 16px rgba(20, 181, 175, 0.25);
+  --gmc-focus-ring:  0 0 0 3px rgba(20, 181, 175, 0.10);
+
+  /* Radii */
+  --gmc-r-card:  24px;
+  --gmc-r-ctl:   12px;
+  --gmc-r-chip:  9999px;
+
+  /* Status */
+  --gmc-error:    #EF4444;
+  --gmc-error-bg: #FFF5F5;
+}
+
+/* Shadcn maps (retained for library components; unused in main UI) */
+@layer base {
+  :root {
+    --background: 240 25% 99%;
+    --foreground: 220 25% 12%;
+    --card: 0 0% 100%;
+    --card-foreground: 220 25% 12%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 25% 12%;
+    --primary: 178 79% 40%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 232 43% 96%;
+    --secondary-foreground: 220 25% 12%;
+    --muted: 232 43% 96%;
+    --muted-foreground: 215 20% 47%;
+    --accent: 178 79% 40%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 226 39% 93%;
+    --input: 226 39% 93%;
+    --ring: 178 79% 40%;
+    --radius: 0.75rem;
+  }
+}
+
+* {
+  border-color: hsl(var(--border));
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
 body {
-    margin: 0;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    background: #FBFBFD;
-    color: #1D1D1F;
+  margin: 0;
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--gmc-bg);
+  color: var(--gmc-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.55;
 }
 
-.font-display {
-    font-family: 'Manrope', -apple-system, BlinkMacSystemFont, sans-serif;
-}
-
-@layer base {
-    :root {
-        --background: 0 0% 98.5%;
-        --foreground: 240 6% 10%;
-        --card: 0 0% 100%;
-        --card-foreground: 240 6% 10%;
-        --popover: 0 0% 100%;
-        --popover-foreground: 240 6% 10%;
-        --primary: 142 71% 45%;
-        --primary-foreground: 0 0% 100%;
-        --secondary: 240 5% 96%;
-        --secondary-foreground: 240 6% 10%;
-        --muted: 240 5% 96%;
-        --muted-foreground: 240 4% 55%;
-        --accent: 142 71% 45%;
-        --accent-foreground: 0 0% 100%;
-        --destructive: 0 72% 51%;
-        --destructive-foreground: 0 0% 100%;
-        --border: 240 6% 91%;
-        --input: 240 6% 91%;
-        --ring: 142 71% 45%;
-        --radius: 0.75rem;
-    }
-}
-
-@layer base {
-    * {
-        @apply border-border;
-    }
-    body {
-        @apply bg-background text-foreground;
-    }
-    html {
-        scroll-behavior: smooth;
-    }
-}
-
-/* Custom scroll for comparison table */
-.hide-scrollbar::-webkit-scrollbar {
-    display: none;
-}
-.hide-scrollbar {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-}
-
-.thin-scrollbar::-webkit-scrollbar {
-    height: 8px;
-    width: 8px;
-}
-.thin-scrollbar::-webkit-scrollbar-track {
-    background: transparent;
-}
-.thin-scrollbar::-webkit-scrollbar-thumb {
-    background: #E5E5EA;
-    border-radius: 999px;
-}
-.thin-scrollbar::-webkit-scrollbar-thumb:hover {
-    background: #C7C7CC;
-}
-
-/* Grain overlay */
-.grain::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 0.13 0 0 0 0 0.78 0 0 0 0 0.35 0 0 0 0.6 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-    opacity: 0.06;
-    pointer-events: none;
-    mix-blend-mode: multiply;
-}
-
-/* Fade-in animation */
-@keyframes fadeSlideUp {
-    from { opacity: 0; transform: translateY(12px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-.fade-in-up {
-    animation: fadeSlideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-
-/* Sticky comparison column shadow */
-.sticky-shadow {
-    box-shadow: 8px 0 20px -12px rgba(0, 0, 0, 0.08);
-}
-
-/* Custom text selection */
 ::selection {
-    background: #34C759;
-    color: white;
+  background: var(--gmc-teal);
+  color: white;
 }
+
+/* Utility classes */
+.gmc-container {
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+}
+@media (min-width: 768px) {
+  .gmc-container { padding-left: 2rem; padding-right: 2rem; }
+}
+
+.gmc-card {
+  background: var(--gmc-card);
+  border: 1px solid var(--gmc-line);
+  border-radius: var(--gmc-r-card);
+  box-shadow: var(--gmc-shadow);
+}
+
+.gmc-eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gmc-muted);
+}
+
+.gmc-h1 {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--gmc-ink);
+  line-height: 1.05;
+}
+
+.gmc-h2 {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--gmc-ink);
+  line-height: 1.15;
+}
+
+.gmc-h3 {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 700;
+  color: var(--gmc-ink);
+  letter-spacing: -0.01em;
+}
+
+/* Primary CTA */
+.gmc-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.9rem 1.5rem;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: white;
+  background: var(--gmc-grad-button);
+  border-radius: var(--gmc-r-ctl);
+  border: none;
+  box-shadow: var(--gmc-shadow-btn);
+  cursor: pointer;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+.gmc-btn-primary:hover { opacity: 0.92; transform: translateY(-1px); }
+.gmc-btn-primary:focus-visible { outline: none; box-shadow: var(--gmc-shadow-btn), var(--gmc-focus-ring); }
+
+.gmc-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.7rem 1.25rem;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--gmc-ink-2);
+  background: white;
+  border: 1.5px solid var(--gmc-line-soft);
+  border-radius: var(--gmc-r-ctl);
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease;
+}
+.gmc-btn-secondary:hover {
+  border-color: var(--gmc-teal);
+  background: var(--gmc-teal-tint);
+  color: var(--gmc-teal-mid);
+}
+
+/* Option row / selectable chip */
+.gmc-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1rem;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--gmc-ink-2);
+  background: white;
+  border: 1.5px solid var(--gmc-line-soft);
+  border-radius: var(--gmc-r-ctl);
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease;
+}
+.gmc-chip:hover:not(:disabled) {
+  border-color: var(--gmc-teal);
+  background: var(--gmc-teal-tint);
+}
+.gmc-chip[aria-pressed="true"] {
+  border-color: var(--gmc-teal);
+  background: var(--gmc-teal-tint);
+  color: var(--gmc-teal-mid);
+}
+.gmc-chip:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Badges */
+.gmc-badge-verified {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.15rem 0.6rem;
+  font-size: 11px;
+  font-weight: 700;
+  background: var(--gmc-teal-tint-2);
+  color: var(--gmc-teal-deep);
+  border-radius: var(--gmc-r-chip);
+}
+
+.gmc-badge-pending {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.15rem 0.6rem;
+  font-size: 11px;
+  font-weight: 700;
+  background: var(--gmc-bg-alt);
+  color: var(--gmc-body);
+  border-radius: var(--gmc-r-chip);
+}
+
+/* Toggle pill */
+.gmc-toggle {
+  width: 38px;
+  height: 22px;
+  border-radius: var(--gmc-r-chip);
+  background: #D5DAEA;
+  position: relative;
+  cursor: pointer;
+  border: none;
+  padding: 0;
+  transition: background 0.2s ease;
+  flex-shrink: 0;
+}
+.gmc-toggle::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: white;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+  transition: transform 0.2s ease;
+}
+.gmc-toggle[aria-pressed="true"] { background: var(--gmc-teal); }
+.gmc-toggle[aria-pressed="true"]::after { transform: translateX(16px); }
+
+/* Trust strip */
+.gmc-trust-strip {
+  background: var(--gmc-bg-soft);
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--gmc-ink-2);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+/* Nav frosted glass */
+.gmc-nav {
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--gmc-line);
+}
+
+/* Scrollbars */
+.thin-scrollbar::-webkit-scrollbar { height: 8px; width: 8px; }
+.thin-scrollbar::-webkit-scrollbar-track { background: transparent; }
+.thin-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--gmc-line);
+  border-radius: 999px;
+}
+
+/* Fade animation */
+@keyframes gmcFadeUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.gmc-fade-in { animation: gmcFadeUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) both; }

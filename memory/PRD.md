@@ -1,59 +1,64 @@
-# Vireo Insurance Compare — PRD
+# Get My Cover — Comparison Tool PRD
 
 ## Original Problem Statement
-"An interactive web app tool that compares insurance from multiple providers."
+Interactive web app that compares insurance from multiple providers.
 
-## User Choices (from ask_human)
-- Insurance types: **Health** and **Life**
-- Data source: Realistic mock/sample provider data
-- Key features: Side-by-side comparison table with filters
-- Auth: None (public tool)
-- Design: Clean, modern, Apple-esque, green + white palette
+## Refactor (Feb 2026)
+Rebuilt as a **static, backend-less comparison tool** for Get My Cover (NZ), rendering exclusively from `gmc_tool_data.json` per attached brand kit.
+
+## Data & Compliance
+- Source: bundled `/app/frontend/src/data/gmc_tool_data.json` (5 NZ insurers × 25 features per insurer, ~125 cells)
+- Each cell shows: value + source citation (doc · version · page) + verified/pending badge
+- **No pricing, no ratings, no reviews, no stars, no scores, no "Most Popular"** — compliance rule, not preference
+- Voice: "describe, never recommend"
+- Standing disclaimer on every view
+
+## Design system (from `gmc_brand_kit.md`)
+- Typography: Plus Jakarta Sans (400–900)
+- Palette: teal `#14B5AF` primary, deep teal `#006A66`, teal gradient buttons — **never green**
+- All tokens as CSS variables under `--gmc-*` in `/app/frontend/src/index.css`
+- Nav: frosted glass rgba(255,255,255,.75) + backdrop-blur(14px)
+- Radii: card 24px, control 12px, chip 9999px
 
 ## Architecture
-- **Backend**: FastAPI (`/app/backend/server.py`) + MongoDB (`quote_history`, `comparisons` collections)
-- **Mock data**: `/app/backend/providers_data.py` — 6 health + 6 life providers
-- **Frontend**: React (CRA) + Tailwind + Shadcn UI, routes at `/`
-- **Design system**: Manrope (display) + Inter (body), Apple soft-grey palette, `#34C759` accent green
+- **Backend**: minimal FastAPI stub (present only so supervisor stays healthy — the tool never calls it)
+- **Frontend**: React (CRA) + Tailwind + Shadcn UI, single route
+- Ships as static bundle via `yarn build` — 92.3KB JS + 10.6KB CSS gzipped
 
-## User Personas
-- **Individual shopper (25–45)**: comparing personal plans quickly
-- **Family decision-maker (30–55)**: comparing family health plans
-- **Life-event planner (30–60)**: new parent, new mortgage, buying life coverage
+## Components (`/app/frontend/src/components/`)
+- `GmcNav.jsx` — frosted-glass sticky header with compact CTA
+- `Hero.jsx` — teal-deep hero with tagline + CTA
+- `ProductTypeSelector.jsx` — 5 product types, only Health enabled; others show "Soon"
+- `InsurerPicker.jsx` — 5 insurer cards, pick 2–3
+- `ComparisonTable.jsx` — grouped rows (6 groups), collapsible, differences-only toggle, sticky header, teal-tint on diff rows
+- `CTA.jsx` — `.gmc-btn-primary.gmc-quote-trigger` (no onClick — parent site's global modal binds to the class)
+- `TrustStrip.jsx` — "Free & no obligation · Advisers are paid by the insurer, never by you"
+- `Disclaimer.jsx` — standing footer disclaimer
 
-## Core Requirements (static)
-- Compare quotes from multiple providers side-by-side
-- Personalized pricing based on user inputs (age, coverage, smoker, family, term)
-- Filter and sort providers
-- View detailed benefits/exclusions/pros-cons per provider
-- Zero signup / friction
+## CTA pattern
+- Class-only trigger: `<button class="gmc-btn-primary gmc-quote-trigger">…</button>`
+- In this preview only: a document-level delegated listener (`App.js`) fires a Sonner toast so reviewers can see the click was received. It's not attached to the button element.
 
-## Implemented (v1.0 — 2026-02)
-- ✅ FastAPI endpoints: `/api/providers/{category}`, `/api/quote`, `/api/comparisons`
-- ✅ Deterministic quote engine (age, smoker, coverage, family, term factors)
-- ✅ Landing hero with Health/Life category switch
-- ✅ Live quote form (sliders + selects + smoker toggle)
-- ✅ Provider grid (6 cards per category) with badge, rating, price, key stats
-- ✅ Filters: max monthly premium, min rating, sort (premium/rating/deductible)
-- ✅ Provider details modal (bento stats, benefits, exclusions, pros/cons)
-- ✅ Multi-select (up to 4) + side-by-side comparison modal with sticky columns
-- ✅ Sticky "compare selected" floating bar
-- ✅ Footer with how-it-works + FAQ
+## Implemented (v2.0 — Feb 2026 refactor)
+- ✅ All prohibited elements removed (prices, ratings, badges, pros/cons)
+- ✅ JSON bundled at build time
+- ✅ Product-type selector (Health live; Life/Trauma/Income/Mortgage placeholder)
+- ✅ Insurer multi-select (2–3 constraint)
+- ✅ Comparison table with collapsible groups + differences-only toggle
+- ✅ Verified / Pending badges per cell
+- ✅ Standing disclaimer + trust strip
+- ✅ Static bundle verified via `yarn build`
+- ✅ Zero banned words in code
 
 ## Backlog
 
 ### P1
-- AI-powered "which plan suits me best?" recommendation using LLM
-- Save/share comparison via URL (backend endpoint already exists)
-- Deeper filters (network type, plan tier, riders)
-- Auto insurance and home insurance categories
+- Wire live products for Life / Trauma / Income Protection / Mortgage Protection when data lands
+- Verified-date badges once human audit is complete (currently all "Pending verification" per data source)
+- Deep-link a comparison (URL params → preselected insurers)
 
 ### P2
-- Real quote API integration (Ethos, Policygenius partners)
-- User accounts to save comparisons across devices
-- Email/PDF export of comparison
-- Progressive disclosure of legal disclaimers per plan
-- i18n / additional locales
-
-## Testing
-- Iteration 1 (2026-02): Backend 100%, Frontend ~95% (a11y polish only). Fixed post-report.
+- Print-friendly comparison view (print stylesheet)
+- Export comparison as PDF via client-side (no server)
+- i18n (te reo Māori labels)
+- Feature-level bookmarks (permalink to a specific row)
