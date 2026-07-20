@@ -6,9 +6,11 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { VerifiedBadge } from "@/components/VerifiedBadge";
+import GlossaryText from "@/components/GlossaryText";
+import InsurerLogo from "@/components/InsurerLogo";
 import CTA from "@/components/CTA";
 
-export default function DetailModal({ feature, insurers, lookup, onClose }) {
+export default function DetailModal({ feature, insurers, lookup, glossary, onClose }) {
   if (!feature) return null;
 
   return (
@@ -33,37 +35,52 @@ export default function DetailModal({ feature, insurers, lookup, onClose }) {
           >
             {feature.feature}
           </DialogTitle>
-          <DialogDescription
-            className="text-sm mt-2 text-left"
-            style={{ color: "var(--gmc-body)" }}
-          >
-            {feature.definition}
+          <DialogDescription asChild>
+            <GlossaryText
+              tag="p"
+              text={feature.definition}
+              glossary={glossary}
+              className="text-sm mt-2 text-left"
+            />
           </DialogDescription>
         </DialogHeader>
 
         <div className="p-6 sm:p-8 space-y-4">
           {insurers.map((ins) => {
             const entry = lookup[ins.id]?.[feature.feature];
+            const points = entry?.detail_points && entry.detail_points.length > 0
+              ? entry.detail_points
+              : entry?.detail
+                ? [entry.detail]
+                : [];
             return (
               <div
                 key={ins.id}
                 className="rounded-[16px] border p-5"
-                style={{ borderColor: "var(--gmc-line)", background: "var(--gmc-card)" }}
+                style={{
+                  borderColor: "var(--gmc-line)",
+                  background: "var(--gmc-card)",
+                  borderLeftWidth: 4,
+                  borderLeftColor: ins.accent || "var(--gmc-teal)",
+                }}
                 data-testid={`detail-block-${ins.id}`}
               >
                 <div className="flex items-start justify-between gap-3 flex-wrap">
-                  <div>
-                    <div
-                      className="font-extrabold text-[16px]"
-                      style={{ color: "var(--gmc-ink)" }}
-                    >
-                      {ins.name}
-                    </div>
-                    <div
-                      className="text-[12px] font-semibold mt-0.5"
-                      style={{ color: "var(--gmc-teal-mid)" }}
-                    >
-                      {ins.product}
+                  <div className="flex items-center gap-3">
+                    <InsurerLogo insurer={ins} size={32} />
+                    <div>
+                      <div
+                        className="font-extrabold text-[16px]"
+                        style={{ color: ins.accent || "var(--gmc-ink)" }}
+                      >
+                        {ins.name}
+                      </div>
+                      <div
+                        className="text-[12px] font-semibold mt-0.5"
+                        style={{ color: "var(--gmc-muted)" }}
+                      >
+                        {ins.product}
+                      </div>
                     </div>
                   </div>
                   <VerifiedBadge verified={entry?.verified} />
@@ -78,14 +95,26 @@ export default function DetailModal({ feature, insurers, lookup, onClose }) {
                         color: "var(--gmc-teal-deep)",
                       }}
                     >
-                      {entry.short}
+                      <GlossaryText text={entry.short} glossary={glossary} />
                     </div>
-                    <p
-                      className="mt-3 text-[14px] leading-relaxed"
-                      style={{ color: "var(--gmc-ink-2)" }}
-                    >
-                      {entry.detail}
-                    </p>
+
+                    {points.length > 0 && (
+                      <ul
+                        className="mt-3 space-y-1.5 list-disc pl-5"
+                        data-testid={`detail-points-${ins.id}`}
+                      >
+                        {points.map((p, i) => (
+                          <li
+                            key={i}
+                            className="text-[14px] leading-relaxed"
+                            style={{ color: "var(--gmc-ink-2)" }}
+                          >
+                            <GlossaryText text={p} glossary={glossary} />
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+
                     <div
                       className="mt-3 text-[12px] leading-snug"
                       style={{ color: "var(--gmc-muted)" }}
@@ -125,7 +154,7 @@ export default function DetailModal({ feature, insurers, lookup, onClose }) {
             className="text-[13px] leading-relaxed max-w-md"
             style={{ color: "var(--gmc-body)" }}
           >
-            Not sure how this applies to you?
+            Not sure how this applies to you? Ask an adviser — free.
           </p>
           <CTA
             label="Ask an adviser — free"

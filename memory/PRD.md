@@ -39,7 +39,19 @@ Rebuilt as a **static, backend-less comparison tool** for Get My Cover (NZ), ren
 - Class-only trigger: `<button class="gmc-btn-primary gmc-quote-trigger">…</button>`
 - In this preview only: a document-level delegated listener (`App.js`) fires a Sonner toast so reviewers can see the click was received. It's not attached to the button element.
 
-## Implemented (v3.0 — Feb 2026 layered UX)
+## Implemented (v4.0 — Feb 2026 accents + logos + glossary + feedback)
+- ✅ v3 JSON bundled: per-insurer `accent` hexes (SC blue, nib green, AIA red, PL burgundy, UniMed teal-blue) and `logo` paths; per-feature `why`; per-cell `detail_points`; global `glossary` object (15 terms)
+- ✅ Real insurer logos extracted from supplied zip, trimmed with PIL, saved to `/app/frontend/public/logos/{sc,nib,aia,pl,uni}.png`; served via `<InsurerLogo>` in uniform tiles with initial-tile fallback
+- ✅ **Accent colours** consistently applied: picker card border/text (selected), at-a-glance mini-block left stripe + insurer name, table column-header top stripe + name, detail-modal left stripe + name
+- ✅ **Detail modal bullets**: full text rendered from `detail_points` as `<ul>` (falls back to `detail` if points missing)
+- ✅ **At-a-glance `why` line**: italic muted sentence rendered under the per-insurer value grid
+- ✅ **Glossary mechanism**: `<GlossaryText>` parses `{term}` markers → dotted-underline `<button>` opens a shadcn Popover with the term + definition (mobile-friendly, keyboard-focusable). No markers in current text so rendering is unchanged; ready for future edits.
+- ✅ **Feedback input** ("Can't find what you're looking for?"): text input stores to `localStorage.gmc_feedback_questions`; on submit shows "Good question — that's one for an adviser" + `.gmc-quote-trigger` button
+- ✅ **`?embed=1&groups=X,Y`** URL parsing (App.js): validates group names against JSON, pre-opens only those groups in the table (other groups remain browsable via chevron)
+- ✅ Compliance preserved: no ratings/prices/badges, `.gmc-quote-trigger` still class-only, embed disclaimer now also carries the required "Insurer logos are used to identify… independent…" line
+- ✅ Static bundle rebuilt cleanly
+
+## Implemented (v3.0 — layered UX)
 - ✅ v2 JSON schema bundled (`short`/`detail` per cell, `notable` per feature, `schema_version: 2`)
 - ✅ **Layer 1 — At a glance**: one card per notable feature (8), each with definition + per-insurer short value + verified icon; clicking opens detail modal
 - ✅ **Layer 2 — Table**: cells show ONLY `short` + tiny verified/pending icon; Core limits open by default, all others collapsed; "Notable differences only" toggle filters to `notable: true`; group filter chips (All + one per group); no horizontal scroll (stretches to container); mobile (<md) renders as stacked cards per feature

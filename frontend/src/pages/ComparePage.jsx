@@ -11,12 +11,13 @@ import DetailModal from "@/components/DetailModal";
 import Disclaimer from "@/components/Disclaimer";
 import TrustStrip from "@/components/TrustStrip";
 import CTA from "@/components/CTA";
+import Feedback from "@/components/Feedback";
 
-export default function ComparePage({ embed = false }) {
+export default function ComparePage({ embed = false, initialGroups = [] }) {
   const [productType, setProductType] = useState("health");
   const [selected, setSelected] = useState(["sc", "nib"]);
   const [diffOnly, setDiffOnly] = useState(false);
-  const [activeGroups, setActiveGroups] = useState([]);
+  const [activeGroups, setActiveGroups] = useState(initialGroups);
   const [openFeature, setOpenFeature] = useState(null);
 
   const selectedInsurers = useMemo(
@@ -55,7 +56,7 @@ export default function ComparePage({ embed = false }) {
   const toggleInsurer = (id) => {
     setSelected((prev) => {
       if (prev.includes(id)) {
-        if (prev.length <= 2) return prev; // keep min 2
+        if (prev.length <= 2) return prev;
         return prev.filter((x) => x !== id);
       }
       if (prev.length >= 3) return prev;
@@ -68,6 +69,17 @@ export default function ComparePage({ embed = false }) {
       prev.includes(g) ? prev.filter((x) => x !== g) : [...prev, g],
     );
   };
+
+  // Pre-open groups in the table:
+  // - If initialGroups came in from URL, open exactly those
+  // - Else if user has filtered via chips, open the filtered groups
+  // - Else default (Core limits only, handled by ComparisonTable)
+  const preOpenGroups =
+    initialGroups.length > 0
+      ? initialGroups
+      : activeGroups.length > 0
+        ? activeGroups
+        : undefined;
 
   return (
     <div
@@ -100,11 +112,12 @@ export default function ComparePage({ embed = false }) {
         features={data.features}
         insurers={selectedInsurers}
         lookup={lookup}
+        glossary={data.glossary}
         onOpen={(featureName) => setOpenFeature(featureName)}
       />
 
       <section
-        className="pb-12 sm:pb-16"
+        className="pb-10 sm:pb-14"
         id="compare"
         data-testid="comparison-table-section"
       >
@@ -121,8 +134,8 @@ export default function ComparePage({ embed = false }) {
                   style={{ color: "var(--gmc-body)" }}
                 >
                   Tap any row to see the full policy wording, source citation
-                  and verification status. Groups collapse and expand — Core
-                  limits opens by default.
+                  and verification status. Terms with a dotted underline have a
+                  quick definition — tap them.
                 </p>
               </div>
               <button
@@ -154,12 +167,16 @@ export default function ComparePage({ embed = false }) {
             insurers={selectedInsurers}
             features={data.features}
             data={data.data}
+            glossary={data.glossary}
             diffOnly={diffOnly}
             activeGroups={activeGroups}
+            openGroups={preOpenGroups}
             onOpenFeature={(featureName) => setOpenFeature(featureName)}
           />
         </div>
       </section>
+
+      <Feedback />
 
       {!embed && (
         <section className="pb-14 sm:pb-20" data-testid="cta-section">
@@ -211,6 +228,9 @@ export default function ComparePage({ embed = false }) {
             >
               Summaries for general information only, not financial advice.
               Always confirm against the insurer&apos;s current policy document.
+              Insurer logos are used to identify the products compared. Get My
+              Cover is independent and is not affiliated with or endorsed by any
+              insurer.
             </p>
           </div>
         </section>
@@ -222,6 +242,7 @@ export default function ComparePage({ embed = false }) {
         feature={currentFeature}
         insurers={selectedInsurers}
         lookup={lookup}
+        glossary={data.glossary}
         onClose={() => setOpenFeature(null)}
       />
     </div>

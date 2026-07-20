@@ -1,21 +1,32 @@
 import "@/App.css";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { toast, Toaster } from "sonner";
 import ComparePage from "@/pages/ComparePage";
+import data from "@/data/gmc_tool_data.json";
 
 function App() {
-  const [embed, setEmbed] = useState(false);
+  const [urlState, setUrlState] = useState({ embed: false, groups: [] });
 
-  // Detect ?embed=1 (or ?embed=true) once on mount.
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const val = params.get("embed");
-    if (val === "1" || val === "true") setEmbed(true);
+    const isEmbed = val === "1" || val === "true";
+
+    // Accept groups=Core%20limits,Cancer%20care (comma-separated, URL-decoded)
+    const groupsParam = params.get("groups");
+    const validGroups = new Set(data.features.map((f) => f.group));
+    let groups = [];
+    if (groupsParam) {
+      groups = groupsParam
+        .split(",")
+        .map((g) => decodeURIComponent(g.trim()))
+        .filter((g) => validGroups.has(g));
+    }
+    setUrlState({ embed: isEmbed, groups });
   }, []);
 
-  // Global delegated handler for CTA buttons carrying `gmc-quote-trigger`.
-  // The production site binds its own modal to this class; our preview shows a
-  // toast so a reviewer sees the trigger fired without adding per-element onClicks.
+  // Global delegated handler for `.gmc-quote-trigger` — production site binds
+  // its own modal here. Preview shows a toast so devs/reviewers see the fire.
   useEffect(() => {
     const handler = (e) => {
       const target = e.target.closest(".gmc-quote-trigger");
@@ -29,9 +40,15 @@ function App() {
     return () => document.removeEventListener("click", handler);
   }, []);
 
+  const initialGroups = useMemo(() => urlState.groups, [urlState.groups]);
+
   return (
-    <div className="App" data-embed={embed ? "1" : "0"}>
-      <ComparePage embed={embed} />
+    <div
+      className="App"
+      data-embed={urlState.embed ? "1" : "0"}
+      data-groups={urlState.groups.join(",") || undefined}
+    >
+      <ComparePage embed={urlState.embed} initialGroups={initialGroups} />
       <Toaster position="top-center" richColors />
     </div>
   );

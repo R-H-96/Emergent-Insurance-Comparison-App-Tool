@@ -1,19 +1,18 @@
 import { Sparkles } from "lucide-react";
 import { VerifiedIcon } from "@/components/VerifiedBadge";
+import GlossaryText from "@/components/GlossaryText";
 
 /**
- * At-a-glance section: one card per notable feature, showing each selected
- * insurer's short value + insurer name, plus feature definition as one-liner.
+ * At-a-glance section: one card per notable feature. Cells show insurer's
+ * short value + a mini accent stripe in the insurer's brand colour. The
+ * feature's `why` line (if present) sits under the value grid.
  */
-export default function AtAGlance({ features, insurers, lookup, onOpen }) {
+export default function AtAGlance({ features, insurers, lookup, glossary, onOpen }) {
   const notable = features.filter((f) => f.notable);
   if (!notable.length || !insurers.length) return null;
 
   return (
-    <section
-      className="pb-8 sm:pb-14"
-      data-testid="at-a-glance"
-    >
+    <section className="pb-8 sm:pb-14" data-testid="at-a-glance">
       <div className="gmc-container">
         <div className="flex items-baseline gap-3 mb-1">
           <Sparkles
@@ -42,12 +41,12 @@ export default function AtAGlance({ features, insurers, lookup, onOpen }) {
               >
                 {f.feature}
               </div>
-              <p
+              <GlossaryText
+                tag="p"
+                text={f.definition}
+                glossary={glossary}
                 className="text-[12px] mt-1 leading-relaxed"
-                style={{ color: "var(--gmc-muted)" }}
-              >
-                {f.definition}
-              </p>
+              />
 
               <div
                 className="mt-4 grid gap-2"
@@ -60,16 +59,18 @@ export default function AtAGlance({ features, insurers, lookup, onOpen }) {
                   return (
                     <div
                       key={ins.id}
-                      className="rounded-[10px] p-3 border"
+                      className="rounded-[10px] p-3 border relative overflow-hidden"
                       style={{
                         background: "var(--gmc-bg-alt)",
                         borderColor: "var(--gmc-line)",
+                        borderLeftWidth: 3,
+                        borderLeftColor: ins.accent || "var(--gmc-teal)",
                       }}
                     >
                       <div className="flex items-center justify-between gap-1.5 mb-1">
                         <div
                           className="text-[11px] font-bold uppercase tracking-[0.05em]"
-                          style={{ color: "var(--gmc-teal-mid)" }}
+                          style={{ color: ins.accent || "var(--gmc-teal-mid)" }}
                         >
                           {ins.name}
                         </div>
@@ -79,7 +80,9 @@ export default function AtAGlance({ features, insurers, lookup, onOpen }) {
                         className="text-[13px] font-semibold leading-snug"
                         style={{ color: "var(--gmc-ink-2)" }}
                       >
-                        {entry?.short || (
+                        {entry?.short ? (
+                          <GlossaryText text={entry.short} glossary={glossary} />
+                        ) : (
                           <span
                             className="italic font-normal"
                             style={{ color: "var(--gmc-faint)" }}
@@ -92,6 +95,16 @@ export default function AtAGlance({ features, insurers, lookup, onOpen }) {
                   );
                 })}
               </div>
+
+              {f.why && (
+                <p
+                  className="mt-4 text-[12.5px] leading-relaxed italic"
+                  style={{ color: "var(--gmc-muted)" }}
+                  data-testid={`glance-why-${f.feature.replace(/\s+/g, "-").toLowerCase()}`}
+                >
+                  <GlossaryText text={f.why} glossary={glossary} />
+                </p>
+              )}
 
               <div
                 className="mt-4 text-[11px] font-bold uppercase tracking-[0.1em]"

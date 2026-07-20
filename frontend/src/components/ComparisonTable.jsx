@@ -1,25 +1,30 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { ChevronDown, ChevronRight } from "lucide-react";
 import { VerifiedIcon } from "@/components/VerifiedBadge";
+import GlossaryText from "@/components/GlossaryText";
+import InsurerLogo from "@/components/InsurerLogo";
 
 /**
- * Comparison table. Two modes:
- *  - Desktop (>= md): CSS grid, stretches to container width, no horizontal scroll.
- *  - Mobile (< md): each feature renders as a stacked card with per-insurer sections.
+ * Two rendering modes:
+ *  - Desktop (>= md): CSS grid, stretches to container.
+ *  - Mobile (< md): each feature is a stacked card.
  *
- * Cells show ONLY the `short` value + a tiny verified/pending icon.
- * Clicking a row/cell opens the detail modal (via `onOpenFeature`).
- * Groups collapsed by default except "Core limits" (per spec).
+ * Cells show ONLY `short` + a tiny verified/pending icon. Clicking any row
+ * opens the detail modal via `onOpenFeature`.
+ *
+ * `openGroups` (optional): array of group names to force-open initially.
+ * If not provided, defaults to opening only "Core limits".
  */
 export default function ComparisonTable({
   insurers,
   features,
   data,
+  glossary,
   diffOnly,
   activeGroups,
+  openGroups,
   onOpenFeature,
 }) {
-  // Order-preserving group map
   const grouped = useMemo(() => {
     const g = new Map();
     features.forEach((f) => {
@@ -29,14 +34,21 @@ export default function ComparisonTable({
     return Array.from(g.entries());
   }, [features]);
 
-  // Default: only "Core limits" open
-  const [collapsed, setCollapsed] = useState(() => {
+  const defaultCollapsed = useMemo(() => {
     const s = new Set();
+    const opens = openGroups && openGroups.length > 0 ? openGroups : ["Core limits"];
     grouped.forEach(([group]) => {
-      if (group !== "Core limits") s.add(group);
+      if (!opens.includes(group)) s.add(group);
     });
     return s;
-  });
+  }, [grouped, openGroups]);
+
+  const [collapsed, setCollapsed] = useState(defaultCollapsed);
+
+  // Re-sync when openGroups changes (embed URL param handling)
+  useEffect(() => {
+    setCollapsed(defaultCollapsed);
+  }, [defaultCollapsed]);
 
   const lookup = useMemo(() => {
     const out = {};
@@ -61,7 +73,6 @@ export default function ComparisonTable({
   const cols = insurers.length;
   const gridTemplate = `minmax(0, 1.2fr) repeat(${cols}, minmax(0, 1fr))`;
 
-  // Apply filters: group filter + diff-only (notable) filter
   const visibleGrouped = grouped
     .filter(([group]) =>
       activeGroups.length === 0 ? true : activeGroups.includes(group),
@@ -74,10 +85,7 @@ export default function ComparisonTable({
 
   if (!visibleGrouped.length) {
     return (
-      <div
-        className="gmc-card p-10 text-center"
-        data-testid="comparison-empty"
-      >
+      <div className="gmc-card p-10 text-center" data-testid="comparison-empty">
         <p style={{ color: "var(--gmc-body)" }}>
           No features match your current filters.
         </p>
@@ -92,7 +100,7 @@ export default function ComparisonTable({
         className="gmc-card overflow-hidden hidden md:block"
         data-testid="comparison-table"
       >
-        {/* Header row */}
+        {/* Header row with insurer accent stripe */}
         <div
           className="grid"
           style={{
@@ -106,23 +114,31 @@ export default function ComparisonTable({
             <div
               key={ins.id}
               className="p-4"
-              style={{ borderLeft: "1px solid var(--gmc-line)" }}
+              style={{
+                borderLeft: "1px solid var(--gmc-line)",
+                borderTop: `3px solid ${ins.accent || "var(--gmc-teal)"}`,
+              }}
               data-testid={`header-${ins.id}`}
             >
-              <div
-                className="font-extrabold text-[15px]"
-                style={{ color: "var(--gmc-ink)" }}
-              >
-                {ins.name}
+              <div className="flex items-center gap-2.5">
+                <InsurerLogo insurer={ins} size={30} />
+                <div>
+                  <div
+                    className="font-extrabold text-[15px] leading-tight"
+                    style={{ color: ins.accent || "var(--gmc-ink)" }}
+                  >
+                    {ins.name}
+                  </div>
+                  <div
+                    className="text-[12px] font-semibold mt-0.5"
+                    style={{ color: "var(--gmc-muted)" }}
+                  >
+                    {ins.product}
+                  </div>
+                </div>
               </div>
               <div
-                className="text-[12px] font-semibold mt-0.5"
-                style={{ color: "var(--gmc-teal-mid)" }}
-              >
-                {ins.product}
-              </div>
-              <div
-                className="text-[11px] mt-0.5 leading-snug"
+                className="text-[11px] mt-1.5 leading-snug"
                 style={{ color: "var(--gmc-muted)" }}
               >
                 {ins.version}
@@ -171,8 +187,7 @@ export default function ComparisonTable({
                     className="text-[11px] font-semibold"
                     style={{ color: "var(--gmc-muted)" }}
                   >
-                    · {visibleFeats.length} row
-                    {visibleFeats.length === 1 ? "" : "s"}
+                    · {visibleFeats.length} row{visibleFeats.length === 1 ? "" : "s"}
                   </span>
                 </div>
                 {insurers.map((ins) => (
@@ -214,12 +229,12 @@ export default function ComparisonTable({
                       >
                         {f.feature}
                       </div>
-                      <div
+                      <GlossaryText
+                        tag="div"
+                        text={f.definition}
+                        glossary={glossary}
                         className="text-[12px] mt-1 leading-relaxed"
-                        style={{ color: "var(--gmc-muted)" }}
-                      >
-                        {f.definition}
-                      </div>
+                      />
                     </div>
                     {insurers.map((ins) => {
                       const entry = lookup[ins.id]?.[f.feature];
@@ -234,7 +249,9 @@ export default function ComparisonTable({
                             className="text-[13px] font-semibold leading-snug flex-1"
                             style={{ color: "var(--gmc-ink-2)" }}
                           >
-                            {entry?.short || (
+                            {entry?.short ? (
+                              <GlossaryText text={entry.short} glossary={glossary} />
+                            ) : (
                               <span
                                 className="italic font-normal"
                                 style={{ color: "var(--gmc-faint)" }}
@@ -323,12 +340,12 @@ export default function ComparisonTable({
                     >
                       {f.feature}
                     </div>
-                    <div
+                    <GlossaryText
+                      tag="div"
+                      text={f.definition}
+                      glossary={glossary}
                       className="text-[12px] mt-1 leading-relaxed"
-                      style={{ color: "var(--gmc-muted)" }}
-                    >
-                      {f.definition}
-                    </div>
+                    />
                     <div className="mt-3 space-y-2">
                       {insurers.map((ins) => {
                         const entry = lookup[ins.id]?.[f.feature];
@@ -339,14 +356,19 @@ export default function ComparisonTable({
                             style={{
                               background: "var(--gmc-card)",
                               borderColor: "var(--gmc-line)",
+                              borderLeftWidth: 3,
+                              borderLeftColor: ins.accent || "var(--gmc-teal)",
                             }}
                           >
                             <div className="flex items-center justify-between gap-2 mb-1">
-                              <div
-                                className="text-[11px] font-bold uppercase tracking-[0.05em]"
-                                style={{ color: "var(--gmc-teal-mid)" }}
-                              >
-                                {ins.name}
+                              <div className="flex items-center gap-2">
+                                <InsurerLogo insurer={ins} size={22} />
+                                <div
+                                  className="text-[11px] font-bold uppercase tracking-[0.05em]"
+                                  style={{ color: ins.accent || "var(--gmc-teal-mid)" }}
+                                >
+                                  {ins.name}
+                                </div>
                               </div>
                               <VerifiedIcon verified={entry?.verified} />
                             </div>
@@ -354,7 +376,9 @@ export default function ComparisonTable({
                               className="text-[13px] font-semibold leading-snug"
                               style={{ color: "var(--gmc-ink-2)" }}
                             >
-                              {entry?.short || (
+                              {entry?.short ? (
+                                <GlossaryText text={entry.short} glossary={glossary} />
+                              ) : (
                                 <span
                                   className="italic font-normal"
                                   style={{ color: "var(--gmc-faint)" }}
