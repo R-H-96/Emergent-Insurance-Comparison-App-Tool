@@ -303,3 +303,66 @@ body {
   to { opacity: 1; transform: translateY(0); }
 }
 .gmc-fade-in { animation: gmcFadeUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) both; }
+
+/* Shimmer strip for the ask-a-question searching state */
+@keyframes gmcShimmer {
+  0%   { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+.gmc-shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--gmc-bg-alt) 0%,
+    var(--gmc-teal-tint-2) 50%,
+    var(--gmc-bg-alt) 100%
+  );
+  background-size: 400px 100%;
+  animation: gmcShimmer 1.1s ease-in-out infinite;
+}
+
+/* Flash-highlight when a table row is targeted from ask-a-question */
+@keyframes gmcFlash {
+  0%   { background-color: var(--gmc-teal-tint-2); box-shadow: inset 4px 0 0 var(--gmc-teal); }
+  60%  { background-color: var(--gmc-teal-tint-2); box-shadow: inset 4px 0 0 var(--gmc-teal); }
+  100% { background-color: transparent; box-shadow: inset 4px 0 0 transparent; }
+}
+.gmc-flash {
+  animation: gmcFlash 2.2s ease-out both;
+}
+
+/* Notable row: teal left-edge marker bar (replaces full green wash) */
+.gmc-notable-row {
+  box-shadow: inset 3px 0 0 var(--gmc-teal);
+}
+
+/* Outlined button style used on at-a-glance cards, sheet CTAs etc. */
+.gmc-btn-outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.55rem 1rem;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--gmc-teal-deep);
+  background: white;
+  border: 1.5px solid var(--gmc-teal);
+  border-radius: var(--gmc-r-ctl);
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+  min-height: 40px;
+}
+.gmc-btn-outline:hover {
+  background: var(--gmc-teal);
+  color: white;
+  transform: translateY(-1px);
+}
+
+/* Minimum tap target */
+.gmc-tap {
+  min-height: 44px;
+  min-width: 44px;
+}

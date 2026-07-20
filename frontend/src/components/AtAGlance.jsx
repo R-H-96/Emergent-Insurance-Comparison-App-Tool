@@ -1,26 +1,48 @@
-import { Sparkles } from "lucide-react";
+import { Sparkles, ArrowRight } from "lucide-react";
 import { VerifiedIcon } from "@/components/VerifiedBadge";
 import GlossaryText from "@/components/GlossaryText";
 
 /**
- * At-a-glance section: one card per notable feature. Cells show insurer's
- * short value + a mini accent stripe in the insurer's brand colour. The
- * feature's `why` line (if present) sits under the value grid.
+ * One card per notable feature. Shows the definition, a mini grid of
+ * insurer short values (with accent-coloured left stripe + name), the
+ * feature's `why` line, and an outlined "Read the full detail" button.
+ * The whole card is clickable (mouse + keyboard).
  */
-export default function AtAGlance({ features, insurers, lookup, glossary, onOpen }) {
+export default function AtAGlance({
+  features,
+  insurers,
+  lookup,
+  glossary,
+  notableCount,
+  onOpen,
+}) {
   const notable = features.filter((f) => f.notable);
   if (!notable.length || !insurers.length) return null;
 
   return (
-    <section className="pb-8 sm:pb-14" data-testid="at-a-glance">
+    <section
+      className="pb-8 sm:pb-14"
+      id="at-a-glance"
+      data-testid="at-a-glance"
+    >
       <div className="gmc-container">
-        <div className="flex items-baseline gap-3 mb-1">
+        <div className="flex items-baseline gap-3 mb-1 flex-wrap">
           <Sparkles
             className="w-4 h-4"
             strokeWidth={2.2}
             style={{ color: "var(--gmc-teal)" }}
           />
-          <div className="gmc-eyebrow">At a glance · notable differences</div>
+          <div className="gmc-eyebrow">At a glance</div>
+          <span
+            className="gmc-badge-verified"
+            style={{
+              background: "var(--gmc-teal-tint-2)",
+              color: "var(--gmc-teal-deep)",
+            }}
+            data-testid="notable-count-chip"
+          >
+            {notableCount} notable differences found
+          </span>
         </div>
         <h2 className="gmc-h2 text-2xl sm:text-3xl mb-6">
           The things people usually ask about
@@ -28,11 +50,18 @@ export default function AtAGlance({ features, insurers, lookup, glossary, onOpen
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {notable.map((f) => (
-            <button
+            <div
               key={f.feature}
-              type="button"
+              role="button"
+              tabIndex={0}
               onClick={() => onOpen(f.feature)}
-              className="gmc-card p-5 sm:p-6 text-left transition-all hover:-translate-y-0.5 hover:shadow-[0_14px_44px_rgba(22,28,39,0.09)]"
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  onOpen(f.feature);
+                }
+              }}
+              className="gmc-card p-5 sm:p-6 text-left cursor-pointer transition-all duration-200 hover:-translate-y-1 hover:shadow-[0_18px_50px_-18px_rgba(22,28,39,0.16)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gmc-teal)]"
               data-testid={`glance-card-${f.feature.replace(/\s+/g, "-").toLowerCase()}`}
             >
               <div
@@ -106,13 +135,16 @@ export default function AtAGlance({ features, insurers, lookup, glossary, onOpen
                 </p>
               )}
 
-              <div
-                className="mt-4 text-[11px] font-bold uppercase tracking-[0.1em]"
-                style={{ color: "var(--gmc-teal-mid)" }}
-              >
-                Read the full detail →
+              <div className="mt-4">
+                <span
+                  className="gmc-btn-outline gmc-tap"
+                  data-testid={`glance-detail-btn-${f.feature.replace(/\s+/g, "-").toLowerCase()}`}
+                >
+                  Read the full detail
+                  <ArrowRight className="w-3.5 h-3.5" strokeWidth={2.5} />
+                </span>
               </div>
-            </button>
+            </div>
           ))}
         </div>
       </div>

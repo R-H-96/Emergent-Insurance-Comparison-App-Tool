@@ -1,4 +1,6 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { toast } from "sonner";
+import { Copy, Check } from "lucide-react";
 import data from "@/data/gmc_tool_data.json";
 import GmcNav from "@/components/GmcNav";
 import Hero from "@/components/Hero";
@@ -11,14 +13,111 @@ import DetailModal from "@/components/DetailModal";
 import Disclaimer from "@/components/Disclaimer";
 import TrustStrip from "@/components/TrustStrip";
 import CTA from "@/components/CTA";
-import Feedback from "@/components/Feedback";
+import AskAQuestion from "@/components/AskAQuestion";
+import ToolNav from "@/components/ToolNav";
+
+const LS_KEY = "gmc_last_selection";
+const VALID_INSURER_IDS = new Set(data.insurers.map((i) => i.id));
+const VALID_GROUPS = new Set(data.features.map((f) => f.group));
+
+/** Read URL/localStorage/defaults into a single initial state. URL wins. */
+function readInitialState(initialGroupsFromApp) {
+  const params = new URLSearchParams(window.location.search);
+
+  // Insurers
+  let insurerIds = null;
+  const insurersParam = params.get("insurers");
+  if (insurersParam) {
+    insurerIds = insurersParam
+      .split(",")
+      .map((s) => s.trim())
+      .filter((s) => VALID_INSURER_IDS.has(s));
+    if (insurerIds.length < 2 || insurerIds.length > 3) insurerIds = null;
+  }
+
+  // Diff toggle
+  const diffParam = params.get("diff");
+  let diffOnly = null;
+  if (diffParam !== null) diffOnly = diffParam === "1" || diffParam === "true";
+
+  // Filter groups (chip filter) — separate from initialGroupsFromApp (pre-open)
+  let activeGroups = null;
+  const groupsParam = params.get("groups");
+  if (groupsParam) {
+    activeGroups = groupsParam
+      .split(",")
+      .map((g) => decodeURIComponent(g.trim()))
+      .filter((g) => VALID_GROUPS.has(g));
+  }
+
+  // Fallback to localStorage
+  let stored = null;
+  try {
+    const raw = window.localStorage.getItem(LS_KEY);
+    if (raw) stored = JSON.parse(raw);
+  } catch (_err) {
+    stored = null;
+  }
+
+  return {
+    insurers:
+      insurerIds ||
+      (stored?.insurers &&
+      stored.insurers.every((id) => VALID_INSURER_IDS.has(id)) &&
+      stored.insurers.length >= 2 &&
+      stored.insurers.length <= 3
+        ? stored.insurers
+        : ["sc", "nib"]),
+    diffOnly: diffOnly !== null ? diffOnly : !!stored?.diffOnly,
+    activeGroups:
+      activeGroups ||
+      (Array.isArray(stored?.activeGroups)
+        ? stored.activeGroups.filter((g) => VALID_GROUPS.has(g))
+        : []),
+  };
+}
 
 export default function ComparePage({ embed = false, initialGroups = [] }) {
+  const initial = useMemo(() => readInitialState(initialGroups), []);
+
   const [productType, setProductType] = useState("health");
-  const [selected, setSelected] = useState(["sc", "nib"]);
-  const [diffOnly, setDiffOnly] = useState(false);
-  const [activeGroups, setActiveGroups] = useState(initialGroups);
+  const [selected, setSelected] = useState(initial.insurers);
+  const [diffOnly, setDiffOnly] = useState(initial.diffOnly);
+  const [activeGroups, setActiveGroups] = useState(initial.activeGroups);
   const [openFeature, setOpenFeature] = useState(null);
+  const [flashFeature, setFlashFeature] = useState(null);
+  const [linkCopied, setLinkCopied] = useState(false);
+
+  const flashTimer = useRef(null);
+
+  // Persist state to URL + localStorage
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    params.set("product", productType);
+    params.set("insurers", selected.join(","));
+    if (diffOnly) params.set("diff", "1"); else params.delete("diff");
+    if (activeGroups.length) params.set("groups", activeGroups.join(",")); else params.delete("groups");
+
+    const newUrl =
+      window.location.pathname +
+      (params.toString() ? `?${params.toString()}` : "") +
+      window.location.hash;
+    window.history.replaceState(null, "", newUrl);
+
+    try {
+      window.localStorage.setItem(
+        LS_KEY,
+        JSON.stringify({
+          insurers: selected,
+          diffOnly,
+          activeGroups,
+          savedAt: Date.now(),
+        }),
+      );
+    } catch (_err) {
+      // storage disabled — ignore
+    }
+  }, [productType, selected, diffOnly, activeGroups]);
 
   const selectedInsurers = useMemo(
     () => data.insurers.filter((i) => selected.includes(i.id)),
@@ -48,6 +147,11 @@ export default function ComparePage({ embed = false, initialGroups = [] }) {
     return list;
   }, []);
 
+  const notableCount = useMemo(
+    () => data.features.filter((f) => f.notable).length,
+    [],
+  );
+
   const currentFeature = useMemo(
     () => data.features.find((f) => f.feature === openFeature) || null,
     [openFeature],
@@ -64,22 +168,51 @@ export default function ComparePage({ embed = false, initialGroups = [] }) {
     });
   };
 
-  const toggleGroup = (g) => {
+  const toggleGroup = (g) =>
     setActiveGroups((prev) =>
       prev.includes(g) ? prev.filter((x) => x !== g) : [...prev, g],
     );
-  };
 
-  // Pre-open groups in the table:
-  // - If initialGroups came in from URL, open exactly those
-  // - Else if user has filtered via chips, open the filtered groups
-  // - Else default (Core limits only, handled by ComparisonTable)
   const preOpenGroups =
     initialGroups.length > 0
       ? initialGroups
       : activeGroups.length > 0
         ? activeGroups
         : undefined;
+
+  const locateFeature = (featureName) => {
+    const rowId = `row-${featureName.replace(/\s+/g, "-").toLowerCase()}`;
+    // Ensure filters won't hide the row: clear diffOnly if that row is not notable
+    const feat = data.features.find((f) => f.feature === featureName);
+    if (feat && !feat.notable && diffOnly) setDiffOnly(false);
+    if (feat && activeGroups.length > 0 && !activeGroups.includes(feat.group)) {
+      setActiveGroups([]);
+    }
+    setTimeout(() => {
+      const el = document.getElementById(rowId);
+      if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
+      setFlashFeature(featureName);
+      if (flashTimer.current) clearTimeout(flashTimer.current);
+      flashTimer.current = setTimeout(() => setFlashFeature(null), 2300);
+    }, 50);
+  };
+
+  const copyShareLink = async () => {
+    const url = window.location.href;
+    try {
+      await navigator.clipboard.writeText(url);
+      setLinkCopied(true);
+      toast.success("Link copied");
+      setTimeout(() => setLinkCopied(false), 1600);
+    } catch (_err) {
+      toast.error("Could not copy — long-press the address bar instead.");
+    }
+  };
+
+  const scrollTo = (id) => {
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
 
   return (
     <div
@@ -88,6 +221,20 @@ export default function ComparePage({ embed = false, initialGroups = [] }) {
     >
       {!embed && <GmcNav />}
       {!embed && <Hero />}
+
+      <ToolNav
+        insurers={selectedInsurers}
+        allInsurers={data.insurers}
+        onToggleInsurer={toggleInsurer}
+        groups={groupList}
+        activeGroups={activeGroups}
+        onToggleGroup={toggleGroup}
+        onClearGroups={() => setActiveGroups([])}
+        onScrollToPicker={() => scrollTo("insurer-picker")}
+        onScrollToTable={() => scrollTo("full-comparison")}
+        onScrollToGlance={() => scrollTo("at-a-glance")}
+        onScrollToAsk={() => scrollTo("ask-a-question")}
+      />
 
       <section
         className={embed ? "pt-6 sm:pt-10 pb-6 sm:pb-8" : "pb-6 sm:pb-10"}
@@ -98,7 +245,11 @@ export default function ComparePage({ embed = false, initialGroups = [] }) {
         </div>
       </section>
 
-      <section className="pb-8 sm:pb-12" data-testid="insurer-picker-section">
+      <section
+        id="insurer-picker"
+        className="pb-8 sm:pb-12"
+        data-testid="insurer-picker-section"
+      >
         <div className="gmc-container">
           <InsurerPicker
             insurers={data.insurers}
@@ -113,12 +264,13 @@ export default function ComparePage({ embed = false, initialGroups = [] }) {
         insurers={selectedInsurers}
         lookup={lookup}
         glossary={data.glossary}
+        notableCount={notableCount}
         onOpen={(featureName) => setOpenFeature(featureName)}
       />
 
       <section
+        id="full-comparison"
         className="pb-10 sm:pb-14"
-        id="compare"
         data-testid="comparison-table-section"
       >
         <div className="gmc-container">
@@ -135,24 +287,41 @@ export default function ComparePage({ embed = false, initialGroups = [] }) {
                 >
                   Tap any row to see the full policy wording, source citation
                   and verification status. Terms with a dotted underline have a
-                  quick definition — tap them.
+                  quick definition — tap them. Notable rows are marked with a
+                  teal edge.
                 </p>
               </div>
-              <button
-                type="button"
-                className="gmc-chip self-start sm:self-auto"
-                aria-pressed={diffOnly}
-                onClick={() => setDiffOnly((v) => !v)}
-                data-testid="differences-only-toggle"
-              >
-                <span
-                  className="gmc-toggle"
+              <div className="flex flex-wrap items-center gap-2 self-start sm:self-auto">
+                <button
+                  type="button"
+                  className="gmc-chip gmc-tap"
                   aria-pressed={diffOnly}
-                  aria-hidden="true"
-                  tabIndex={-1}
-                />
-                Notable differences only
-              </button>
+                  onClick={() => setDiffOnly((v) => !v)}
+                  data-testid="differences-only-toggle"
+                >
+                  <span
+                    className="gmc-toggle"
+                    aria-pressed={diffOnly}
+                    aria-hidden="true"
+                    tabIndex={-1}
+                  />
+                  Notable only
+                </button>
+                <button
+                  type="button"
+                  className="gmc-chip gmc-tap"
+                  onClick={copyShareLink}
+                  data-testid="copy-link-btn"
+                  aria-label="Copy link to this comparison"
+                >
+                  {linkCopied ? (
+                    <Check className="w-3.5 h-3.5" strokeWidth={2.5} />
+                  ) : (
+                    <Copy className="w-3.5 h-3.5" strokeWidth={2.2} />
+                  )}
+                  {linkCopied ? "Copied" : "Copy link"}
+                </button>
+              </div>
             </div>
 
             <FilterChips
@@ -171,12 +340,21 @@ export default function ComparePage({ embed = false, initialGroups = [] }) {
             diffOnly={diffOnly}
             activeGroups={activeGroups}
             openGroups={preOpenGroups}
+            flashFeature={flashFeature}
             onOpenFeature={(featureName) => setOpenFeature(featureName)}
           />
         </div>
       </section>
 
-      <Feedback />
+      <AskAQuestion
+        features={data.features}
+        data={data.data}
+        glossary={data.glossary}
+        insurers={selectedInsurers}
+        lookup={lookup}
+        onLocate={locateFeature}
+        onOpenFeature={(featureName) => setOpenFeature(featureName)}
+      />
 
       {!embed && (
         <section className="pb-14 sm:pb-20" data-testid="cta-section">
@@ -238,6 +416,9 @@ export default function ComparePage({ embed = false, initialGroups = [] }) {
         <Disclaimer />
       )}
 
+      {/* Bottom spacer so the sticky mobile CTA doesn't hide footer content */}
+      <div className="h-20 md:hidden" aria-hidden="true" />
+
       <DetailModal
         feature={currentFeature}
         insurers={selectedInsurers}
@@ -245,6 +426,23 @@ export default function ComparePage({ embed = false, initialGroups = [] }) {
         glossary={data.glossary}
         onClose={() => setOpenFeature(null)}
       />
+
+      {/* Mobile sticky bottom adviser CTA */}
+      <div
+        className="md:hidden fixed bottom-0 left-0 right-0 z-30 p-3"
+        style={{
+          background: "rgba(255,255,255,0.9)",
+          backdropFilter: "blur(12px)",
+          borderTop: "1px solid var(--gmc-line)",
+        }}
+        data-testid="mobile-sticky-cta"
+      >
+        <CTA
+          label="Talk to an adviser — free"
+          data-testid="mobile-sticky-adviser"
+          {...{ style: { width: "100%" } }}
+        />
+      </div>
     </div>
   );
 }

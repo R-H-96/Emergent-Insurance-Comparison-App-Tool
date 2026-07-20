@@ -39,7 +39,24 @@ Rebuilt as a **static, backend-less comparison tool** for Get My Cover (NZ), ren
 - Class-only trigger: `<button class="gmc-btn-primary gmc-quote-trigger">…</button>`
 - In this preview only: a document-level delegated listener (`App.js`) fires a Sonner toast so reviewers can see the click was received. It's not attached to the button element.
 
-## Implemented (v4.0 — Feb 2026 accents + logos + glossary + feedback)
+## Implemented (v5.0 — Feb 2026 sticky nav, ask engine, shareable state)
+- ✅ v3 JSON refreshed with new accents (SC `#0079C2`, nib `#6CC24A`, AIA `#D0103A`, PL `#1D4A44`, UniMed `#1C2B54`) and per-insurer `sources[]` with real URLs
+- ✅ New nib logo replaced and whitespace-trimmed (matching the other logo pipeline)
+- ✅ All colours read from JSON — no hardcoded hexes remain in components
+- ✅ **Column tinting**: each insurer table column gets a ~5% opacity wash of its accent (`hexToRgba(accent, 0.05)`) making columns trackable at a glance
+- ✅ **Notable row marker changed**: full-row teal fill replaced with a 3px teal inset left-edge marker (`.gmc-notable-row`) — subtler and doesn't fight column tints
+- ✅ **Sticky tool nav** (`ToolNav.jsx`): appears once the picker scrolls out of view. Desktop shows three tab buttons (At a glance / Full comparison / Ask a question) that smooth-scroll to the corresponding anchors, plus the selected insurers as small overlapping logo chips outlined in each accent, and a "Change" button that scrolls back to the picker. Mobile replaces this with a floating pill button (bottom-right) that opens a bottom **Sheet** containing the InsurerPicker and group FilterChips
+- ✅ **Ask a question engine** (`AskAQuestion.jsx` + `lib/askEngine.js`): deterministic client-side keyword matcher over feature names, definitions, why-lines, short/detail cells, and glossary terms. Canonical synonym map (adhd→mental, mri→imaging, pharmac→non-pharmac, gp→day-to-day, etc.) is flat-split so multi-word canonicals score correctly. UX: ~800ms shimmer, then either a result card (feature match with per-insurer short + accent stripes + "Show me in the table" + "Read the full detail" + "Ask another" buttons) or the adviser fallback. All questions logged to `localStorage.gmc_feedback_questions`
+- ✅ **Row locate/flash**: "Show me in the table" scrolls to `row-<slug>` (auto-expands the containing group and clears filters that would hide it), then applies a 2.3s `.gmc-flash` animation to draw the eye
+- ✅ **Detail modal sources**: `SOURCE` block now renders each entry in `insurer.sources[]` as an underlined `<a target="_blank">` with an `ExternalLink` icon; the JSON's original cell-level `source` text is kept as a smaller "Cited passage" line
+- ✅ **At-a-glance outlined CTA**: "Read the full detail →" rendered as a `.gmc-btn-outline` button with hover fill; whole card is a role="button" with hover lift + pointer cursor + keyboard support
+- ✅ **Shareable URL state**: `?product=&insurers=sc,nib&diff=1&groups=Core%20limits` — restored on load, updated via `history.replaceState` on every state change; "Copy link" button in the table header uses `navigator.clipboard.writeText`
+- ✅ **Persistent selection**: `localStorage.gmc_last_selection` (`insurers`, `diffOnly`, `activeGroups`, `savedAt`) — URL wins over storage wins over defaults
+- ✅ **"[N] notable differences found" chip** next to the At a glance heading (currently 9)
+- ✅ **Mobile pass**: 44px min tap targets via `.gmc-tap`, bottom-sheet picker (shadcn Sheet), fixed bottom "Talk to an adviser — free" CTA, stacked-card table retained; bottom spacer prevents footer overlap
+- ✅ Static bundle rebuilt cleanly
+
+## Implemented (v4.0 — accents, logos, glossary, feedback)
 - ✅ v3 JSON bundled: per-insurer `accent` hexes (SC blue, nib green, AIA red, PL burgundy, UniMed teal-blue) and `logo` paths; per-feature `why`; per-cell `detail_points`; global `glossary` object (15 terms)
 - ✅ Real insurer logos extracted from supplied zip, trimmed with PIL, saved to `/app/frontend/public/logos/{sc,nib,aia,pl,uni}.png`; served via `<InsurerLogo>` in uniform tiles with initial-tile fallback
 - ✅ **Accent colours** consistently applied: picker card border/text (selected), at-a-glance mini-block left stripe + insurer name, table column-header top stripe + name, detail-modal left stripe + name

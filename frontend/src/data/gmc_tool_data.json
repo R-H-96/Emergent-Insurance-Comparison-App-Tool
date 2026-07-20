@@ -10,43 +10,77 @@
    "version": "Policy document, effective 1 Apr 2026",
    "accent": "#0079C2",
    "accent_name": "Southern Cross blue",
-   "logo": "/logos/sc.png"
+   "logo": "/logos/sc.png",
+   "sources": [
+    {
+     "label": "Wellbeing plan policy document (PDF)",
+     "url": "https://www.southerncross.co.nz/-/media/Southern-Cross-Health-Society/Health-insurance/Member-collateral/Plan-documents/Current-plan-documents/PD_Wellbeing_plan.pdf"
+    }
+   ]
   },
   {
    "id": "nib",
    "name": "nib",
    "product": "Ultimate Health (Base)",
    "version": "Policy document, effective 1 Feb 2024",
-   "accent": "#007A3D",
-   "accent_name": "nib green",
-   "logo": "/logos/nib.png"
+   "accent": "#6CC24A",
+   "accent_name": "nib light green (matches light logo)",
+   "logo": "/logos/nib.png",
+   "sources": [
+    {
+     "label": "Ultimate Health policy document (PDF)",
+     "url": "https://assets.ctfassets.net/ja9v5o5o08yv/z7NkWDogU7CB3IkWc7GU7/518c2505105870a368a77d2455dea946/Ultimate_Health_Base_Policy_Document__effective_for_new_policies_or_policies_renewing_from_1_February_2024_or_later_.pdf"
+    }
+   ]
   },
   {
    "id": "aia",
    "name": "AIA",
    "product": "Private Health",
    "version": "Umbrella wording v6, effective 17 Apr 2025",
-   "accent": "#D31145",
-   "accent_name": "AIA red",
-   "logo": "/logos/aia.png"
+   "accent": "#D0103A",
+   "accent_name": "AIA red (deepened to match logo)",
+   "logo": "/logos/aia.png",
+   "sources": [
+    {
+     "label": "AIA Private Health policy wording (PDF)",
+     "url": "https://www.aia.co.nz/content/dam/nz/en/docs/our-products/policy-wordings/health/aia-private-health-umbrella-policy-wording.pdf"
+    }
+   ]
   },
   {
    "id": "pl",
    "name": "Partners Life",
    "product": "Private Medical Cover",
    "version": "Protection Benefit Sheet V11 (version check open)",
-   "accent": "#7D2248",
-   "accent_name": "Partners Life burgundy",
-   "logo": "/logos/pl.png"
+   "accent": "#1D4A44",
+   "accent_name": "Partners Life dark green-teal",
+   "logo": "/logos/pl.png",
+   "sources": [
+    {
+     "label": "Partners Life useful documents (official page)",
+     "url": "https://www.partnerslife.co.nz/useful-documents"
+    }
+   ]
   },
   {
    "id": "uni",
    "name": "UniMed",
    "product": "Hospital Select Plus",
    "version": "Plan doc effective 1 Aug 2025 + T&C 2026",
-   "accent": "#00A5B5",
-   "accent_name": "UniMed teal",
-   "logo": "/logos/uni.png"
+   "accent": "#1C2B54",
+   "accent_name": "UniMed navy (from logo)",
+   "logo": "/logos/uni.png",
+   "sources": [
+    {
+     "label": "Hospital Select Plus plan document (PDF)",
+     "url": "https://unimed.co.nz/assets/Important-Documents/HCP-Hospital-Select-Plus-Modules-Plan.pdf"
+    },
+    {
+     "label": "UniMed Terms & Conditions 2026 (PDF)",
+     "url": "https://unimed.co.nz/assets/Important-Documents/2026-Terms-and-Conditions-/UniMed-Terms-and-Conditions-2026.pdf"
+    }
+   ]
   }
  ],
  "features": [
@@ -1634,8 +1668,8 @@
   ]
  },
  "schema_version": 3,
- "notes": "v3: adds insurer accent hex + logo path (official files to /logos/, fallback initial-tile), 'why' lines on notable features (render under at-a-glance values), a glossary object (dotted-underline tooltip any time a term appears), and detail_points (render modal details as these bullets, not the paragraph). 'detail' retained for compatibility. internal_note fields are audit flags — NEVER render them in the UI.",
- "accent_status": "AIA red is documented brand red; other hexes sampled from official wordmarks — eyeball each against the insurer's live site before launch and correct if off.",
+ "notes": "v3: adds insurer accent hex + logo path (official files to /logos/, fallback initial-tile), 'why' lines on notable features (render under at-a-glance values), a glossary object (dotted-underline tooltip any time a term appears), and detail_points (render modal details as these bullets, not the paragraph). 'detail' retained for compatibility. internal_note fields are audit flags — NEVER render them in the UI. Insurers now carry sources[] (label+url) — render the modal SOURCE line as a link to the insurer's matching source url.",
+ "accent_status": "Accents matched to supplied logos 19 Jul 2026 per Reuben's direction: nib = light logo green, PL = dark green-teal, UniMed = navy, AIA deepened.",
  "glossary": {
   "excess": "The amount you pay yourself when you claim, before the insurer pays the rest. A higher excess means cheaper premiums.",
   "Pharmac": "New Zealand's government drug-funding agency — it decides which medicines the public system pays for.",

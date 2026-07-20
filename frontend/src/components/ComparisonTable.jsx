@@ -4,17 +4,16 @@ import { VerifiedIcon } from "@/components/VerifiedBadge";
 import GlossaryText from "@/components/GlossaryText";
 import InsurerLogo from "@/components/InsurerLogo";
 
-/**
- * Two rendering modes:
- *  - Desktop (>= md): CSS grid, stretches to container.
- *  - Mobile (< md): each feature is a stacked card.
- *
- * Cells show ONLY `short` + a tiny verified/pending icon. Clicking any row
- * opens the detail modal via `onOpenFeature`.
- *
- * `openGroups` (optional): array of group names to force-open initially.
- * If not provided, defaults to opening only "Core limits".
- */
+// Turn "#RRGGBB" into "rgba(r,g,b,alpha)"
+function hexToRgba(hex, alpha) {
+  if (!hex || typeof hex !== "string") return `rgba(20,181,175,${alpha})`;
+  const h = hex.replace("#", "");
+  const parse = (i) => parseInt(h.substring(i, i + 2), 16);
+  return `rgba(${parse(0)},${parse(2)},${parse(4)},${alpha})`;
+}
+
+const rowId = (name) => `row-${name.replace(/\s+/g, "-").toLowerCase()}`;
+
 export default function ComparisonTable({
   insurers,
   features,
@@ -23,6 +22,7 @@ export default function ComparisonTable({
   diffOnly,
   activeGroups,
   openGroups,
+  flashFeature,
   onOpenFeature,
 }) {
   const grouped = useMemo(() => {
@@ -44,11 +44,20 @@ export default function ComparisonTable({
   }, [grouped, openGroups]);
 
   const [collapsed, setCollapsed] = useState(defaultCollapsed);
+  useEffect(() => setCollapsed(defaultCollapsed), [defaultCollapsed]);
 
-  // Re-sync when openGroups changes (embed URL param handling)
+  // When flashFeature changes, ensure its group is open
   useEffect(() => {
-    setCollapsed(defaultCollapsed);
-  }, [defaultCollapsed]);
+    if (!flashFeature) return;
+    const f = features.find((x) => x.feature === flashFeature);
+    if (!f) return;
+    setCollapsed((prev) => {
+      if (!prev.has(f.group)) return prev;
+      const next = new Set(prev);
+      next.delete(f.group);
+      return next;
+    });
+  }, [flashFeature, features]);
 
   const lookup = useMemo(() => {
     const out = {};
@@ -72,6 +81,9 @@ export default function ComparisonTable({
 
   const cols = insurers.length;
   const gridTemplate = `minmax(0, 1.2fr) repeat(${cols}, minmax(0, 1fr))`;
+
+  // Per-insurer column background tints (~5%)
+  const columnTints = insurers.map((i) => hexToRgba(i.accent, 0.05));
 
   const visibleGrouped = grouped
     .filter(([group]) =>
@@ -100,7 +112,7 @@ export default function ComparisonTable({
         className="gmc-card overflow-hidden hidden md:block"
         data-testid="comparison-table"
       >
-        {/* Header row with insurer accent stripe */}
+        {/* Header row */}
         <div
           className="grid"
           style={{
@@ -110,13 +122,14 @@ export default function ComparisonTable({
           }}
         >
           <div className="p-4 gmc-eyebrow">Feature</div>
-          {insurers.map((ins) => (
+          {insurers.map((ins, i) => (
             <div
               key={ins.id}
               className="p-4"
               style={{
                 borderLeft: "1px solid var(--gmc-line)",
                 borderTop: `3px solid ${ins.accent || "var(--gmc-teal)"}`,
+                background: columnTints[i],
               }}
               data-testid={`header-${ins.id}`}
             >
@@ -200,72 +213,79 @@ export default function ComparisonTable({
               </button>
 
               {!isCollapsed &&
-                visibleFeats.map((f) => (
-                  <div
-                    key={f.feature}
-                    className="grid group cursor-pointer transition-colors hover:bg-[color:var(--gmc-teal-tint)]"
-                    style={{
-                      gridTemplateColumns: gridTemplate,
-                      borderBottom: "1px solid var(--gmc-line)",
-                      background: f.notable
-                        ? "var(--gmc-teal-tint)"
-                        : "var(--gmc-card)",
-                    }}
-                    onClick={() => onOpenFeature(f.feature)}
-                    role="button"
-                    tabIndex={0}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter" || e.key === " ") {
-                        e.preventDefault();
-                        onOpenFeature(f.feature);
-                      }
-                    }}
-                    data-testid={`row-${f.feature.replace(/\s+/g, "-").toLowerCase()}`}
-                  >
-                    <div className="p-4">
-                      <div
-                        className="font-bold text-[14px] leading-snug"
-                        style={{ color: "var(--gmc-ink)" }}
-                      >
-                        {f.feature}
-                      </div>
-                      <GlossaryText
-                        tag="div"
-                        text={f.definition}
-                        glossary={glossary}
-                        className="text-[12px] mt-1 leading-relaxed"
-                      />
-                    </div>
-                    {insurers.map((ins) => {
-                      const entry = lookup[ins.id]?.[f.feature];
-                      return (
+                visibleFeats.map((f) => {
+                  const isFlashing = flashFeature === f.feature;
+                  return (
+                    <div
+                      key={f.feature}
+                      id={rowId(f.feature)}
+                      className={`grid group cursor-pointer transition-colors hover:bg-[color:var(--gmc-teal-tint)] ${
+                        f.notable ? "gmc-notable-row" : ""
+                      } ${isFlashing ? "gmc-flash" : ""}`}
+                      style={{
+                        gridTemplateColumns: gridTemplate,
+                        borderBottom: "1px solid var(--gmc-line)",
+                        scrollMarginTop: 96,
+                      }}
+                      onClick={() => onOpenFeature(f.feature)}
+                      role="button"
+                      tabIndex={0}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                          e.preventDefault();
+                          onOpenFeature(f.feature);
+                        }
+                      }}
+                      data-testid={`row-${f.feature.replace(/\s+/g, "-").toLowerCase()}`}
+                    >
+                      <div className="p-4">
                         <div
-                          key={ins.id}
-                          className="p-4 flex items-start gap-2"
-                          style={{ borderLeft: "1px solid var(--gmc-line)" }}
-                          data-testid={`cell-${ins.id}-${f.feature.replace(/\s+/g, "-").toLowerCase()}`}
+                          className="font-bold text-[14px] leading-snug"
+                          style={{ color: "var(--gmc-ink)" }}
                         >
-                          <div
-                            className="text-[13px] font-semibold leading-snug flex-1"
-                            style={{ color: "var(--gmc-ink-2)" }}
-                          >
-                            {entry?.short ? (
-                              <GlossaryText text={entry.short} glossary={glossary} />
-                            ) : (
-                              <span
-                                className="italic font-normal"
-                                style={{ color: "var(--gmc-faint)" }}
-                              >
-                                Not extracted
-                              </span>
-                            )}
-                          </div>
-                          <VerifiedIcon verified={entry?.verified} />
+                          {f.feature}
                         </div>
-                      );
-                    })}
-                  </div>
-                ))}
+                        <GlossaryText
+                          tag="div"
+                          text={f.definition}
+                          glossary={glossary}
+                          className="text-[12px] mt-1 leading-relaxed"
+                        />
+                      </div>
+                      {insurers.map((ins, i) => {
+                        const entry = lookup[ins.id]?.[f.feature];
+                        return (
+                          <div
+                            key={ins.id}
+                            className="p-4 flex items-start gap-2"
+                            style={{
+                              borderLeft: "1px solid var(--gmc-line)",
+                              background: columnTints[i],
+                            }}
+                            data-testid={`cell-${ins.id}-${f.feature.replace(/\s+/g, "-").toLowerCase()}`}
+                          >
+                            <div
+                              className="text-[13px] font-semibold leading-snug flex-1"
+                              style={{ color: "var(--gmc-ink-2)" }}
+                            >
+                              {entry?.short ? (
+                                <GlossaryText text={entry.short} glossary={glossary} />
+                              ) : (
+                                <span
+                                  className="italic font-normal"
+                                  style={{ color: "var(--gmc-faint)" }}
+                                >
+                                  Not extracted
+                                </span>
+                              )}
+                            </div>
+                            <VerifiedIcon verified={entry?.verified} />
+                          </div>
+                        );
+                      })}
+                    </div>
+                  );
+                })}
             </div>
           );
         })}
@@ -280,7 +300,7 @@ export default function ComparisonTable({
               <button
                 type="button"
                 onClick={() => toggleGroup(group)}
-                className="w-full flex items-center gap-2 p-4 text-left"
+                className="w-full flex items-center gap-2 p-4 gmc-tap text-left"
                 style={{ background: "var(--gmc-bg-alt)" }}
                 aria-expanded={!isCollapsed}
                 data-testid={`mobile-group-toggle-${group}`}
@@ -313,92 +333,96 @@ export default function ComparisonTable({
               </button>
 
               {!isCollapsed &&
-                visibleFeats.map((f) => (
-                  <div
-                    key={f.feature}
-                    className="p-4 border-t cursor-pointer"
-                    style={{
-                      borderColor: "var(--gmc-line)",
-                      background: f.notable
-                        ? "var(--gmc-teal-tint)"
-                        : "var(--gmc-card)",
-                    }}
-                    onClick={() => onOpenFeature(f.feature)}
-                    role="button"
-                    tabIndex={0}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter" || e.key === " ") {
-                        e.preventDefault();
-                        onOpenFeature(f.feature);
-                      }
-                    }}
-                    data-testid={`mobile-row-${f.feature.replace(/\s+/g, "-").toLowerCase()}`}
-                  >
+                visibleFeats.map((f) => {
+                  const isFlashing = flashFeature === f.feature;
+                  return (
                     <div
-                      className="font-bold text-[14px]"
-                      style={{ color: "var(--gmc-ink)" }}
+                      key={f.feature}
+                      id={rowId(f.feature)}
+                      className={`p-4 border-t cursor-pointer ${
+                        f.notable ? "gmc-notable-row" : ""
+                      } ${isFlashing ? "gmc-flash" : ""}`}
+                      style={{
+                        borderColor: "var(--gmc-line)",
+                        scrollMarginTop: 96,
+                      }}
+                      onClick={() => onOpenFeature(f.feature)}
+                      role="button"
+                      tabIndex={0}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                          e.preventDefault();
+                          onOpenFeature(f.feature);
+                        }
+                      }}
+                      data-testid={`mobile-row-${f.feature.replace(/\s+/g, "-").toLowerCase()}`}
                     >
-                      {f.feature}
-                    </div>
-                    <GlossaryText
-                      tag="div"
-                      text={f.definition}
-                      glossary={glossary}
-                      className="text-[12px] mt-1 leading-relaxed"
-                    />
-                    <div className="mt-3 space-y-2">
-                      {insurers.map((ins) => {
-                        const entry = lookup[ins.id]?.[f.feature];
-                        return (
-                          <div
-                            key={ins.id}
-                            className="rounded-[10px] p-3 border"
-                            style={{
-                              background: "var(--gmc-card)",
-                              borderColor: "var(--gmc-line)",
-                              borderLeftWidth: 3,
-                              borderLeftColor: ins.accent || "var(--gmc-teal)",
-                            }}
-                          >
-                            <div className="flex items-center justify-between gap-2 mb-1">
-                              <div className="flex items-center gap-2">
-                                <InsurerLogo insurer={ins} size={22} />
-                                <div
-                                  className="text-[11px] font-bold uppercase tracking-[0.05em]"
-                                  style={{ color: ins.accent || "var(--gmc-teal-mid)" }}
-                                >
-                                  {ins.name}
-                                </div>
-                              </div>
-                              <VerifiedIcon verified={entry?.verified} />
-                            </div>
+                      <div
+                        className="font-bold text-[14px]"
+                        style={{ color: "var(--gmc-ink)" }}
+                      >
+                        {f.feature}
+                      </div>
+                      <GlossaryText
+                        tag="div"
+                        text={f.definition}
+                        glossary={glossary}
+                        className="text-[12px] mt-1 leading-relaxed"
+                      />
+                      <div className="mt-3 space-y-2">
+                        {insurers.map((ins) => {
+                          const entry = lookup[ins.id]?.[f.feature];
+                          return (
                             <div
-                              className="text-[13px] font-semibold leading-snug"
-                              style={{ color: "var(--gmc-ink-2)" }}
+                              key={ins.id}
+                              className="rounded-[10px] p-3 border"
+                              style={{
+                                background: hexToRgba(ins.accent, 0.05),
+                                borderColor: "var(--gmc-line)",
+                                borderLeftWidth: 3,
+                                borderLeftColor: ins.accent || "var(--gmc-teal)",
+                              }}
                             >
-                              {entry?.short ? (
-                                <GlossaryText text={entry.short} glossary={glossary} />
-                              ) : (
-                                <span
-                                  className="italic font-normal"
-                                  style={{ color: "var(--gmc-faint)" }}
-                                >
-                                  Not extracted
-                                </span>
-                              )}
+                              <div className="flex items-center justify-between gap-2 mb-1">
+                                <div className="flex items-center gap-2">
+                                  <InsurerLogo insurer={ins} size={22} />
+                                  <div
+                                    className="text-[11px] font-bold uppercase tracking-[0.05em]"
+                                    style={{ color: ins.accent || "var(--gmc-teal-mid)" }}
+                                  >
+                                    {ins.name}
+                                  </div>
+                                </div>
+                                <VerifiedIcon verified={entry?.verified} />
+                              </div>
+                              <div
+                                className="text-[13px] font-semibold leading-snug"
+                                style={{ color: "var(--gmc-ink-2)" }}
+                              >
+                                {entry?.short ? (
+                                  <GlossaryText text={entry.short} glossary={glossary} />
+                                ) : (
+                                  <span
+                                    className="italic font-normal"
+                                    style={{ color: "var(--gmc-faint)" }}
+                                  >
+                                    Not extracted
+                                  </span>
+                                )}
+                              </div>
                             </div>
-                          </div>
-                        );
-                      })}
+                          );
+                        })}
+                      </div>
+                      <div
+                        className="mt-3 text-[11px] font-bold uppercase tracking-[0.1em]"
+                        style={{ color: "var(--gmc-teal-mid)" }}
+                      >
+                        Tap for full detail →
+                      </div>
                     </div>
-                    <div
-                      className="mt-3 text-[11px] font-bold uppercase tracking-[0.1em]"
-                      style={{ color: "var(--gmc-teal-mid)" }}
-                    >
-                      Tap for full detail →
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
             </div>
           );
         })}

@@ -1,3 +1,4 @@
+import { ExternalLink } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -53,6 +54,7 @@ export default function DetailModal({ feature, insurers, lookup, glossary, onClo
               : entry?.detail
                 ? [entry.detail]
                 : [];
+            const sources = Array.isArray(ins.sources) ? ins.sources : [];
             return (
               <div
                 key={ins.id}
@@ -116,21 +118,49 @@ export default function DetailModal({ feature, insurers, lookup, glossary, onClo
                     )}
 
                     <div
-                      className="mt-3 text-[12px] leading-snug"
-                      style={{ color: "var(--gmc-muted)" }}
+                      className="mt-4 pt-3 border-t"
+                      style={{ borderColor: "var(--gmc-line)" }}
                     >
-                      <span
-                        className="font-bold uppercase tracking-[0.08em] mr-1"
+                      <div
+                        className="text-[10px] font-bold uppercase tracking-[0.1em] mb-1.5"
                         style={{ color: "var(--gmc-body)" }}
                       >
-                        Source
-                      </span>
-                      <span
-                        className="underline decoration-dotted underline-offset-2"
-                        style={{ color: "var(--gmc-teal-deep)" }}
-                      >
-                        {entry.source}
-                      </span>
+                        Sources
+                      </div>
+                      {sources.length > 0 ? (
+                        <ul className="space-y-1" data-testid={`sources-${ins.id}`}>
+                          {sources.map((s, i) => (
+                            <li key={i}>
+                              <a
+                                href={s.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center gap-1.5 text-[12px] underline decoration-dotted underline-offset-2 hover:decoration-solid"
+                                style={{ color: "var(--gmc-teal-deep)" }}
+                                data-testid={`source-link-${ins.id}-${i}`}
+                              >
+                                {s.label}
+                                <ExternalLink className="w-3 h-3" strokeWidth={2} />
+                              </a>
+                            </li>
+                          ))}
+                          {entry.source && (
+                            <li
+                              className="text-[11px] mt-1"
+                              style={{ color: "var(--gmc-muted)" }}
+                            >
+                              Cited passage: {entry.source}
+                            </li>
+                          )}
+                        </ul>
+                      ) : (
+                        <div
+                          className="text-[12px]"
+                          style={{ color: "var(--gmc-muted)" }}
+                        >
+                          {entry.source}
+                        </div>
+                      )}
                     </div>
                   </>
                 ) : (
