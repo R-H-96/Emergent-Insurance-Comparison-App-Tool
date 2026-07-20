@@ -80,6 +80,22 @@ Rebuilt as a **static, backend-less comparison tool** for Get My Cover (NZ), ren
 - ✅ **Mobile pass**: 44px min tap targets via `.gmc-tap`, bottom-sheet picker (shadcn Sheet), fixed bottom "Talk to an adviser — free" CTA, stacked-card table retained; bottom spacer prevents footer overlap
 - ✅ Static bundle rebuilt cleanly
 
+
+## Implemented (v6.0 — Refinement Round, Feb 20 2026)
+- ✅ **New reusable `MobileSheet`** (`/app/frontend/src/components/MobileSheet.jsx`) — Framer-motion drag-to-dismiss (120px OR velocity 500), backdrop tap, browser-back closure via History API (StrictMode-safe with 150ms guard), body scroll lock with scrollbar-width compensation, ESC key close, sticky branded header with drag handle + eyebrow + title + single X, safe-area-inset-bottom footer padding, portal to document.body
+- ✅ **DetailModal**: Dialog on desktop; MobileSheet on `<768px` — sticky header stays visible, footer CTA docks to bottom with safe-area inset, sources & detail bullets kept intact
+- ✅ **AskPanel**: mobile now uses MobileSheet (removes duplicate X from previous Shadcn Sheet); desktop drawer max-width bumped to 420px; input 48px min-height and 16px font-size
+- ✅ **MobileBottomBar**: safe-area-inset-bottom padding, hidden (aria-hidden + translated off-screen) while any sheet is open; compare sheet uses MobileSheet with title "Change comparison" (no truncation) + Done footer
+- ✅ **ControlDock**: buttons w-14 h-14 (~30% wider), icons only with hover tooltips, larger 34px logo chips with accent outline, z-index 60 (< 100). Insurer popover 600px wide showing full picker cards; filter popover shows FilterChips with filled variant + 38x22 .gmc-toggle for notable-only
+- ✅ **FilterChips**: new `filled` prop — active = teal fill + white text; inactive = neutral outlined; mutual exclusion between "All groups" and individual groups
+- ✅ **ComparisonSurface**: sticky segmented control now respects `--gmc-sticky-offset` CSS var; z-index 40
+- ✅ **ComparisonTable**: proper empty state ("No rows in this group for this pair.") with `Clear filters` button (`comparison-empty-clear`) that resets group + notable-only filters
+- ✅ **iOS anti-zoom**: global CSS forces text/search/email/tel/url/number/textarea/select to 16px font-size on `<768px`
+- ✅ **A11y**: global `:focus-visible` teal ring on all interactive elements
+- ✅ **SEO safety**: `<meta name="robots" content="noindex, nofollow">` added to `public/index.html`
+- ✅ Testing agent (iteration_2) — 35+ checks, 100% pass on both mobile (390x844) and desktop (1440x900) viewports
+
+
 ## Implemented (v4.0 — accents, logos, glossary, feedback)
 - ✅ v3 JSON bundled: per-insurer `accent` hexes (SC blue, nib green, AIA red, PL burgundy, UniMed teal-blue) and `logo` paths; per-feature `why`; per-cell `detail_points`; global `glossary` object (15 terms)
 - ✅ Real insurer logos extracted from supplied zip, trimmed with PIL, saved to `/app/frontend/public/logos/{sc,nib,aia,pl,uni}.png`; served via `<InsurerLogo>` in uniform tiles with initial-tile fallback
