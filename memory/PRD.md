@@ -39,7 +39,16 @@ Rebuilt as a **static, backend-less comparison tool** for Get My Cover (NZ), ren
 - Class-only trigger: `<button class="gmc-btn-primary gmc-quote-trigger">…</button>`
 - In this preview only: a document-level delegated listener (`App.js`) fires a Sonner toast so reviewers can see the click was received. It's not attached to the button element.
 
-## Implemented (v2.0 — Feb 2026 refactor)
+## Implemented (v3.0 — Feb 2026 layered UX)
+- ✅ v2 JSON schema bundled (`short`/`detail` per cell, `notable` per feature, `schema_version: 2`)
+- ✅ **Layer 1 — At a glance**: one card per notable feature (8), each with definition + per-insurer short value + verified icon; clicking opens detail modal
+- ✅ **Layer 2 — Table**: cells show ONLY `short` + tiny verified/pending icon; Core limits open by default, all others collapsed; "Notable differences only" toggle filters to `notable: true`; group filter chips (All + one per group); no horizontal scroll (stretches to container); mobile (<md) renders as stacked cards per feature
+- ✅ **Layer 3 — Detail modal**: opens on click of any at-a-glance card / table row / mobile row; shows group eyebrow, feature name, definition, per-insurer blocks (product, short-value pill, full `detail`, dotted-underline source citation, verified/pending badge), and a bottom `.gmc-quote-trigger` CTA labelled "Ask an adviser — free"
+- ✅ **`?embed=1` mode**: strips GmcNav, Hero, footer CTA card, and full standing Disclaimer; replaces with compact inline disclaimer to preserve compliance. Detected via `URLSearchParams` in `App.js`, propagated via `embed` prop to `ComparePage`
+- ✅ Static bundle rebuilt: 116KB JS + 10.9KB CSS gzipped
+- ✅ Brand kit unchanged: Plus Jakarta Sans, `#14B5AF` teal, no green, no prices/ratings/badges
+
+## Implemented (v2.0 — refactor)
 - ✅ All prohibited elements removed (prices, ratings, badges, pros/cons)
 - ✅ JSON bundled at build time
 - ✅ Product-type selector (Health live; Life/Trauma/Income/Mortgage placeholder)
