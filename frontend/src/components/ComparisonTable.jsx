@@ -26,6 +26,7 @@ export default function ComparisonTable({
   openGroups,
   flashFeature,
   onOpenFeature,
+  onClearFilters,
 }) {
   const grouped = useMemo(() => {
     const g = new Map();
@@ -100,11 +101,24 @@ export default function ComparisonTable({
     .filter(([, , visible]) => visible.length > 0);
 
   if (!visibleGrouped.length) {
+    const hasFilters = diffOnly || activeGroups.length > 0;
     return (
       <div className="gmc-card p-10 text-center" data-testid="comparison-empty">
-        <p style={{ color: "var(--gmc-body)" }}>
-          No features match your current filters.
+        <p className="text-[14px] font-semibold" style={{ color: "var(--gmc-ink)" }}>
+          {hasFilters
+            ? "No rows in this group for this pair."
+            : "No features match your current filters."}
         </p>
+        {hasFilters && (
+          <button
+            type="button"
+            className="gmc-btn-outline gmc-tap mt-4"
+            onClick={onClearFilters}
+            data-testid="comparison-empty-clear"
+          >
+            Clear filters
+          </button>
+        )}
       </div>
     );
   }

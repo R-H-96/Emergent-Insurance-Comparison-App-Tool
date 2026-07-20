@@ -284,6 +284,7 @@ export default function ComparePage({ embed = false, initialGroups = [] }) {
         onDiffOnlyChange={setDiffOnly}
         notableCount={notableCount}
         onOpenAsk={() => setAskOpen(true)}
+        hidden={askOpen || !!openFeature}
       />
 
       {embed ? (

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Users, MessageCircleQuestion } from "lucide-react";
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import MobileSheet from "@/components/MobileSheet";
 import useMediaQuery from "@/hooks/useMediaQuery";
 import ProductTypeSelector from "@/components/ProductTypeSelector";
 import InsurerPicker from "@/components/InsurerPicker";
@@ -8,7 +8,10 @@ import FilterChips from "@/components/FilterChips";
 
 /**
  * Mobile-only single bottom action bar (<1200px). Three slots:
- *   Compare (picker + filters sheet) · Ask (opens AskPanel via callback) · Adviser
+ *   Compare (picker + filters sheet) · Ask · Adviser
+ *
+ * Hidden while another sheet is open (askOpen or featureOpen) so it doesn't
+ * peek behind modal content. Safe-area-inset-bottom aware.
  */
 export default function MobileBottomBar({
   insurers,
@@ -24,21 +27,28 @@ export default function MobileBottomBar({
   onDiffOnlyChange,
   notableCount,
   onOpenAsk,
+  hidden = false,
 }) {
   const isMobile = !useMediaQuery("(min-width: 1200px)");
   const [compareOpen, setCompareOpen] = useState(false);
 
   if (!isMobile) return null;
 
+  const shouldHide = hidden || compareOpen;
+
   return (
     <>
       <div
-        className="fixed bottom-0 left-0 right-0 z-30 flex gap-2 p-2 print:hidden"
+        className="fixed bottom-0 left-0 right-0 z-30 flex gap-2 px-2 pt-2 print:hidden transition-transform duration-200 ease-out"
         style={{
-          background: "rgba(255,255,255,0.95)",
+          background: "rgba(255,255,255,0.96)",
           backdropFilter: "blur(12px)",
           borderTop: "1px solid var(--gmc-line)",
+          paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 8px)",
+          transform: shouldHide ? "translateY(120%)" : "translateY(0)",
+          visibility: shouldHide ? "hidden" : "visible",
         }}
+        aria-hidden={shouldHide}
         data-testid="mobile-bottom-bar"
       >
         <button
@@ -81,65 +91,15 @@ export default function MobileBottomBar({
         </button>
       </div>
 
-      <Sheet open={compareOpen} onOpenChange={setCompareOpen}>
-        <SheetContent
-          side="bottom"
-          className="bg-white rounded-t-[var(--gmc-r-card)] border-none max-h-[90vh] overflow-y-auto p-0"
-          data-testid="mbb-compare-sheet"
-        >
-          <SheetHeader
-            className="px-5 pt-5 pb-3 border-b"
-            style={{ borderColor: "var(--gmc-line)" }}
-          >
-            <SheetTitle
-              className="text-left text-lg font-extrabold"
-              style={{ color: "var(--gmc-ink)" }}
-            >
-              Change what you&apos;re comparing
-            </SheetTitle>
-          </SheetHeader>
-          <div className="p-5 space-y-6">
-            <ProductTypeSelector value={productType} onChange={onProductType} />
-            <InsurerPicker
-              insurers={allInsurers}
-              selected={insurers.map((i) => i.id)}
-              onToggle={onToggleInsurer}
-            />
-            <div>
-              <div className="gmc-eyebrow mb-2">Filter by group</div>
-              <FilterChips
-                groups={groups}
-                activeGroups={activeGroups}
-                onToggle={onToggleGroup}
-                onClear={onClearGroups}
-              />
-            </div>
-            <div
-              className="flex items-center justify-between p-3 rounded-[var(--gmc-r-ctl)]"
-              style={{ background: "var(--gmc-bg-alt)" }}
-            >
-              <div>
-                <div
-                  className="text-[13px] font-bold"
-                  style={{ color: "var(--gmc-ink)" }}
-                >
-                  Notable only
-                </div>
-                <div
-                  className="text-[12px]"
-                  style={{ color: "var(--gmc-muted)" }}
-                >
-                  {notableCount} for this pair
-                </div>
-              </div>
-              <button
-                type="button"
-                className="gmc-toggle gmc-tap"
-                aria-pressed={diffOnly}
-                onClick={() => onDiffOnlyChange(!diffOnly)}
-                data-testid="mbb-diff-toggle"
-              />
-            </div>
+      <MobileSheet
+        open={compareOpen}
+        onClose={() => setCompareOpen(false)}
+        title="Change comparison"
+        eyebrow="Compare"
+        testId="mbb-compare-sheet"
+        maxHeight="90vh"
+        footer={
+          <div className="p-4">
             <button
               type="button"
               className="gmc-btn-primary w-full gmc-tap"
@@ -149,8 +109,54 @@ export default function MobileBottomBar({
               Done
             </button>
           </div>
-        </SheetContent>
-      </Sheet>
+        }
+      >
+        <div className="p-5 space-y-6">
+          <ProductTypeSelector value={productType} onChange={onProductType} />
+          <InsurerPicker
+            insurers={allInsurers}
+            selected={insurers.map((i) => i.id)}
+            onToggle={onToggleInsurer}
+          />
+          <div>
+            <div className="gmc-eyebrow mb-2">Filter by group</div>
+            <FilterChips
+              groups={groups}
+              activeGroups={activeGroups}
+              onToggle={onToggleGroup}
+              onClear={onClearGroups}
+              filled
+            />
+          </div>
+          <div
+            className="flex items-center justify-between p-3 rounded-[var(--gmc-r-ctl)]"
+            style={{ background: "var(--gmc-bg-alt)" }}
+          >
+            <div>
+              <div
+                className="text-[14px] font-bold"
+                style={{ color: "var(--gmc-ink)" }}
+              >
+                Notable only
+              </div>
+              <div
+                className="text-[12px]"
+                style={{ color: "var(--gmc-muted)" }}
+              >
+                {notableCount} for this pair
+              </div>
+            </div>
+            <button
+              type="button"
+              className="gmc-toggle gmc-tap"
+              aria-pressed={diffOnly}
+              onClick={() => onDiffOnlyChange(!diffOnly)}
+              data-testid="mbb-diff-toggle"
+              aria-label="Toggle notable only"
+            />
+          </div>
+        </div>
+      </MobileSheet>
     </>
   );
 }

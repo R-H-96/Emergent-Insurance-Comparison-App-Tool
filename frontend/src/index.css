@@ -367,6 +367,32 @@ body {
   min-width: 44px;
 }
 
+/* Prevent iOS auto-zoom on input focus — inputs must be >= 16px */
+@media (max-width: 767px) {
+  input[type="text"],
+  input[type="search"],
+  input[type="email"],
+  input[type="tel"],
+  input[type="url"],
+  input[type="number"],
+  textarea,
+  select {
+    font-size: 16px !important;
+  }
+}
+
+/* Global focus-visible ring for keyboard nav */
+button:focus-visible,
+a:focus-visible,
+[role="button"]:focus-visible,
+[role="tab"]:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(20, 181, 175, 0.35);
+}
+
 /* Print stylesheet — clean, ink-friendly comparison table */
 @media print {
   body { background: white; }

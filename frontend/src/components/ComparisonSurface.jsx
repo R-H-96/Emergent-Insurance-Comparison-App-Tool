@@ -66,10 +66,10 @@ export default function ComparisonSurface({
       <div className="gmc-container">
         <InsurerStrip insurers={insurers} onChange={onOpenPicker} />
 
-        {/* Sticky segmented control */}
+        {/* Sticky segmented control — offset supports floating nav via --gmc-sticky-offset */}
         <div
-          className="sticky z-20 py-3 -mx-4 px-4 sm:mx-0 sm:px-0"
-          style={{ top: 0, background: "var(--gmc-bg)" }}
+          className="sticky z-[40] py-3 -mx-4 px-4 sm:mx-0 sm:px-0"
+          style={{ top: "var(--gmc-sticky-offset, 0px)", background: "var(--gmc-bg)" }}
           data-testid="density-sticky"
         >
           <div className="flex flex-wrap items-center gap-3 justify-between">
@@ -180,6 +180,10 @@ export default function ComparisonSurface({
                   openGroups={preOpenGroups}
                   flashFeature={flashFeature}
                   onOpenFeature={onOpenFeature}
+                  onClearFilters={() => {
+                    onClearGroups();
+                    if (diffOnly) onDiffOnlyChange(false);
+                  }}
                 />
               )}
             </motion.div>

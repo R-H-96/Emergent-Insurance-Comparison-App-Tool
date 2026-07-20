@@ -13,10 +13,7 @@ import FilterChips from "@/components/FilterChips";
 
 /**
  * Desktop-only right rail (>= 1200px). A control dock, no anchor links.
- * Insurer chips + Filter icon open anchored popovers containing the
- * respective controls (live edits). Ask icon toggles the AskPanel drawer.
- * Share icon triggers the share callback.
- *
+ * Icons/logos only — every element exposes its label via a hover tooltip.
  * Below 1200px this renders nothing — the MobileBottomBar takes over.
  */
 export default function ControlDock({
@@ -45,44 +42,44 @@ export default function ControlDock({
 
   return (
     <div
-      className="fixed right-4 top-1/2 -translate-y-1/2 z-40"
+      className="fixed right-4 top-1/2 -translate-y-1/2 z-[60]"
       data-testid="control-dock"
     >
       <div
-        className="flex flex-col gap-1.5 p-2 rounded-full"
+        className="flex flex-col gap-2 p-2.5 rounded-full"
         style={{
-          background: "rgba(255,255,255,0.9)",
+          background: "rgba(255,255,255,0.92)",
           border: "1px solid var(--gmc-line)",
           backdropFilter: "blur(14px)",
           boxShadow: "0 12px 40px rgba(22,28,39,0.10)",
         }}
       >
-        {/* Insurer chips (open picker popover) */}
+        {/* Insurer picker trigger */}
         <Popover open={pickerOpen} onOpenChange={onPickerOpenChange}>
           <PopoverTrigger asChild>
             <button
               type="button"
-              className="group relative gmc-tap flex items-center justify-center w-11 h-11 rounded-full transition-colors hover:bg-[color:var(--gmc-teal-tint)]"
+              className="group relative gmc-tap flex items-center justify-center w-14 h-14 rounded-full transition-colors hover:bg-[color:var(--gmc-teal-tint)]"
               data-testid="dock-insurers"
               aria-label="Change insurers"
             >
               <Users
-                className="w-[18px] h-[18px]"
+                className="w-6 h-6"
                 strokeWidth={2.2}
                 style={{ color: "var(--gmc-teal-deep)" }}
               />
-              <RailLabel>Insurers</RailLabel>
+              <RailLabel>Change insurers</RailLabel>
             </button>
           </PopoverTrigger>
           <PopoverContent
             side="left"
             align="center"
             sideOffset={12}
-            className="w-[520px] max-w-[92vw] max-h-[80vh] overflow-y-auto p-5 bg-white rounded-[var(--gmc-r-card)] border shadow-[0_20px_60px_rgba(22,28,39,0.16)]"
+            className="w-[600px] max-w-[92vw] max-h-[80vh] overflow-y-auto p-6 bg-white rounded-[var(--gmc-r-card)] border shadow-[0_20px_60px_rgba(22,28,39,0.16)] z-[70]"
             style={{ borderColor: "var(--gmc-line)" }}
             data-testid="dock-picker-popover"
           >
-            <div className="space-y-5">
+            <div className="space-y-6">
               <ProductTypeSelector value={productType} onChange={onProductType} />
               <InsurerPicker
                 insurers={allInsurers}
@@ -93,35 +90,36 @@ export default function ControlDock({
           </PopoverContent>
         </Popover>
 
-        {/* Individual insurer chips */}
+        {/* Individual insurer chips — logo only, larger */}
         {insurers.map((ins) => (
           <button
             key={ins.id}
             type="button"
             onClick={() => onPickerOpenChange(true)}
-            className="group relative gmc-tap flex items-center justify-center w-11 h-11 rounded-full"
+            className="group relative gmc-tap flex items-center justify-center w-14 h-14 rounded-full bg-white"
             style={{ boxShadow: `inset 0 0 0 2px ${ins.accent || "var(--gmc-teal)"}` }}
-            aria-label={`Change ${ins.name}`}
+            aria-label={`${ins.name} — change insurer`}
             data-testid={`dock-chip-${ins.id}`}
           >
-            <InsurerLogo insurer={ins} size={26} />
+            <InsurerLogo insurer={ins} size={34} />
             <RailLabel>{ins.name}</RailLabel>
           </button>
         ))}
 
-        <div className="h-px my-1 mx-2" style={{ background: "var(--gmc-line)" }} />
+        <div className="h-px my-1 mx-3" style={{ background: "var(--gmc-line)" }} />
 
         {/* Filter popover */}
         <Popover open={filterOpen} onOpenChange={setFilterOpen}>
           <PopoverTrigger asChild>
             <button
               type="button"
-              className="group relative gmc-tap flex items-center justify-center w-11 h-11 rounded-full transition-colors hover:bg-[color:var(--gmc-teal-tint)]"
+              className="group relative gmc-tap flex items-center justify-center w-14 h-14 rounded-full transition-colors hover:bg-[color:var(--gmc-teal-tint)]"
               data-testid="dock-filter"
               aria-label="Filter groups"
+              aria-expanded={filterOpen}
             >
               <Filter
-                className="w-[18px] h-[18px]"
+                className="w-6 h-6"
                 strokeWidth={2.2}
                 style={{ color: "var(--gmc-teal-deep)" }}
               />
@@ -132,7 +130,7 @@ export default function ControlDock({
             side="left"
             align="center"
             sideOffset={12}
-            className="w-[360px] max-h-[80vh] overflow-y-auto p-5 bg-white rounded-[var(--gmc-r-card)] border shadow-[0_20px_60px_rgba(22,28,39,0.16)]"
+            className="w-[380px] max-h-[80vh] overflow-y-auto p-5 bg-white rounded-[var(--gmc-r-card)] border shadow-[0_20px_60px_rgba(22,28,39,0.16)] z-[70]"
             style={{ borderColor: "var(--gmc-line)" }}
             data-testid="dock-filter-popover"
           >
@@ -142,14 +140,15 @@ export default function ControlDock({
               activeGroups={activeGroups}
               onToggle={onToggleGroup}
               onClear={onClearGroups}
+              filled
             />
             <div
-              className="mt-4 pt-4 border-t flex items-center justify-between"
+              className="mt-5 pt-4 border-t flex items-center justify-between"
               style={{ borderColor: "var(--gmc-line)" }}
             >
               <div>
                 <div
-                  className="text-[13px] font-bold"
+                  className="text-[14px] font-bold"
                   style={{ color: "var(--gmc-ink)" }}
                 >
                   Notable only
@@ -166,6 +165,7 @@ export default function ControlDock({
                 className="gmc-toggle gmc-tap"
                 aria-pressed={diffOnly}
                 onClick={() => onDiffOnlyChange(!diffOnly)}
+                aria-label="Toggle notable only"
                 data-testid="dock-diff-toggle"
               />
             </div>
@@ -176,7 +176,7 @@ export default function ControlDock({
         <button
           type="button"
           onClick={onToggleAsk}
-          className="group relative gmc-tap flex items-center justify-center w-11 h-11 rounded-full transition-colors hover:bg-[color:var(--gmc-teal-tint)]"
+          className="group relative gmc-tap flex items-center justify-center w-14 h-14 rounded-full transition-colors hover:bg-[color:var(--gmc-teal-tint)]"
           style={{
             background: askOpen ? "var(--gmc-teal-tint)" : "transparent",
           }}
@@ -185,29 +185,29 @@ export default function ControlDock({
           aria-pressed={askOpen}
         >
           <MessageCircleQuestion
-            className="w-[18px] h-[18px]"
+            className="w-6 h-6"
             strokeWidth={2.2}
             style={{ color: "var(--gmc-teal-deep)" }}
           />
-          <RailLabel>Ask</RailLabel>
+          <RailLabel>Ask a question</RailLabel>
         </button>
 
-        <div className="h-px my-1 mx-2" style={{ background: "var(--gmc-line)" }} />
+        <div className="h-px my-1 mx-3" style={{ background: "var(--gmc-line)" }} />
 
         {/* Share */}
         <button
           type="button"
           onClick={onShare}
-          className="group relative gmc-tap flex items-center justify-center w-11 h-11 rounded-full transition-colors hover:bg-[color:var(--gmc-teal-tint)]"
+          className="group relative gmc-tap flex items-center justify-center w-14 h-14 rounded-full transition-colors hover:bg-[color:var(--gmc-teal-tint)]"
           data-testid="dock-share"
           aria-label="Share this comparison"
         >
           <Share2
-            className="w-[18px] h-[18px]"
+            className="w-6 h-6"
             strokeWidth={2.2}
             style={{ color: "var(--gmc-teal-deep)" }}
           />
-          <RailLabel>Share</RailLabel>
+          <RailLabel>Share link</RailLabel>
         </button>
       </div>
     </div>

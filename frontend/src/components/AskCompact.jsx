@@ -31,11 +31,11 @@ export default function AskCompact({ askState, examples, onResultScroll }) {
           data-testid="ask-compact-form"
         >
           <div
-            className="flex-1 flex items-center gap-2 h-11 gmc-tap px-3 rounded-[var(--gmc-r-ctl)] border-[1.5px] bg-white transition"
+            className="flex-1 flex items-center gap-2 min-h-[48px] px-3 rounded-[var(--gmc-r-ctl)] border-2 bg-white transition"
             style={{
               borderColor: focused
                 ? "var(--gmc-teal)"
-                : "var(--gmc-line-soft)",
+                : "var(--gmc-line)",
               boxShadow: focused ? "var(--gmc-focus-ring)" : "none",
             }}
           >
@@ -51,7 +51,7 @@ export default function AskCompact({ askState, examples, onResultScroll }) {
               onFocus={() => setFocused(true)}
               onBlur={() => setFocused(false)}
               placeholder={placeholder}
-              className="flex-1 bg-transparent text-[14px] focus:outline-none"
+              className="flex-1 bg-transparent text-[16px] focus:outline-none"
               style={{ color: "var(--gmc-ink)" }}
               maxLength={500}
               aria-label="Ask anything about these policies"
