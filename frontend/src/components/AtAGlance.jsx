@@ -1,12 +1,13 @@
 import { Sparkles, ArrowRight } from "lucide-react";
 import { VerifiedIcon } from "@/components/VerifiedBadge";
 import GlossaryText from "@/components/GlossaryText";
+import { isNotableForSelection } from "@/lib/notable";
 
 /**
- * One card per notable feature. Shows the definition, a mini grid of
- * insurer short values (with accent-coloured left stripe + name), the
- * feature's `why` line, and an outlined "Read the full detail" button.
- * The whole card is clickable (mouse + keyboard).
+ * One card per feature that's notable AND whose signal differs across the
+ * currently selected insurers. Shows definition, a mini grid of insurer short
+ * values (with accent left stripes + name), the feature's `why` line, and an
+ * outlined "Read the full detail" button. Whole card is clickable.
  */
 export default function AtAGlance({
   features,
@@ -16,8 +17,10 @@ export default function AtAGlance({
   notableCount,
   onOpen,
 }) {
-  const notable = features.filter((f) => f.notable);
-  if (!notable.length || !insurers.length) return null;
+  const notable = features.filter((f) =>
+    isNotableForSelection(f, insurers, lookup),
+  );
+  if (!insurers.length) return null;
 
   return (
     <section
@@ -41,14 +44,28 @@ export default function AtAGlance({
             }}
             data-testid="notable-count-chip"
           >
-            {notableCount} notable differences found
+            {notableCount} notable difference{notableCount === 1 ? "" : "s"} found
           </span>
         </div>
         <h2 className="gmc-h2 text-2xl sm:text-3xl mb-6">
           The things people usually ask about
         </h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {notable.length === 0 ? (
+          <div
+            className="gmc-card p-6 sm:p-8 text-center"
+            data-testid="at-a-glance-empty"
+          >
+            <p
+              className="text-[14px]"
+              style={{ color: "var(--gmc-body)" }}
+            >
+              These policies agree on the notable points for this selection —
+              switch an insurer to surface the interesting differences.
+            </p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {notable.map((f) => (
             <div
               key={f.feature}
@@ -146,7 +163,8 @@ export default function AtAGlance({
               </div>
             </div>
           ))}
-        </div>
+          </div>
+        )}
       </div>
     </section>
   );

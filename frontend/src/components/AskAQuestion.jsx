@@ -1,70 +1,37 @@
 import { useState } from "react";
-import { MessageCircleQuestion, Check, ArrowRight, Search } from "lucide-react";
+import {
+  MessageCircleQuestion,
+  Check,
+  ArrowRight,
+  Search,
+} from "lucide-react";
 import CTA from "@/components/CTA";
 import InsurerLogo from "@/components/InsurerLogo";
-import { matchQuestion } from "@/lib/askEngine";
-
-const STORAGE_KEY = "gmc_feedback_questions";
-const DEFERRED_SHIMMER_MS = 800;
+import GlossaryText from "@/components/GlossaryText";
+import useRotatingPlaceholder from "@/hooks/useRotatingPlaceholder";
 
 /**
- * "Ask a question" panel. On submit:
- *  1. Persist question to localStorage
- *  2. Show a shimmer for ~800ms
- *  3. Deterministic client-side keyword-match against features/definitions/glossary
- *  4. If matched: render a result card with per-insurer short values and a
- *     "Show me in the table" button (scrolls + flash-highlights the row and
- *     can open the detail modal). If no match: show the adviser fallback.
+ * Full-width "Ask a question" section. Uses the shared askState from the
+ * parent (so the compact bar and full section stay in sync). Shows shimmer,
+ * match card, or fallback based on status. Placeholder cycles through the
+ * JSON's example_questions.
  */
 export default function AskAQuestion({
-  features,
-  data,
+  askState,
+  examples,
   glossary,
   insurers,
   lookup,
-  onLocate, // (featureName) => void — scroll+flash the table row
-  onOpenFeature, // (featureName) => void — open the detail modal
+  onLocate,
+  onOpenFeature,
 }) {
-  const [question, setQuestion] = useState("");
-  const [status, setStatus] = useState("idle"); // idle | searching | match | nomatch
-  const [result, setResult] = useState(null);
-
-  const persist = (q) => {
-    try {
-      const raw = window.localStorage.getItem(STORAGE_KEY);
-      const list = raw ? JSON.parse(raw) : [];
-      list.push({
-        q,
-        at: new Date().toISOString(),
-        path: typeof window !== "undefined" ? window.location.pathname : "",
-      });
-      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
-    } catch (_err) {
-      // storage full / disabled — ignore
-    }
-  };
-
-  const reset = () => {
-    setStatus("idle");
-    setResult(null);
-  };
+  const { question, setQuestion, status, result, submit, reset } = askState;
+  const [focused, setFocused] = useState(false);
+  const placeholder = useRotatingPlaceholder(examples, { focused });
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const q = question.trim();
-    if (!q) return;
-    persist(q);
-    setStatus("searching");
-    setResult(null);
-    setTimeout(() => {
-      const match = matchQuestion(q, { features, data, glossary });
-      if (match) {
-        setResult(match);
-        setStatus("match");
-      } else {
-        setStatus("nomatch");
-      }
-    }, DEFERRED_SHIMMER_MS);
+    submit();
   };
 
   return (
@@ -101,22 +68,24 @@ export default function AskAQuestion({
                 setQuestion(e.target.value);
                 if (status !== "idle") reset();
               }}
-              placeholder="e.g. Does any of these cover ADHD assessments?"
+              onFocus={() => setFocused(true)}
+              onBlur={() => setFocused(false)}
+              placeholder={placeholder}
               className="flex-1 h-11 gmc-tap px-4 rounded-[var(--gmc-r-ctl)] border-[1.5px] bg-white text-[14px] focus:outline-none focus:border-[color:var(--gmc-teal)] focus:ring-2 focus:ring-[color:var(--gmc-teal)]/20 transition"
               style={{
                 borderColor: "var(--gmc-line-soft)",
                 color: "var(--gmc-ink)",
               }}
+              aria-label="Ask a question about these policies"
               data-testid="ask-input"
               maxLength={500}
-              required
               disabled={status === "searching"}
             />
             <button
               type="submit"
               className="gmc-btn-secondary h-11 gmc-tap"
               data-testid="ask-submit"
-              disabled={status === "searching"}
+              disabled={!question.trim() || status === "searching"}
             >
               <Search className="w-4 h-4" strokeWidth={2.2} />
               Search policies
@@ -139,22 +108,29 @@ export default function AskAQuestion({
               result={result}
               insurers={insurers}
               lookup={lookup}
+              glossary={glossary}
               onLocate={onLocate}
               onOpenFeature={onOpenFeature}
               onAskAnother={reset}
             />
           )}
 
-          {status === "nomatch" && (
-            <NoMatch onAskAnother={reset} />
-          )}
+          {status === "nomatch" && <NoMatch onAskAnother={reset} />}
         </div>
       </div>
     </section>
   );
 }
 
-function MatchResult({ result, insurers, lookup, onLocate, onOpenFeature, onAskAnother }) {
+function MatchResult({
+  result,
+  insurers,
+  lookup,
+  glossary,
+  onLocate,
+  onOpenFeature,
+  onAskAnother,
+}) {
   const { feature } = result;
   return (
     <div
@@ -164,6 +140,7 @@ function MatchResult({ result, insurers, lookup, onLocate, onOpenFeature, onAskA
         background: "var(--gmc-teal-tint)",
       }}
       data-testid="ask-match"
+      aria-live="polite"
     >
       <div
         className="text-[11px] font-bold uppercase tracking-[0.1em]"
@@ -177,12 +154,12 @@ function MatchResult({ result, insurers, lookup, onLocate, onOpenFeature, onAskA
       >
         Here&apos;s what the policies say about {feature.feature}
       </div>
-      <p
+      <GlossaryText
+        tag="p"
+        text={feature.definition}
+        glossary={glossary}
         className="text-[13px] mt-1 leading-relaxed"
-        style={{ color: "var(--gmc-body)" }}
-      >
-        {feature.definition}
-      </p>
+      />
 
       <div
         className="mt-4 grid gap-2"
@@ -215,7 +192,9 @@ function MatchResult({ result, insurers, lookup, onLocate, onOpenFeature, onAskA
                 className="text-[13px] font-semibold leading-snug"
                 style={{ color: "var(--gmc-ink-2)" }}
               >
-                {entry?.short || (
+                {entry?.short ? (
+                  <GlossaryText text={entry.short} glossary={glossary} />
+                ) : (
                   <span
                     className="italic font-normal"
                     style={{ color: "var(--gmc-faint)" }}
@@ -266,6 +245,7 @@ function NoMatch({ onAskAnother }) {
       className="flex flex-col sm:flex-row sm:items-center gap-4 justify-between p-4 rounded-[var(--gmc-r-ctl)] gmc-fade-in"
       style={{ background: "var(--gmc-teal-tint)" }}
       data-testid="ask-nomatch"
+      aria-live="polite"
     >
       <div className="flex items-start gap-2">
         <div

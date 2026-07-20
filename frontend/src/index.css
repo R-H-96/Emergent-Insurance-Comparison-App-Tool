@@ -366,3 +366,38 @@ body {
   min-height: 44px;
   min-width: 44px;
 }
+
+/* Print stylesheet — clean, ink-friendly comparison table */
+@media print {
+  body { background: white; }
+  .gmc-nav,
+  [data-testid="hero-section"],
+  [data-testid="tool-rail-desktop"],
+  [data-testid="mobile-tool-pill"],
+  [data-testid="mobile-sticky-cta"],
+  [data-testid="mobile-tool-sheet"],
+  [data-testid="ask-compact-section"],
+  [data-testid="ask-section"],
+  [data-testid="cta-section"],
+  [data-testid="product-type-section"],
+  [data-testid="insurer-picker-section"],
+  [data-testid="site-footer"],
+  .gmc-btn-primary,
+  .gmc-btn-secondary,
+  .gmc-btn-outline {
+    display: none !important;
+  }
+  .print\:hidden { display: none !important; }
+  [data-testid="comparison-table"] {
+    border: 1px solid #999 !important;
+    box-shadow: none !important;
+    page-break-inside: auto;
+  }
+  [data-testid="comparison-table"] > div {
+    page-break-inside: avoid;
+  }
+  a { color: inherit; text-decoration: underline; }
+  .gmc-notable-row {
+    box-shadow: inset 4px 0 0 #000 !important;
+  }
+}

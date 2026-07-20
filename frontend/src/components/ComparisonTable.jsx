@@ -3,6 +3,8 @@ import { ChevronDown, ChevronRight } from "lucide-react";
 import { VerifiedIcon } from "@/components/VerifiedBadge";
 import GlossaryText from "@/components/GlossaryText";
 import InsurerLogo from "@/components/InsurerLogo";
+import { isNotableForSelection } from "@/lib/notable";
+import { pushEvent } from "@/lib/analytics";
 
 // Turn "#RRGGBB" into "rgba(r,g,b,alpha)"
 function hexToRgba(hex, alpha) {
@@ -90,7 +92,9 @@ export default function ComparisonTable({
       activeGroups.length === 0 ? true : activeGroups.includes(group),
     )
     .map(([group, feats]) => {
-      const visible = diffOnly ? feats.filter((f) => f.notable) : feats;
+      const visible = diffOnly
+        ? feats.filter((f) => isNotableForSelection(f, insurers, lookup))
+        : feats;
       return [group, feats, visible];
     })
     .filter(([, , visible]) => visible.length > 0);
@@ -215,12 +219,13 @@ export default function ComparisonTable({
               {!isCollapsed &&
                 visibleFeats.map((f) => {
                   const isFlashing = flashFeature === f.feature;
+                  const isNotablePair = isNotableForSelection(f, insurers, lookup);
                   return (
                     <div
                       key={f.feature}
                       id={rowId(f.feature)}
                       className={`grid group cursor-pointer transition-colors hover:bg-[color:var(--gmc-teal-tint)] ${
-                        f.notable ? "gmc-notable-row" : ""
+                        isNotablePair ? "gmc-notable-row" : ""
                       } ${isFlashing ? "gmc-flash" : ""}`}
                       style={{
                         gridTemplateColumns: gridTemplate,
@@ -335,12 +340,13 @@ export default function ComparisonTable({
               {!isCollapsed &&
                 visibleFeats.map((f) => {
                   const isFlashing = flashFeature === f.feature;
+                  const isNotablePair = isNotableForSelection(f, insurers, lookup);
                   return (
                     <div
                       key={f.feature}
                       id={rowId(f.feature)}
                       className={`p-4 border-t cursor-pointer ${
-                        f.notable ? "gmc-notable-row" : ""
+                        isNotablePair ? "gmc-notable-row" : ""
                       } ${isFlashing ? "gmc-flash" : ""}`}
                       style={{
                         borderColor: "var(--gmc-line)",

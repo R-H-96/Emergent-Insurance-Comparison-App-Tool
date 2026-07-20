@@ -12,19 +12,22 @@ import ComparisonTable from "@/components/ComparisonTable";
 import DetailModal from "@/components/DetailModal";
 import Disclaimer from "@/components/Disclaimer";
 import TrustStrip from "@/components/TrustStrip";
+import TrustLine from "@/components/TrustLine";
 import CTA from "@/components/CTA";
 import AskAQuestion from "@/components/AskAQuestion";
+import AskCompact from "@/components/AskCompact";
 import ToolNav from "@/components/ToolNav";
+import useAskEngine from "@/hooks/useAskEngine";
+import { countNotableForSelection } from "@/lib/notable";
+import { pushEvent } from "@/lib/analytics";
 
 const LS_KEY = "gmc_last_selection";
 const VALID_INSURER_IDS = new Set(data.insurers.map((i) => i.id));
 const VALID_GROUPS = new Set(data.features.map((f) => f.group));
 
-/** Read URL/localStorage/defaults into a single initial state. URL wins. */
-function readInitialState(initialGroupsFromApp) {
+function readInitialState() {
   const params = new URLSearchParams(window.location.search);
 
-  // Insurers
   let insurerIds = null;
   const insurersParam = params.get("insurers");
   if (insurersParam) {
@@ -35,12 +38,10 @@ function readInitialState(initialGroupsFromApp) {
     if (insurerIds.length < 2 || insurerIds.length > 3) insurerIds = null;
   }
 
-  // Diff toggle
   const diffParam = params.get("diff");
   let diffOnly = null;
   if (diffParam !== null) diffOnly = diffParam === "1" || diffParam === "true";
 
-  // Filter groups (chip filter) — separate from initialGroupsFromApp (pre-open)
   let activeGroups = null;
   const groupsParam = params.get("groups");
   if (groupsParam) {
@@ -50,7 +51,6 @@ function readInitialState(initialGroupsFromApp) {
       .filter((g) => VALID_GROUPS.has(g));
   }
 
-  // Fallback to localStorage
   let stored = null;
   try {
     const raw = window.localStorage.getItem(LS_KEY);
@@ -78,7 +78,7 @@ function readInitialState(initialGroupsFromApp) {
 }
 
 export default function ComparePage({ embed = false, initialGroups = [] }) {
-  const initial = useMemo(() => readInitialState(initialGroups), []);
+  const initial = useMemo(() => readInitialState(), []);
 
   const [productType, setProductType] = useState("health");
   const [selected, setSelected] = useState(initial.insurers);
@@ -89,6 +89,7 @@ export default function ComparePage({ embed = false, initialGroups = [] }) {
   const [linkCopied, setLinkCopied] = useState(false);
 
   const flashTimer = useRef(null);
+  const firstMount = useRef(true);
 
   // Persist state to URL + localStorage
   useEffect(() => {
@@ -114,8 +115,14 @@ export default function ComparePage({ embed = false, initialGroups = [] }) {
           savedAt: Date.now(),
         }),
       );
-    } catch (_err) {
-      // storage disabled — ignore
+    } catch (_err) { /* storage disabled */ }
+
+    // gmc_select_insurers analytics (skip the first mount so we don't
+    // spam on page load — only actual user changes count).
+    if (firstMount.current) {
+      firstMount.current = false;
+    } else {
+      pushEvent("gmc_select_insurers", { insurers: selected });
     }
   }, [productType, selected, diffOnly, activeGroups]);
 
@@ -148,14 +155,21 @@ export default function ComparePage({ embed = false, initialGroups = [] }) {
   }, []);
 
   const notableCount = useMemo(
-    () => data.features.filter((f) => f.notable).length,
-    [],
+    () => countNotableForSelection(data.features, selectedInsurers, lookup),
+    [selectedInsurers, lookup],
   );
 
   const currentFeature = useMemo(
     () => data.features.find((f) => f.feature === openFeature) || null,
     [openFeature],
   );
+
+  const askState = useAskEngine({
+    features: data.features,
+    data: data.data,
+    glossary: data.glossary,
+    synonyms: data.synonyms,
+  });
 
   const toggleInsurer = (id) => {
     setSelected((prev) => {
@@ -180,11 +194,15 @@ export default function ComparePage({ embed = false, initialGroups = [] }) {
         ? activeGroups
         : undefined;
 
+  const openFeatureAndTrack = (featureName) => {
+    setOpenFeature(featureName);
+    pushEvent("gmc_modal_open", { feature: featureName });
+  };
+
   const locateFeature = (featureName) => {
     const rowId = `row-${featureName.replace(/\s+/g, "-").toLowerCase()}`;
-    // Ensure filters won't hide the row: clear diffOnly if that row is not notable
     const feat = data.features.find((f) => f.feature === featureName);
-    if (feat && !feat.notable && diffOnly) setDiffOnly(false);
+    if (feat && diffOnly) setDiffOnly(false);
     if (feat && activeGroups.length > 0 && !activeGroups.includes(feat.group)) {
       setActiveGroups([]);
     }
@@ -197,15 +215,29 @@ export default function ComparePage({ embed = false, initialGroups = [] }) {
     }, 50);
   };
 
-  const copyShareLink = async () => {
+  const share = async () => {
     const url = window.location.href;
+    const shareData = {
+      title: "Compare NZ health insurance",
+      text: "Have a look at this side-by-side comparison",
+      url,
+    };
+    pushEvent("gmc_share", { method: "trigger", url });
+    if (typeof navigator !== "undefined" && navigator.share) {
+      try {
+        await navigator.share(shareData);
+        pushEvent("gmc_share", { method: "native" });
+        return;
+      } catch (_err) { /* user cancelled or unsupported — fall through */ }
+    }
     try {
       await navigator.clipboard.writeText(url);
       setLinkCopied(true);
-      toast.success("Link copied");
+      toast.success("Copied!");
+      pushEvent("gmc_share", { method: "clipboard" });
       setTimeout(() => setLinkCopied(false), 1600);
     } catch (_err) {
-      toast.error("Could not copy — long-press the address bar instead.");
+      toast.error("Could not share — long-press the address bar instead.");
     }
   };
 
@@ -234,6 +266,7 @@ export default function ComparePage({ embed = false, initialGroups = [] }) {
         onScrollToTable={() => scrollTo("full-comparison")}
         onScrollToGlance={() => scrollTo("at-a-glance")}
         onScrollToAsk={() => scrollTo("ask-a-question")}
+        onShare={share}
       />
 
       <section
@@ -247,7 +280,7 @@ export default function ComparePage({ embed = false, initialGroups = [] }) {
 
       <section
         id="insurer-picker"
-        className="pb-8 sm:pb-12"
+        className="pb-8 sm:pb-10"
         data-testid="insurer-picker-section"
       >
         <div className="gmc-container">
@@ -259,13 +292,19 @@ export default function ComparePage({ embed = false, initialGroups = [] }) {
         </div>
       </section>
 
+      <AskCompact
+        askState={askState}
+        examples={data.example_questions || []}
+        onResultScroll={() => scrollTo("ask-a-question")}
+      />
+
       <AtAGlance
         features={data.features}
         insurers={selectedInsurers}
         lookup={lookup}
         glossary={data.glossary}
         notableCount={notableCount}
-        onOpen={(featureName) => setOpenFeature(featureName)}
+        onOpen={openFeatureAndTrack}
       />
 
       <section
@@ -274,6 +313,7 @@ export default function ComparePage({ embed = false, initialGroups = [] }) {
         data-testid="comparison-table-section"
       >
         <div className="gmc-container">
+          <TrustLine data={data.data} />
           <div className="flex flex-col gap-4 mb-6">
             <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
               <div>
@@ -287,8 +327,8 @@ export default function ComparePage({ embed = false, initialGroups = [] }) {
                 >
                   Tap any row to see the full policy wording, source citation
                   and verification status. Terms with a dotted underline have a
-                  quick definition — tap them. Notable rows are marked with a
-                  teal edge.
+                  quick definition — tap them. Notable-difference rows are
+                  marked with a teal edge.
                 </p>
               </div>
               <div className="flex flex-wrap items-center gap-2 self-start sm:self-auto">
@@ -305,21 +345,21 @@ export default function ComparePage({ embed = false, initialGroups = [] }) {
                     aria-hidden="true"
                     tabIndex={-1}
                   />
-                  Notable only
+                  Notable only ({notableCount})
                 </button>
                 <button
                   type="button"
                   className="gmc-chip gmc-tap"
-                  onClick={copyShareLink}
+                  onClick={share}
                   data-testid="copy-link-btn"
-                  aria-label="Copy link to this comparison"
+                  aria-label="Share this comparison"
                 >
                   {linkCopied ? (
                     <Check className="w-3.5 h-3.5" strokeWidth={2.5} />
                   ) : (
                     <Copy className="w-3.5 h-3.5" strokeWidth={2.2} />
                   )}
-                  {linkCopied ? "Copied" : "Copy link"}
+                  {linkCopied ? "Copied" : "Share"}
                 </button>
               </div>
             </div>
@@ -341,19 +381,19 @@ export default function ComparePage({ embed = false, initialGroups = [] }) {
             activeGroups={activeGroups}
             openGroups={preOpenGroups}
             flashFeature={flashFeature}
-            onOpenFeature={(featureName) => setOpenFeature(featureName)}
+            onOpenFeature={openFeatureAndTrack}
           />
         </div>
       </section>
 
       <AskAQuestion
-        features={data.features}
-        data={data.data}
+        askState={askState}
+        examples={data.example_questions || []}
         glossary={data.glossary}
         insurers={selectedInsurers}
         lookup={lookup}
         onLocate={locateFeature}
-        onOpenFeature={(featureName) => setOpenFeature(featureName)}
+        onOpenFeature={openFeatureAndTrack}
       />
 
       {!embed && (
@@ -417,7 +457,7 @@ export default function ComparePage({ embed = false, initialGroups = [] }) {
       )}
 
       {/* Bottom spacer so the sticky mobile CTA doesn't hide footer content */}
-      <div className="h-20 md:hidden" aria-hidden="true" />
+      <div className="h-20 md:hidden print:hidden" aria-hidden="true" />
 
       <DetailModal
         feature={currentFeature}
@@ -429,7 +469,7 @@ export default function ComparePage({ embed = false, initialGroups = [] }) {
 
       {/* Mobile sticky bottom adviser CTA */}
       <div
-        className="md:hidden fixed bottom-0 left-0 right-0 z-30 p-3"
+        className="md:hidden fixed bottom-0 left-0 right-0 z-30 p-3 print:hidden"
         style={{
           background: "rgba(255,255,255,0.9)",
           backdropFilter: "blur(12px)",

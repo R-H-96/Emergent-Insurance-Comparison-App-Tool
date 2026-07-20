@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import { toast, Toaster } from "sonner";
 import ComparePage from "@/pages/ComparePage";
 import data from "@/data/gmc_tool_data.json";
+import { pushEvent } from "@/lib/analytics";
 
 function App() {
   const [urlState, setUrlState] = useState({ embed: false, groups: [] });
@@ -31,6 +32,10 @@ function App() {
     const handler = (e) => {
       const target = e.target.closest(".gmc-quote-trigger");
       if (!target) return;
+      pushEvent("gmc_cta_click", {
+        label: (target.textContent || "").trim().slice(0, 80),
+        path: window.location.pathname,
+      });
       toast.message("Adviser booking modal", {
         description:
           "On the live GMC site the global modal opens here — this preview intentionally has no per-button handler.",

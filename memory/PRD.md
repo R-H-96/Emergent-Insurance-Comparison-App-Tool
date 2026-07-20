@@ -39,7 +39,21 @@ Rebuilt as a **static, backend-less comparison tool** for Get My Cover (NZ), ren
 - Class-only trigger: `<button class="gmc-btn-primary gmc-quote-trigger">…</button>`
 - In this preview only: a document-level delegated listener (`App.js`) fires a Sonner toast so reviewers can see the click was received. It's not attached to the button element.
 
-## Implemented (v5.0 — Feb 2026 sticky nav, ask engine, shareable state)
+## Implemented (v6.0 — Feb 2026 pair-aware notability, ask v2, right rail, analytics)
+- ✅ v4 JSON bundled — every cell now carries a `signal` (normalized value), features have `synonyms[]`, and there are 8 rotating `example_questions`. Glossary markers now live in the copy (features definition/why + cell detail_points contain `{term}` tokens like `{Pharmac}`, `{Medsafe}`, `{specialist}`)
+- ✅ **Pair-aware "Notable only"** (`lib/notable.js`): a row is notable *for the current selection* when `feature.notable === true` AND the selected insurers' `signal` values differ. Drives the toggle filter, the At-a-glance card list, and the "[N] notable differences found" chip (SC vs AIA → 8; SC vs Partners Life → 9)
+- ✅ **Ask-engine v2** (`lib/askEngine.js`): synonym phrases loaded from JSON per feature (`+5` for phrase-in-question), then token scoring against feature name (+3) / group (+2) / corpus incl. glossary mentions (+1). Case-insensitive throughout. Damerau-lite Levenshtein (edit distance ≤2) applied to any token of ≥5 letters — so "pshycology" → Mental health, "surgey" → Surgical benefit maximum
+- ✅ **Rotating placeholder** (`useRotatingPlaceholder`): both ask inputs cycle through `example_questions` every 3.5s, prefixed "Try: '…'"; paused on focus
+- ✅ **Compact ask bar** (`AskCompact.jsx`): placed directly under the insurer picker; shares the same `useAskEngine` state with the full section and smooth-scrolls the user to the result
+- ✅ **Live glossary markers**: `GlossaryText` unchanged behaviour, but I added `stopPropagation` on the marker button so clicking inside a clickable at-a-glance card / row opens the popover (not the row's modal)
+- ✅ **Desktop right-side rail** (`ToolNav.jsx` ≥1200px): floating vertical dock with `Sparkles / Table2 / MessageCircleQuestion` icon buttons (labels slide out on hover), then the selected-insurer logo chips outlined in accent (click = scroll back to picker), then a Share icon. Appears once the picker leaves the viewport; ≤1199px falls back to the existing mobile floating pill + bottom sheet.
+- ✅ **Share**: `navigator.share()` where available (mobile), clipboard fallback with "Copied!" toast + `gmc_share` analytics event on both paths
+- ✅ **Ask sendBeacon**: `FEEDBACK_ENDPOINT` constant at the top of `hooks/useAskEngine.js` (currently empty string → disabled). Once you paste a Formspree URL in it, every ask fires `navigator.sendBeacon(FEEDBACK_ENDPOINT, {question, matched_feature, path, timestamp})` — fire-and-forget, no personal data. localStorage logging preserved.
+- ✅ **Analytics dataLayer** (`lib/analytics.js`): `pushEvent` ensures `window.dataLayer` exists and pushes `{event, ts, ...payload}`. Events wired: `gmc_select_insurers`, `gmc_group_open`, `gmc_modal_open`, `gmc_question_asked` (with `matched: boolean`), `gmc_cta_click`, `gmc_share`
+- ✅ **Trust line** (`TrustLine.jsx`): above the comparison table — reads all `verified` fields to find the latest ISO date, otherwise "Verification in progress" · `How we compare →` link placeholder to `/compare/how-we-compare`
+- ✅ **Polish**: shadcn Dialog already provides focus trap + ARIA; added `aria-label` on ask inputs, `aria-live="polite"` on ask result cards, keyboard support on cards. Print stylesheet (`@media print`) hides nav/hero/rail/mobile-pill/asks/CTAs and prints the comparison table with a black inset marker for notable rows
+
+## Implemented (v5.0 — sticky nav, ask engine v1, shareable state)
 - ✅ v3 JSON refreshed with new accents (SC `#0079C2`, nib `#6CC24A`, AIA `#D0103A`, PL `#1D4A44`, UniMed `#1C2B54`) and per-insurer `sources[]` with real URLs
 - ✅ New nib logo replaced and whitespace-trimmed (matching the other logo pipeline)
 - ✅ All colours read from JSON — no hardcoded hexes remain in components

@@ -1,7 +1,15 @@
 /**
- * Deterministic client-side keyword search over the JSON data.
- * Given a natural-language question, returns the best-matching feature
- * (or null if no meaningful match). Never generates text.
+ * Deterministic client-side ask engine (v2 — synonyms + typo tolerance).
+ *
+ * Ranking signals per feature:
+ *   +5 exact phrase match of any synonym phrase in the question
+ *   +3 token in feature name
+ *   +2 token in group name
+ *   +1 token in feature corpus (definition, why, cells, glossary mentions)
+ *
+ * All tokenisation is case-insensitive. Words of ≥5 letters use Levenshtein
+ * distance ≤2 for fuzzy match ("surgey" → "surgery"). Never generates text —
+ * only returns the best feature match (or null when below the threshold).
  */
 
 const STOP_WORDS = new Set([
@@ -11,103 +19,68 @@ const STOP_WORDS = new Set([
   "i","we","you","they","he","she","it","my","our","your","their","its",
   "about","any","can","could","should","would","will","just","only","some",
   "what","how","when","where","who","which","why","cover","covers","policy",
-  "policies","insurance","insurer","insurers","plan","plans",
+  "policies","insurance","insurer","insurers","plan","plans","get","really",
 ]);
 
-const CANONICAL = {
-  "chemo": "chemotherapy",
-  "radio": "radiotherapy",
-  "mri": "diagnostic imaging",
-  "ct": "diagnostic imaging",
-  "pet": "diagnostic imaging",
-  "scans": "diagnostic imaging",
-  "test": "tests",
-  "kids": "children",
-  "child": "children",
-  "baby": "children",
-  "newborn": "children",
-  "birth": "congenital",
-  "adhd": "mental health",
-  "counsellor": "mental health",
-  "counselling": "mental health",
-  "therapy": "mental health",
-  "therapist": "mental health",
-  "psych": "mental health",
-  "psychologist": "mental health",
-  "psychiatrist": "mental health",
-  "psychiatric": "mental health",
-  "depression": "mental health",
-  "anxiety": "mental health",
-  "pregnancy": "obstetrics",
-  "pregnant": "obstetrics",
-  "maternity": "obstetrics",
-  "baby": "obstetrics",
-  "labour": "obstetrics",
-  "delivery": "obstetrics",
-  "gp": "day-to-day",
-  "dentist": "day-to-day",
-  "dental": "day-to-day",
-  "optical": "day-to-day",
-  "glasses": "day-to-day",
-  "physio": "day-to-day",
-  "physiotherapy": "day-to-day",
-  "prescription": "day-to-day",
-  "prescriptions": "day-to-day",
-  "pharmac": "non-pharmac",
-  "expensive": "non-pharmac",
-  "unfunded": "non-pharmac",
-  "drug": "medicines",
-  "drugs": "medicines",
-  "medicine": "medicines",
-  "medication": "medicines",
-  "prior": "prior approval",
-  "approval": "prior approval",
-  "preauth": "prior approval",
-  "pre-existing": "pre-existing",
-  "existing": "pre-existing",
-  "waiting": "stand-down",
-  "wait": "stand-down",
-  "waits": "stand-down",
-  "standdown": "stand-down",
-  "surgery": "surgical",
-  "surgical": "surgical",
-  "operate": "surgical",
-  "operation": "surgical",
-  "hospital": "hospital",
-  "specialist": "specialist",
-  "referral": "specialist",
-  "loyalty": "loyalty",
-  "excess": "excess",
-  "deductible": "excess",
-  "provider": "approved-provider",
-  "network": "approved-provider",
-  "affiliated": "approved-provider",
-  "claim": "claims",
-  "claims": "claims",
-  "exclusion": "exclusions",
-  "exclusions": "exclusions",
-  "cancer": "cancer",
-  "oncology": "cancer",
-  "tumour": "cancer",
-  "tumor": "cancer",
-};
-
-function tokenize(text) {
-  if (!text) return [];
-  return String(text)
+function normalise(s) {
+  return String(s || "")
     .toLowerCase()
     .replace(/[^\p{L}\p{N}\s-]/gu, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function tokenize(text) {
+  return normalise(text)
     .split(/\s+/)
-    .filter(Boolean)
-    .filter((t) => !STOP_WORDS.has(t))
-    .flatMap((t) => (CANONICAL[t] || t).split(/\s+/))
     .filter(Boolean)
     .filter((t) => !STOP_WORDS.has(t));
 }
 
-function scoreFeature(feature, data, glossary, questionTokens) {
-  // Build the corpus for this feature: name + definition + why + short + detail across insurers
-  const parts = [feature.feature, feature.definition, feature.why || ""];
+// Damerau-lite Levenshtein (transpositions ignored). Good enough for typos.
+function editDistance(a, b) {
+  if (a === b) return 0;
+  const al = a.length;
+  const bl = b.length;
+  if (Math.abs(al - bl) > 2) return 3; // early exit for our ≤2 threshold
+  const prev = new Array(bl + 1);
+  const curr = new Array(bl + 1);
+  for (let j = 0; j <= bl; j++) prev[j] = j;
+  for (let i = 1; i <= al; i++) {
+    curr[0] = i;
+    for (let j = 1; j <= bl; j++) {
+      const cost = a.charCodeAt(i - 1) === b.charCodeAt(j - 1) ? 0 : 1;
+      curr[j] = Math.min(
+        curr[j - 1] + 1,
+        prev[j] + 1,
+        prev[j - 1] + cost,
+      );
+    }
+    for (let j = 0; j <= bl; j++) prev[j] = curr[j];
+  }
+  return prev[bl];
+}
+
+// Return true if `qToken` matches any token in the corpus set — either exact
+// or (for tokens of length >= 5) within edit-distance 2.
+function fuzzyHas(corpusSet, qToken) {
+  if (corpusSet.has(qToken)) return true;
+  if (qToken.length < 5) return false;
+  for (const t of corpusSet) {
+    if (t.length < 4) continue;
+    if (Math.abs(t.length - qToken.length) > 2) continue;
+    if (editDistance(t, qToken) <= 2) return true;
+  }
+  return false;
+}
+
+function buildFeatureCorpus(feature, data, glossary) {
+  const parts = [
+    feature.feature,
+    feature.definition || "",
+    feature.why || "",
+    feature.group || "",
+  ];
   Object.values(data || {}).forEach((rows) => {
     rows.forEach((row) => {
       if (row.feature === feature.feature) {
@@ -117,40 +90,58 @@ function scoreFeature(feature, data, glossary, questionTokens) {
       }
     });
   });
-  // Include glossary term matches: any glossary term that shows up in the feature text
-  const featureCorpus = parts.join(" ").toLowerCase();
+  const joined = parts.join(" ").toLowerCase();
   Object.keys(glossary || {}).forEach((term) => {
-    if (featureCorpus.includes(term.toLowerCase())) parts.push(term);
+    if (joined.includes(term.toLowerCase())) parts.push(term);
   });
+  return parts.join(" ");
+}
 
-  const corpusTokens = new Set(tokenize(parts.join(" ")));
-
+function scoreFeature(feature, opts) {
+  const { data, glossary, synonyms, questionNormalised, questionTokens } = opts;
   let score = 0;
-  const nameTokens = new Set(tokenize(feature.feature));
-  const groupTokens = new Set(tokenize(feature.group || ""));
-  questionTokens.forEach((qt) => {
-    if (nameTokens.has(qt)) score += 3;
-    else if (groupTokens.has(qt)) score += 2;
-    else if (corpusTokens.has(qt)) score += 1;
-  });
+
+  // Synonym phrase match (highest weight)
+  const phrases = (synonyms && synonyms[feature.feature]) || [];
+  for (const phrase of phrases) {
+    const p = normalise(phrase);
+    if (!p) continue;
+    if (questionNormalised.includes(p)) {
+      score += 5;
+      break; // one hit is enough for this feature
+    }
+  }
+
+  const name = new Set(tokenize(feature.feature));
+  const group = new Set(tokenize(feature.group || ""));
+  const corpus = new Set(tokenize(buildFeatureCorpus(feature, data, glossary)));
+
+  for (const qt of questionTokens) {
+    if (fuzzyHas(name, qt)) score += 3;
+    else if (fuzzyHas(group, qt)) score += 2;
+    else if (fuzzyHas(corpus, qt)) score += 1;
+  }
   return score;
 }
 
-/**
- * Match a question against features. Returns:
- *   { feature: <feature>, score: N, tokens: [...] } | null
- */
-export function matchQuestion(question, { features, data, glossary }) {
-  const tokens = tokenize(question);
-  if (tokens.length === 0) return null;
+export function matchQuestion(question, { features, data, glossary, synonyms }) {
+  const qNorm = normalise(question);
+  const qTokens = tokenize(question);
+  if (qTokens.length === 0 && !qNorm) return null;
+
   let best = null;
-  features.forEach((f) => {
-    const s = scoreFeature(f, data, glossary, tokens);
+  for (const f of features) {
+    const s = scoreFeature(f, {
+      data,
+      glossary,
+      synonyms,
+      questionNormalised: qNorm,
+      questionTokens: qTokens,
+    });
     if (s > 0 && (!best || s > best.score)) {
-      best = { feature: f, score: s, tokens };
+      best = { feature: f, score: s, tokens: qTokens };
     }
-  });
-  // Require a minimum signal so nonsense queries fall through to the adviser CTA
+  }
   if (!best || best.score < 2) return null;
   return best;
 }

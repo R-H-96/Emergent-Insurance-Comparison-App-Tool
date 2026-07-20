@@ -115,7 +115,7 @@
    "feature": "Non-Pharmac medicines cap",
    "definition": "Cover for effective drugs NZ's public system doesn't fund — one of the biggest real differences between NZ policies.",
    "notable": true,
-   "why": "Modern medicines Pharmac doesn't fund can cost six figures a year — this line decides who pays for them."
+   "why": "Modern medicines {Pharmac} doesn't fund can cost six figures a year — this line decides who pays for them."
   },
   {
    "group": "Cancer care",
@@ -126,7 +126,7 @@
   {
    "group": "Specialists & tests",
    "feature": "Specialist consultations",
-   "definition": "Cover for private specialist visits — capped amount, and whether GP referral is required.",
+   "definition": "Cover for private {specialist} visits — capped amount, and whether GP referral is required.",
    "notable": false
   },
   {
@@ -185,7 +185,7 @@
   {
    "group": "Extras",
    "feature": "Telehealth",
-   "definition": "Remote GP/specialist consultations covered or provided.",
+   "definition": "Remote GP/{specialist} consultations covered or provided.",
    "notable": false
   },
   {
@@ -253,9 +253,10 @@
     "short": "Unlimited (prostheses limits apply)",
     "detail": "Unlimited for eligible surgical procedures performed by a specialist or Affiliated Provider (individual prostheses limits apply). Excess applies to this benefit.",
     "detail_points": [
-     "Unlimited for eligible surgical procedures performed by a specialist or Affiliated Provider (individual prostheses limits apply)",
-     "Excess applies to this benefit"
-    ]
+     "Unlimited for eligible surgical procedures performed by a {specialist} or Affiliated Provider (individual {prostheses} limits apply)",
+     "{Excess} applies to this benefit"
+    ],
+    "signal": "unlimited"
    },
    {
     "feature": "Non-surgical hospital maximum",
@@ -267,7 +268,8 @@
      "No single standalone non-surgical hospitalisation cap",
      "Non-surgical cover is provided through named benefits instead (e.g. imaging $60,000/yr, cardiac tests $5,000/yr, diagnostic tests $3,000/yr, psychiatric admission $3,500/yr)"
     ],
-    "internal_note": "NEEDS CARE IN PHRASING — verify framing"
+    "internal_note": "NEEDS CARE IN PHRASING — verify framing",
+    "signal": "named-benefits"
    },
    {
     "feature": "Excess options",
@@ -276,10 +278,11 @@
     "short": "Optional; once per person, per year",
     "detail": "Excess options offered; chosen amount shown on membership certificate. Excess applies per person, once per claims year, and only to the surgical procedures, chemotherapy, and radiotherapy benefits.",
     "detail_points": [
-     "Excess options offered",
+     "{Excess} options offered",
      "Chosen amount shown on membership certificate",
      "Excess applies per person, once per claims year, and only to the surgical procedures, chemotherapy, and radiotherapy benefits"
-    ]
+    ],
+    "signal": "annual-optional-3benefits"
    },
    {
     "feature": "Chemotherapy / radiotherapy cover",
@@ -288,11 +291,12 @@
     "short": "Chemo $60k/yr + radiotherapy (uncapped)",
     "detail": "Chemotherapy (base): 100% of actual charges up to $60,000 each claims year for Pharmac-approved treatment via Affiliated Provider; excess applies. Radiotherapy: 100% of actual charges for a limited range of treatments (no annual dollar cap stated); excess applies.",
     "detail_points": [
-     "Chemotherapy (base): 100% of actual charges up to $60,000 each claims year for Pharmac-approved treatment via Affiliated Provider",
-     "Excess applies",
+     "Chemotherapy (base): 100% of actual charges up to $60,000 each claims year for {Pharmac}-approved treatment via Affiliated Provider",
+     "{Excess} applies",
      "Radiotherapy: 100% of actual charges for a limited range of treatments (no annual dollar cap stated)",
      "Excess applies"
-    ]
+    ],
+    "signal": "chemo60k-radio-uncapped"
    },
    {
     "feature": "Non-Pharmac medicines cap",
@@ -301,10 +305,11 @@
     "short": "$10k/yr base; upgrades to $100k/$300k",
     "detail": "Base plan: non-Pharmac (Medsafe-indicated) chemotherapy drugs up to $10,000 each claims year. Optional Cancer Cover Plus upgrades lift this: Chemotherapy 100 = $100,000/yr; Chemotherapy 300 = $300,000/yr (upgrades exclude cancers with defined family history).",
     "detail_points": [
-     "Base plan: non-Pharmac (Medsafe-indicated) chemotherapy drugs up to $10,000 each claims year",
+     "Base plan: {non-Pharmac} ({Medsafe}-indicated) chemotherapy drugs up to $10,000 each claims year",
      "Optional Cancer Cover Plus upgrades lift this: Chemotherapy 100 = $100,000/yr",
      "Chemotherapy 300 = $300,000/yr (upgrades exclude cancers with defined family history)"
-    ]
+    ],
+    "signal": "10k-upgradable"
    },
    {
     "feature": "Follow-up care",
@@ -313,9 +318,10 @@
     "short": "No time limits on Wellbeing Two",
     "detail": "On Wellbeing Two, specialist consultations, imaging, and tests are NOT time-limited to treatment (the 6-month rule applies to Wellbeing One only). Oncologist consultations always exempt from time rules.",
     "detail_points": [
-     "On Wellbeing Two, specialist consultations, imaging, and tests are NOT time-limited to treatment (the 6-month rule applies to Wellbeing One only)",
+     "On Wellbeing Two, {specialist} consultations, imaging, and tests are NOT time-limited to treatment (the 6-month rule applies to Wellbeing One only)",
      "Oncologist consultations always exempt from time rules"
-    ]
+    ],
+    "signal": "no-time-limit"
    },
    {
     "feature": "Specialist consultations",
@@ -324,10 +330,11 @@
     "short": "$5,000/yr",
     "detail": "Specialist consultations up to $5,000 each claims year (100% of actual charges; includes second opinions via contracted Affiliated Providers). Psychiatrist consultations separately capped at $750/yr.",
     "detail_points": [
-     "Specialist consultations up to $5,000 each claims year (100% of actual charges",
+     "{Specialist} consultations up to $5,000 each claims year (100% of actual charges",
      "Includes second opinions via contracted Affiliated Providers)",
      "Psychiatrist consultations separately capped at $750/yr"
-    ]
+    ],
+    "signal": "5k"
    },
    {
     "feature": "Diagnostic imaging & tests",
@@ -338,11 +345,12 @@
     "detail_points": [
      "Diagnostic imaging up to $60,000 each claims year (MRI, CT, ultrasound, X-ray",
      "PET/CT for specific cancers and cardiac conditions",
-     "No excess)",
+     "No {excess})",
      "Cardiac tests $5,000/yr",
      "Diagnostic tests $3,000/yr",
      "Laboratory tests $70/yr (Wellbeing Two benefit)"
-    ]
+    ],
+    "signal": "60k"
    },
    {
     "feature": "Time-link conditions",
@@ -353,7 +361,8 @@
     "detail_points": [
      "None on Wellbeing Two",
      "(Wellbeing One requires consults/imaging/tests within 6 months of related surgery, chemo, or radiotherapy.)"
-    ]
+    ],
+    "signal": "none"
    },
    {
     "feature": "Pre-existing conditions",
@@ -364,7 +373,8 @@
     "detail_points": [
      "Pre-existing conditions are not covered unless explicitly accepted and stated on the membership certificate (individually underwritten at application)",
      "Exclusion does not apply to the optional day-to-day modules"
-    ]
+    ],
+    "signal": "excluded-unless-accepted"
    },
    {
     "feature": "Stand-down / waiting periods",
@@ -375,7 +385,8 @@
     "detail_points": [
      "No general stand-down stated, but specific benefits carry qualifying periods: obstetrics allowance after 1 year continuous cover (Wellbeing Two)",
      "Complete skin-lesion removal after 3 years continuous cover"
-    ]
+    ],
+    "signal": "1-3yr-specific"
    },
    {
     "feature": "Congenital conditions",
@@ -385,7 +396,8 @@
     "detail": "Excluded, except: umbilical hernia, inguinal hernia, undescended testes, hydrocele, tongue tie, phimosis, and squint.",
     "detail_points": [
      "Excluded, except: umbilical hernia, inguinal hernia, undescended testes, hydrocele, tongue tie, phimosis, and squint"
-    ]
+    ],
+    "signal": "excluded-7-exceptions"
    },
    {
     "feature": "GP / day-to-day add-on",
@@ -395,7 +407,8 @@
     "detail": "Two optional modules: 'Keeping Well Module' and 'Day-to-day Module' (prescriptions, physiotherapy and similar day-to-day costs).",
     "detail_points": [
      "Two optional modules: 'Keeping Well Module' and 'Day-to-day Module' (prescriptions, physiotherapy and similar day-to-day costs)"
-    ]
+    ],
+    "signal": "modules"
    },
    {
     "feature": "Obstetrics / maternity",
@@ -404,9 +417,10 @@
     "short": "$750/yr after 1 year (Two only)",
     "detail": "Wellbeing Two only: obstetrics allowance $750 each claims year after 1 year continuous cover (specialist obstetric care, 2D/Doppler ultrasounds, approved-facility accommodation); no excess.",
     "detail_points": [
-     "Wellbeing Two only: obstetrics allowance $750 each claims year after 1 year continuous cover (specialist obstetric care, 2D/Doppler ultrasounds, approved-facility accommodation)",
-     "No excess"
-    ]
+     "Wellbeing Two only: obstetrics allowance $750 each claims year after 1 year continuous cover ({specialist} obstetric care, 2D/Doppler ultrasounds, approved-facility accommodation)",
+     "No {excess}"
+    ],
+    "signal": "750yr-after1yr"
    },
    {
     "feature": "Mental health",
@@ -417,7 +431,8 @@
     "detail_points": [
      "Psychiatrist consultations $750 each claims year",
      "Psychiatric admission & care $3,500 each claims year (sub-limits apply)"
-    ]
+    ],
+    "signal": "750+3.5k"
    },
    {
     "feature": "Telehealth",
@@ -426,9 +441,10 @@
     "short": "Not in policy wording",
     "detail": "Not specified in the policy wording. Southern Cross promotes member telehealth services (e.g. Care Hub) outside the policy document — VERIFY from SC website before publishing anything.",
     "detail_points": [
-     "Not specified in the policy wording"
+     "Not specified in the {policy wording}"
     ],
-    "internal_note": "Southern Cross promotes member telehealth services (e.g. Care Hub) outside the policy document — VERIFY from SC website before publishing anything"
+    "internal_note": "Southern Cross promotes member telehealth services (e.g. Care Hub) outside the policy document — VERIFY from SC website before publishing anything",
+    "signal": "not-in-wording"
    },
    {
     "feature": "Prosthesis / specialised equipment",
@@ -437,9 +453,10 @@
     "short": "Per-item caps (separate list)",
     "detail": "Covered as part of eligible surgery per the separate 'List of prostheses and specialised equipment', which sets a maximum payment per item (southerncross.co.nz/lopse). Surgical benefit is unlimited but each prosthesis is individually capped.",
     "detail_points": [
-     "Covered as part of eligible surgery per the separate 'List of prostheses and specialised equipment', which sets a maximum payment per item (southerncross.co.nz/lopse)",
+     "Covered as part of eligible surgery per the separate 'List of {prostheses} and specialised equipment', which sets a maximum payment per item (southerncross.co.nz/lopse)",
      "Surgical benefit is unlimited but each prosthesis is individually capped"
-    ]
+    ],
+    "signal": "per-item-caps"
    },
    {
     "feature": "Approved-provider rules",
@@ -449,9 +466,10 @@
     "detail": "Strong Affiliated Provider model: some services are Affiliated-Provider-only (separate list); using an AP means they arrange prior approval and claim directly. Non-AP use may expose you to 'reasonable charges' gaps.",
     "detail_points": [
      "Strong Affiliated Provider model: some services are Affiliated-Provider-only (separate list)",
-     "Using an AP means they arrange prior approval and claim directly",
-     "Non-AP use may expose you to 'reasonable charges' gaps"
-    ]
+     "Using an AP means they arrange {prior approval} and claim directly",
+     "Non-AP use may expose you to '{reasonable charges}' gaps"
+    ],
+    "signal": "affiliated-network"
    },
    {
     "feature": "Prior approval",
@@ -463,7 +481,8 @@
      "Recommended at least 5 working days before treatment",
      "Required for some benefits (e.g. overseas treatment, $40k lifetime treatment benefit)",
      "Not needed when an Affiliated Provider performs a contracted service (they arrange it)"
-    ]
+    ],
+    "signal": "recommended"
    },
    {
     "feature": "Claims process",
@@ -474,7 +493,8 @@
     "detail_points": [
      "Online via MySouthernCross or the app",
      "Affiliated Providers and Easy-Claim partners claim directly on your behalf"
-    ]
+    ],
+    "signal": "app-aps"
    },
    {
     "feature": "Loyalty / no-claims benefits",
@@ -486,7 +506,8 @@
      "No broad loyalty programme in the wording",
      "Time-based benefit unlocks instead (obstetrics after 1 yr on Two",
      "Full skin-lesion removal after 3 yrs)"
-    ]
+    ],
+    "signal": "time-unlocks"
    },
    {
     "feature": "Premium structure",
@@ -498,7 +519,8 @@
      "Not stated in the policy document (premiums set outside the wording",
      "SC re-prices with age at renewal)"
     ],
-    "internal_note": "Source externally before publishing — EXTERNAL VERIFICATION NEEDED"
+    "internal_note": "Source externally before publishing — EXTERNAL VERIFICATION NEEDED",
+    "signal": "not-stated"
    },
    {
     "feature": "Guaranteed wording upgrades",
@@ -509,7 +531,8 @@
     "detail_points": [
      "Southern Cross may change the policy document over time and changes apply to existing members (policyholder may cancel if they disagree)",
      "Membership certificate takes precedence over the policy document"
-    ]
+    ],
+    "signal": "changes-apply"
    },
    {
     "feature": "Key exclusions",
@@ -519,7 +542,8 @@
     "detail": "Headline exclusions: pre-existing conditions (unless accepted), a defined list of chronic conditions, congenital conditions (with the exceptions above), termination of pregnancy, most breast reconstruction/symmetry beyond named benefits, overseas treatment beyond the $30,000/yr benefit.",
     "detail_points": [
      "Headline exclusions: pre-existing conditions (unless accepted), a defined list of chronic conditions, congenital conditions (with the exceptions above), termination of pregnancy, most breast reconstruction/symmetry beyond named benefits, overseas treatment beyond the $30,000/yr benefit"
-    ]
+    ],
+    "signal": "list-sc"
    },
    {
     "feature": "Cover ceases / age limits",
@@ -528,7 +552,8 @@
     "short": "None identified",
     "detail": "No ceasing age identified in the policy wording — verify (SC membership is generally lifetime-renewable).",
     "detail_points": [],
-    "internal_note": "No ceasing age identified in the policy wording — verify (SC membership is generally lifetime-renewable)"
+    "internal_note": "No ceasing age identified in the policy wording — verify (SC membership is generally lifetime-renewable)",
+    "signal": "none-identified"
    }
   ],
   "nib": [
@@ -539,9 +564,10 @@
     "short": "$600,000/yr",
     "detail": "Surgical Benefit: up to $600,000 per insured person every policy year for private hospital surgery. Several related benefits (diagnostics, cancer treatment, travel) draw from this limit.",
     "detail_points": [
-     "Surgical Benefit: up to $600,000 per insured person every policy year for private hospital surgery",
+     "Surgical Benefit: up to $600,000 per insured person every {policy year} for private hospital surgery",
      "Several related benefits (diagnostics, cancer treatment, travel) draw from this limit"
-    ]
+    ],
+    "signal": "600k"
    },
    {
     "feature": "Non-surgical hospital maximum",
@@ -550,8 +576,9 @@
     "short": "$300,000/yr",
     "detail": "Non-Surgical Benefit: up to $300,000 per insured person every policy year for non-surgical private hospital admission.",
     "detail_points": [
-     "Non-Surgical Benefit: up to $300,000 per insured person every policy year for non-surgical private hospital admission"
-    ]
+     "Non-Surgical Benefit: up to $300,000 per insured person every {policy year} for non-surgical private hospital admission"
+    ],
+    "signal": "300k"
    },
    {
     "feature": "Excess options",
@@ -560,10 +587,11 @@
     "short": "Annual; amount per certificate",
     "detail": "Excess applies per policy (amount on Acceptance/Renewal Certificate); some benefits explicitly excess-free (e.g. Loyalty Sterilisation). EXCESS OPTION AMOUNTS NOT IN WORDING — verify options from nib site/application.",
     "detail_points": [
-     "Excess applies per policy (amount on Acceptance/Renewal Certificate)",
+     "{Excess} applies per policy (amount on Acceptance/Renewal Certificate)",
      "Some benefits explicitly excess-free (e.g. Loyalty Sterilisation)"
     ],
-    "internal_note": "EXCESS OPTION AMOUNTS NOT IN WORDING — verify options from nib site/application"
+    "internal_note": "EXCESS OPTION AMOUNTS NOT IN WORDING — verify options from nib site/application",
+    "signal": "annual"
    },
    {
     "feature": "Chemotherapy / radiotherapy cover",
@@ -575,7 +603,8 @@
      "Cancer Treatment Benefit: cancer treatment paid from the remaining Surgical ($600k) or Non-Surgical ($300k) limit — cancer surgery under Surgical",
      "No separate lower cancer cap",
      "Private-hospital suites excluded"
-    ]
+    ],
+    "signal": "within-limits"
    },
    {
     "feature": "Non-Pharmac medicines cap",
@@ -584,9 +613,10 @@
     "short": "$20,000/yr standard",
     "detail": "Non-PHARMAC Cancer Treatment Benefit: chemotherapy/immunotherapy medicines not funded by PHARMAC, administered in private hospital — up to $20,000 per insured person every policy year. (Ultimate Health Max lifts this substantially — extract Max next.)",
     "detail_points": [
-     "Non-PHARMAC Cancer Treatment Benefit: chemotherapy/immunotherapy medicines not funded by PHARMAC, administered in private hospital — up to $20,000 per insured person every policy year",
+     "{Non-PHARMAC} Cancer Treatment Benefit: chemotherapy/immunotherapy medicines not funded by {PHARMAC}, administered in private hospital — up to $20,000 per insured person every {policy year}",
      "(Ultimate Health Max lifts this substantially — extract Max next.)"
-    ]
+    ],
+    "signal": "20k"
    },
    {
     "feature": "Follow-up care",
@@ -595,8 +625,9 @@
     "short": "Cancer follow-ups $3k/yr",
     "detail": "Cancer follow-up: investigations relating to your cancer up to $3,000 per person per policy year (requires a related paid claim).",
     "detail_points": [
-     "Cancer follow-up: investigations relating to your cancer up to $3,000 per person per policy year (requires a related paid claim)"
-    ]
+     "Cancer follow-up: investigations relating to your cancer up to $3,000 per person per {policy year} (requires a related paid claim)"
+    ],
+    "signal": "3k-linked"
    },
    {
     "feature": "Specialist consultations",
@@ -605,10 +636,11 @@
     "short": "Unlimited in-admission; $6k/yr pre/post",
     "detail": "Hospital Specialist Consultations: unlimited during admission period (requires related Surgical/Non-Surgical claim). Pre/post-surgery consultations up to $6,000/yr. Optional Specialist Option adds standalone specialist consults (unlimited number) without needing an admission.",
     "detail_points": [
-     "Hospital Specialist Consultations: unlimited during admission period (requires related Surgical/Non-Surgical claim)",
+     "Hospital {Specialist} Consultations: unlimited during admission period (requires related Surgical/Non-Surgical claim)",
      "Pre/post-surgery consultations up to $6,000/yr",
      "Optional Specialist Option adds standalone specialist consults (unlimited number) without needing an admission"
-    ]
+    ],
+    "signal": "unlim-admission+6k"
    },
    {
     "feature": "Diagnostic imaging & tests",
@@ -618,8 +650,9 @@
     "detail": "Diagnostic Investigations: unlimited number of tests, paid from the remaining Surgical/Non-Surgical limit (requires related claim). Specialist Option adds standalone imaging (MRI, CT etc.) up to $60,000/yr and surveillance imaging $3,000/yr.",
     "detail_points": [
      "Diagnostic Investigations: unlimited number of tests, paid from the remaining Surgical/Non-Surgical limit (requires related claim)",
-     "Specialist Option adds standalone imaging (MRI, CT etc.) up to $60,000/yr and surveillance imaging $3,000/yr"
-    ]
+     "{Specialist} Option adds standalone imaging (MRI, CT etc.) up to $60,000/yr and surveillance imaging $3,000/yr"
+    ],
+    "signal": "unlim-within-limits"
    },
    {
     "feature": "Time-link conditions",
@@ -629,8 +662,9 @@
     "detail": "Base diagnostics/consultations are tied to a related Surgical or Non-Surgical claim rather than a time window. Specialist Option benefits need only a GP/specialist referral.",
     "detail_points": [
      "Base diagnostics/consultations are tied to a related Surgical or Non-Surgical claim rather than a time window",
-     "Specialist Option benefits need only a GP/specialist referral"
-    ]
+     "{Specialist} Option benefits need only a GP/specialist referral"
+    ],
+    "signal": "claim-linked"
    },
    {
     "feature": "Pre-existing conditions",
@@ -641,7 +675,8 @@
     "detail_points": [
      "Underwritten at application: pre-existing conditions typically become personal exclusions listed on your Acceptance Certificate (or premium loadings)",
      "NOTE: optional Options (GP, Dental etc.) cover pre-existing conditions EXCEPT congenital — a genuine nib point of difference"
-    ]
+    ],
+    "signal": "excluded-options-cover"
    },
    {
     "feature": "Stand-down / waiting periods",
@@ -654,7 +689,8 @@
      "Options carry waits: GP-type Option 90 days",
      "Dental/Optical-type Option 6 months",
      "Loyalty benefits are time-based (e.g. Sterilisation after 2 years)"
-    ]
+    ],
+    "signal": "90d-6mo-options"
    },
    {
     "feature": "Congenital conditions",
@@ -665,7 +701,8 @@
     "detail_points": [
      "Congenital conditions excluded (defined as recognised at birth or diagnosed within 4 months of birth)",
      "General exclusions list congenital/chromosomal disorders, Marfan's, gene therapy, genetic testing"
-    ]
+    ],
+    "signal": "excluded"
    },
    {
     "feature": "GP / day-to-day add-on",
@@ -676,7 +713,8 @@
     "detail_points": [
      "Optional GP Option: GP consults up to $55 each ($80 home, $25 ACC top-up), prescriptions $15/item to $300/yr, physio-type treatments $40/visit to $400/yr, nurse visits $30 × 6",
      "Dental/Optical/Therapeutic Option also available"
-    ]
+    ],
+    "signal": "options"
    },
    {
     "feature": "Obstetrics / maternity",
@@ -688,7 +726,8 @@
      "No general obstetrics benefit",
      "High-Risk Pregnancy Benefit covers obstetrician assessment/monitoring of recognised risk factors only",
      "Excludes normal pregnancy, pregnancies conceived before join date, public hospital treatment"
-    ]
+    ],
+    "signal": "high-risk-only"
    },
    {
     "feature": "Mental health",
@@ -697,7 +736,8 @@
     "short": "None identified in base",
     "detail": "No standalone mental health benefit identified in Base Cover — VERIFY before publishing (check Non-Surgical Benefit scope and any counselling benefits in full doc).",
     "detail_points": [],
-    "internal_note": "No standalone mental health benefit identified in Base Cover — VERIFY before publishing (check Non-Surgical Benefit scope and any counselling benefits in full doc)"
+    "internal_note": "No standalone mental health benefit identified in Base Cover — VERIFY before publishing (check Non-Surgical Benefit scope and any counselling benefits in full doc)",
+    "signal": "none"
    },
    {
     "feature": "Telehealth",
@@ -708,7 +748,8 @@
     "detail_points": [
      "Not identified in wording — nib promotes telehealth/virtual GP services outside the policy document"
     ],
-    "internal_note": "VERIFY from nib site"
+    "internal_note": "VERIFY from nib site",
+    "signal": "not-in-wording"
    },
    {
     "feature": "Prosthesis / specialised equipment",
@@ -717,7 +758,8 @@
     "short": "Within Surgical Benefit (verify)",
     "detail": "Prostheses handling not extracted on first pass — VERIFY (nib typically covers per schedule within Surgical Benefit).",
     "detail_points": [],
-    "internal_note": "Prostheses handling not extracted on first pass — VERIFY (nib typically covers per schedule within Surgical Benefit)"
+    "internal_note": "Prostheses handling not extracted on first pass — VERIFY (nib typically covers per schedule within Surgical Benefit)",
+    "signal": "verify"
    },
    {
     "feature": "Approved-provider rules",
@@ -729,7 +771,8 @@
      "'Recognised providers' — you can use any recognised NZ provider",
      "Nib's First Choice Network is preferred (pre-approvals honoured regardless of later status changes)",
      "Claims priced against nib's 'Efficient Market Price' — non-First-Choice providers may leave a gap"
-    ]
+    ],
+    "signal": "first-choice-emp"
    },
    {
     "feature": "Prior approval",
@@ -741,7 +784,8 @@
      "Pre-approval recommended via 'my nib' before treatment",
      "Locks in the Efficient Market Price at pre-approval date",
      "Without it, price applies at treatment date"
-    ]
+    ],
+    "signal": "recommended-locks-price"
    },
    {
     "feature": "Claims process",
@@ -751,7 +795,8 @@
     "detail": "Claims and pre-approvals through the 'my nib' portal/app.",
     "detail_points": [
      "Claims and pre-approvals through the 'my nib' portal/app"
-    ]
+    ],
+    "signal": "portal"
    },
    {
     "feature": "Loyalty / no-claims benefits",
@@ -761,7 +806,8 @@
     "detail": "Distinct loyalty layer: Loyalty benefits unlock over time — Sterilisation (after 2 yrs), Check Up ($100 every 3 yrs), Orthodontic, Active Wellness, Health Check, cover-suspension benefit.",
     "detail_points": [
      "Distinct loyalty layer: Loyalty benefits unlock over time — Sterilisation (after 2 yrs), Check Up ($100 every 3 yrs), Orthodontic, Active Wellness, Health Check, cover-suspension benefit"
-    ]
+    ],
+    "signal": "loyalty-layer"
    },
    {
     "feature": "Premium structure",
@@ -772,7 +818,8 @@
     "detail_points": [
      "Not stated in policy document (nib prices by age/plan at renewal)"
     ],
-    "internal_note": "EXTERNAL VERIFICATION NEEDED"
+    "internal_note": "EXTERNAL VERIFICATION NEEDED",
+    "signal": "not-stated"
    },
    {
     "feature": "Guaranteed wording upgrades",
@@ -783,7 +830,8 @@
     "detail_points": [
      "Policy terms can change at renewal (Acceptance/Renewal Certificate governs)"
     ],
-    "internal_note": "Whether wording improvements auto-apply to existing members not confirmed on first pass — VERIFY"
+    "internal_note": "Whether wording improvements auto-apply to existing members not confirmed on first pass — VERIFY",
+    "signal": "verify"
    },
    {
     "feature": "Key exclusions",
@@ -794,7 +842,8 @@
     "detail_points": [
      "Key exclusions: personal exclusions per certificate (pre-existing), congenital/chromosomal disorders, genetic testing/therapy, normal pregnancy, public hospital treatment, private hospital suites",
      "General exclusions list applies"
-    ]
+    ],
+    "signal": "list-nib"
    },
    {
     "feature": "Cover ceases / age limits",
@@ -803,7 +852,8 @@
     "short": "None identified",
     "detail": "No ceasing age identified on first pass — VERIFY.",
     "detail_points": [],
-    "internal_note": "No ceasing age identified on first pass — VERIFY"
+    "internal_note": "No ceasing age identified on first pass — VERIFY",
+    "signal": "none-identified"
    }
   ],
   "aia": [
@@ -814,10 +864,11 @@
     "short": "Unlimited (reasonable charges)",
     "detail": "Surgery benefit: Unlimited (reasonable charges) in an approved facility, incl. surgeon/anaesthetist/hospital fees and prostheses. Includes related outpatient consults, imaging and tests within 12 months before/after surgery. Excess applies.",
     "detail_points": [
-     "Surgery benefit: Unlimited (reasonable charges) in an approved facility, incl. surgeon/anaesthetist/hospital fees and prostheses",
+     "Surgery benefit: Unlimited ({reasonable charges}) in an approved facility, incl. surgeon/anaesthetist/hospital fees and {prostheses}",
      "Includes related outpatient consults, imaging and tests within 12 months before/after surgery",
-     "Excess applies"
-    ]
+     "{Excess} applies"
+    ],
+    "signal": "unlimited"
    },
    {
     "feature": "Non-surgical hospital maximum",
@@ -826,10 +877,11 @@
     "short": "$500,000/yr",
     "detail": "Medical Hospitalisation: $500,000 per life assured per policy year for non-surgical private hospital treatment (specialist-referred). Cancer hospitalisation sits under Cancer Care instead. Excess applies.",
     "detail_points": [
-     "Medical Hospitalisation: $500,000 per life assured per policy year for non-surgical private hospital treatment (specialist-referred)",
+     "Medical Hospitalisation: $500,000 per life assured per {policy year} for non-surgical private hospital treatment ({specialist}-referred)",
      "Cancer hospitalisation sits under Cancer Care instead",
-     "Excess applies"
-    ]
+     "{Excess} applies"
+    ],
+    "signal": "500k"
    },
    {
     "feature": "Excess options",
@@ -838,10 +890,11 @@
     "short": "$0–$10,000 menu, annual",
     "detail": "Excess options: $0, $250, $500, $750, $1,000, $2,000, $4,000 or $10,000 (Private Health Cover). Private Health Plus additional benefits: $0 or $250. Many benefits are explicitly excess-free.",
     "detail_points": [
-     "Excess options: $0, $250, $500, $750, $1,000, $2,000, $4,000 or $10,000 (Private Health Cover)",
+     "{Excess} options: $0, $250, $500, $750, $1,000, $2,000, $4,000 or $10,000 (Private Health Cover)",
      "Private Health Plus additional benefits: $0 or $250",
      "Many benefits are explicitly excess-free"
-    ]
+    ],
+    "signal": "annual-menu-0-10k"
    },
    {
     "feature": "Chemotherapy / radiotherapy cover",
@@ -850,10 +903,11 @@
     "short": "$500k/yr Cancer Care benefit",
     "detail": "Cancer Care benefit: $500,000 per life assured per policy year for non-surgical cancer treatment (consults, imaging, chemo/immunotherapy, radiotherapy, brachytherapy); cancer surgery under the unlimited Surgery benefit. Also covers prophylactic mastectomy/oophorectomy (BRCA1/2), breast reconstruction and symmetry surgery, and post-cancer support (psychologist, wigs, home help).",
     "detail_points": [
-     "Cancer Care benefit: $500,000 per life assured per policy year for non-surgical cancer treatment (consults, imaging, chemo/immunotherapy, radiotherapy, brachytherapy)",
+     "Cancer Care benefit: $500,000 per life assured per {policy year} for non-surgical cancer treatment (consults, imaging, chemo/immunotherapy, radiotherapy, brachytherapy)",
      "Cancer surgery under the unlimited Surgery benefit",
      "Also covers prophylactic mastectomy/oophorectomy (BRCA1/2), breast reconstruction and symmetry surgery, and post-cancer support (psychologist, wigs, home help)"
-    ]
+    ],
+    "signal": "500k-cancer-benefit"
    },
    {
     "feature": "Non-Pharmac medicines cap",
@@ -862,9 +916,10 @@
     "short": "Inside $500k cancer benefit — no low cap",
     "detail": "Non-Pharmac cancer medicines: covered WITHIN the $500,000/yr Cancer Care benefit — Pharmac and non-Pharmac Medsafe-indicated chemo/immunotherapy (incl. targeted therapy, oral, at home), subject to AIA criteria and prior approval. No separate low non-Pharmac cap in this product.",
     "detail_points": [
-     "Non-Pharmac cancer medicines: covered WITHIN the $500,000/yr Cancer Care benefit — Pharmac and non-Pharmac Medsafe-indicated chemo/immunotherapy (incl. targeted therapy, oral, at home), subject to AIA criteria and prior approval",
+     "{Non-Pharmac} cancer medicines: covered WITHIN the $500,000/yr Cancer Care benefit — {Pharmac} and non-Pharmac {Medsafe}-indicated chemo/immunotherapy (incl. targeted therapy, oral, at home), subject to AIA criteria and {prior approval}",
      "No separate low non-Pharmac cap in this product"
-    ]
+    ],
+    "signal": "within-500k"
    },
    {
     "feature": "Follow-up care",
@@ -875,7 +930,8 @@
     "detail_points": [
      "Post-cancer treatment care and support benefit (psychologist consults, personal items, lymphatic massage, home help)",
      "Surgery-related follow-up consults/imaging within 12 months of surgery"
-    ]
+    ],
+    "signal": "12mo+support"
    },
    {
     "feature": "Specialist consultations",
@@ -884,10 +940,11 @@
     "short": "Surgery-linked; Plus adds $10k/yr",
     "detail": "Base: specialist consults covered when directly related to approved surgery (within 12 months) or cancer treatment. Private Health Plus adds standalone Specialist Consultations up to $10,000/yr (GP-referred). Excess applies.",
     "detail_points": [
-     "Base: specialist consults covered when directly related to approved surgery (within 12 months) or cancer treatment",
+     "Base: {specialist} consults covered when directly related to approved surgery (within 12 months) or cancer treatment",
      "Private Health Plus adds standalone Specialist Consultations up to $10,000/yr (GP-referred)",
-     "Excess applies"
-    ]
+     "{Excess} applies"
+    ],
+    "signal": "surgery-linked+plus10k"
    },
    {
     "feature": "Diagnostic imaging & tests",
@@ -896,9 +953,10 @@
     "short": "$200,000/yr (specialist-referred)",
     "detail": "Major Diagnostic Imaging and Tests (base): $200,000 per life assured per policy year, specialist-referred, surgery not required (CT, MRI, PET/CT, colonoscopy, angiogram etc.). Private Health Plus adds broader Diagnostic Imaging & Tests at $100,000/yr on GP referral (incl. labs, X-ray, ultrasound, sleep studies).",
     "detail_points": [
-     "Major Diagnostic Imaging and Tests (base): $200,000 per life assured per policy year, specialist-referred, surgery not required (CT, MRI, PET/CT, colonoscopy, angiogram etc.)",
+     "Major Diagnostic Imaging and Tests (base): $200,000 per life assured per {policy year}, {specialist}-referred, surgery not required (CT, MRI, PET/CT, colonoscopy, angiogram etc.)",
      "Private Health Plus adds broader Diagnostic Imaging & Tests at $100,000/yr on GP referral (incl. labs, X-ray, ultrasound, sleep studies)"
-    ]
+    ],
+    "signal": "200k+plus100k"
    },
    {
     "feature": "Time-link conditions",
@@ -909,7 +967,8 @@
     "detail_points": [
      "Surgery-related outpatient support: 12 months before/after surgery (consults, imaging)",
      "Physio/OT/prescriptions within 6 months after surgery"
-    ]
+    ],
+    "signal": "12mo"
    },
    {
     "feature": "Pre-existing conditions",
@@ -920,7 +979,8 @@
     "detail_points": [
      "Underwritten: pre-existing conditions excluded/personally excluded per schedule (standard AIA approach)",
      "Notable exception: the Congenital Conditions Surgery benefit is exempt from the pre-existing exclusion"
-    ]
+    ],
+    "signal": "excluded"
    },
    {
     "feature": "Stand-down / waiting periods",
@@ -932,7 +992,8 @@
      "Pregnancy/maternity allowance (Plus) requires 2 years continuous cover",
      "15-day free-look period"
     ],
-    "internal_note": "Several benefits require 3 years continuous cover (see wording pp.19–20 — VERIFY specifics)"
+    "internal_note": "Several benefits require 3 years continuous cover (see wording pp.19–20 — VERIFY specifics)",
+    "signal": "2-3yr-specific"
    },
    {
     "feature": "Congenital conditions",
@@ -942,9 +1003,10 @@
     "detail": "Congenital Conditions Surgery benefit: $2,000 per life per LIFETIME for the same 7 conditions others merely exempt from exclusion (umbilical/inguinal hernia, undescended testes, hydrocele, tongue tie, phimosis, squint); no excess; prior approval required.",
     "detail_points": [
      "Congenital Conditions Surgery benefit: $2,000 per life per LIFETIME for the same 7 conditions others merely exempt from exclusion (umbilical/inguinal hernia, undescended testes, hydrocele, tongue tie, phimosis, squint)",
-     "No excess",
-     "Prior approval required"
-    ]
+     "No {excess}",
+     "{Prior approval} required"
+    ],
+    "signal": "2k-lifetime-benefit"
    },
    {
     "feature": "GP / day-to-day add-on",
@@ -954,8 +1016,9 @@
     "detail": "No GP/day-to-day module in this product. Private Health Plus tier adds GP-referred specialist consults, wider diagnostics, health screening allowance.",
     "detail_points": [
      "No GP/day-to-day module in this product",
-     "Private Health Plus tier adds GP-referred specialist consults, wider diagnostics, health screening allowance"
-    ]
+     "Private Health Plus tier adds GP-referred {specialist} consults, wider diagnostics, health screening allowance"
+    ],
+    "signal": "none"
    },
    {
     "feature": "Obstetrics / maternity",
@@ -964,10 +1027,11 @@
     "short": "$1,500/pregnancy (Plus, after 2 yrs)",
     "detail": "Pregnancy, Maternity and Infertility Allowance (Plus only): $1,500 per pregnancy per policy year (obstetric care incl. scans, infertility diagnosis/treatment, related accommodation) after 2 years continuous Plus cover; no excess. Caesarean-related benefit noted separately ($2,000, caesarean excluded from one benefit — VERIFY which).",
     "detail_points": [
-     "Pregnancy, Maternity and Infertility Allowance (Plus only): $1,500 per pregnancy per policy year (obstetric care incl. scans, infertility diagnosis/treatment, related accommodation) after 2 years continuous Plus cover",
-     "No excess"
+     "Pregnancy, Maternity and Infertility Allowance (Plus only): $1,500 per pregnancy per {policy year} (obstetric care incl. scans, infertility diagnosis/treatment, related accommodation) after 2 years continuous Plus cover",
+     "No {excess}"
     ],
-    "internal_note": "Caesarean-related benefit noted separately ($2,000, caesarean excluded from one benefit — VERIFY which)"
+    "internal_note": "Caesarean-related benefit noted separately ($2,000, caesarean excluded from one benefit — VERIFY which)",
+    "signal": "1500-plus-2yr"
    },
    {
     "feature": "Mental health",
@@ -979,7 +1043,8 @@
      "No general psychiatric/mental health hospitalisation benefit identified",
      "Psychologist support covered post-cancer only"
     ],
-    "internal_note": "VERIFY against exclusions list"
+    "internal_note": "VERIFY against exclusions list",
+    "signal": "post-cancer-only"
    },
    {
     "feature": "Telehealth",
@@ -988,9 +1053,10 @@
     "short": "Not in wording (Vitality is separate)",
     "detail": "Not in policy wording. AIA runs the separate AIA Vitality wellness programme (premium discounts) outside this policy — reference as a programme, not a policy benefit.",
     "detail_points": [
-     "Not in policy wording",
+     "Not in {policy wording}",
      "AIA runs the separate AIA Vitality wellness programme (premium discounts) outside this policy — reference as a programme, not a policy benefit"
-    ]
+    ],
+    "signal": "not-in-wording"
    },
    {
     "feature": "Prosthesis / specialised equipment",
@@ -999,10 +1065,11 @@
     "short": "Within unlimited Surgery benefit",
     "detail": "Prostheses included within Surgery benefit inpatient costs (unlimited benefit; reasonable charges apply). No separate prostheses schedule cited in wording — VERIFY whether internal limits exist.",
     "detail_points": [
-     "Prostheses included within Surgery benefit inpatient costs (unlimited benefit",
-     "Reasonable charges apply)"
+     "{Prostheses} included within Surgery benefit inpatient costs (unlimited benefit",
+     "{Reasonable charges} apply)"
     ],
-    "internal_note": "No separate prostheses schedule cited in wording — VERIFY whether internal limits exist"
+    "internal_note": "No separate prostheses schedule cited in wording — VERIFY whether internal limits exist",
+    "signal": "within-unlimited"
    },
    {
     "feature": "Approved-provider rules",
@@ -1012,9 +1079,10 @@
     "detail": "'Approved facility' model — treatment must be in approved facilities; 'reasonable charges' standard applies across benefits. No affiliated-provider-style network restrictions equivalent to SC/nib identified.",
     "detail_points": [
      "'Approved facility' model — treatment must be in approved facilities",
-     "'reasonable charges' standard applies across benefits",
+     "'{reasonable charges}' standard applies across benefits",
      "No affiliated-provider-style network restrictions equivalent to SC/nib identified"
-    ]
+    ],
+    "signal": "approved-facilities"
    },
    {
     "feature": "Prior approval",
@@ -1023,9 +1091,10 @@
     "short": "Required for many benefits",
     "detail": "Prior approval required for many benefits (all cancer treatments, prophylactic surgery, congenital surgery, overseas-related benefits). Apply via aia.co.nz or 0800 500 108.",
     "detail_points": [
-     "Prior approval required for many benefits (all cancer treatments, prophylactic surgery, congenital surgery, overseas-related benefits)",
+     "{Prior approval} required for many benefits (all cancer treatments, prophylactic surgery, congenital surgery, overseas-related benefits)",
      "Apply via aia.co.nz or 0800 500 108"
-    ]
+    ],
+    "signal": "required-many"
    },
    {
     "feature": "Claims process",
@@ -1035,7 +1104,8 @@
     "detail": "Claims via aia.co.nz / 0800 500 108 (§D 'How to make a claim').",
     "detail_points": [
      "Claims via aia.co.nz / 0800 500 108 (§D 'How to make a claim')"
-    ]
+    ],
+    "signal": "phone-web"
    },
    {
     "feature": "Loyalty / no-claims benefits",
@@ -1046,7 +1116,8 @@
     "detail_points": [
      "AIA Vitality (separate programme) offers premium discounts up to material levels"
     ],
-    "internal_note": "Time-based benefit unlocks at 2 and 3 years continuous cover (details pp.19–22 — VERIFY list)"
+    "internal_note": "Time-based benefit unlocks at 2 and 3 years continuous cover (details pp.19–22 — VERIFY list)",
+    "signal": "2-3yr+vitality"
    },
    {
     "feature": "Premium structure",
@@ -1058,7 +1129,8 @@
      "Not stated in policy document",
      "Vitality discounts affect net premium)"
     ],
-    "internal_note": "EXTERNAL VERIFICATION NEEDED (AIA prices by age"
+    "internal_note": "EXTERNAL VERIFICATION NEEDED (AIA prices by age",
+    "signal": "not-stated"
    },
    {
     "feature": "Guaranteed wording upgrades",
@@ -1069,7 +1141,8 @@
     "detail_points": [
      "Enhancement Pass Back Benefit (§B): future improvements to the policy are automatically passed back to existing policyholders — a distinctive AIA feature",
      "Changes via pass-back don't require the 30-day notice"
-    ]
+    ],
+    "signal": "pass-back"
    },
    {
     "feature": "Key exclusions",
@@ -1079,7 +1152,8 @@
     "detail": "Exclusions section pp.23–25: pre-existing conditions, plus standard exclusion list (read in full before publishing page copy — extraction pass focused on benefits).",
     "detail_points": [
      "Exclusions section pp.23–25: pre-existing conditions, plus standard exclusion list (read in full before publishing page copy — extraction pass focused on benefits)"
-    ]
+    ],
+    "signal": "list-aia"
    },
    {
     "feature": "Cover ceases / age limits",
@@ -1088,7 +1162,8 @@
     "short": "None identified",
     "detail": "No ceasing age identified on first pass — VERIFY in §G/defined terms.",
     "detail_points": [],
-    "internal_note": "No ceasing age identified on first pass — VERIFY in §G/defined terms"
+    "internal_note": "No ceasing age identified on first pass — VERIFY in §G/defined terms",
+    "signal": "none-identified"
    }
   ],
   "pl": [
@@ -1099,9 +1174,10 @@
     "short": "$300,000/yr",
     "detail": "Surgical Benefit: up to $300,000 per life assured per policy year (surgeon/anaesthetist/theatre/hospital fees, prostheses, related consults/diagnostics/prescriptions/physio within 6 months). Includes oral surgery, medically-required weight-loss surgery, breast reconstruction after cancer with no time limit.",
     "detail_points": [
-     "Surgical Benefit: up to $300,000 per life assured per policy year (surgeon/anaesthetist/theatre/hospital fees, prostheses, related consults/diagnostics/prescriptions/physio within 6 months)",
+     "Surgical Benefit: up to $300,000 per life assured per {policy year} (surgeon/anaesthetist/theatre/hospital fees, {prostheses}, related consults/diagnostics/prescriptions/physio within 6 months)",
      "Includes oral surgery, medically-required weight-loss surgery, breast reconstruction after cancer with no time limit"
-    ]
+    ],
+    "signal": "300k"
    },
    {
     "feature": "Non-surgical hospital maximum",
@@ -1110,8 +1186,9 @@
     "short": "$300,000/yr",
     "detail": "Non-surgical Benefit: up to $300,000 per life assured per policy year, covering Private Hospital admissions (§4.2.1) and the Serious Illness Benefit (§4.2.2 — drug/radiotherapy treatment for life-threatening conditions e.g. cancer).",
     "detail_points": [
-     "Non-surgical Benefit: up to $300,000 per life assured per policy year, covering Private Hospital admissions (§4.2.1) and the Serious Illness Benefit (§4.2.2 — drug/radiotherapy treatment for life-threatening conditions e.g. cancer)"
-    ]
+     "Non-surgical Benefit: up to $300,000 per life assured per {policy year}, covering Private Hospital admissions (§4.2.1) and the Serious Illness Benefit (§4.2.2 — drug/radiotherapy treatment for life-threatening conditions e.g. cancer)"
+    ],
+    "signal": "300k"
    },
    {
     "feature": "Excess options",
@@ -1120,11 +1197,12 @@
     "short": "Annual; waived for serious conditions",
     "detail": "Excess per Policy Schedule (options chosen at application — VERIFY current options externally). Distinctive: Excess Waiver Benefit — excess waived entirely for heart attack, stroke, coronary artery surgery, or critical cancer admissions (§5.12). Major Diagnostic excess capped at $250. Multiple Policy Excess Benefit reduces excess if another insurer paid part.",
     "detail_points": [
-     "Distinctive: Excess Waiver Benefit — excess waived entirely for heart attack, stroke, coronary artery surgery, or critical cancer admissions (§5.12)",
+     "Distinctive: {Excess} Waiver Benefit — excess waived entirely for heart attack, stroke, coronary artery surgery, or critical cancer admissions (§5.12)",
      "Major Diagnostic excess capped at $250",
      "Multiple Policy Excess Benefit reduces excess if another insurer paid part"
     ],
-    "internal_note": "Excess per Policy Schedule (options chosen at application — VERIFY current options externally)"
+    "internal_note": "Excess per Policy Schedule (options chosen at application — VERIFY current options externally)",
+    "signal": "annual-waiver-serious"
    },
    {
     "feature": "Chemotherapy / radiotherapy cover",
@@ -1135,7 +1213,8 @@
     "detail_points": [
      "Cancer: surgery under Surgical Benefit ($300k)",
      "Non-surgical cancer treatment under Serious Illness Benefit within the $300k Non-surgical maximum (chemo/radiotherapy incl. private outpatient clinic administration, prescriptions, follow-ups until cured/in remission)"
-    ]
+    ],
+    "signal": "within-300k"
    },
    {
     "feature": "Non-Pharmac medicines cap",
@@ -1144,9 +1223,10 @@
     "short": "All Medsafe drugs — no separate cap",
     "detail": "Non-Pharmac Subsidised Drugs Benefit: ALL Medsafe-registered drugs covered when prescribed by a specialist for a covered treatment, within Medsafe guidelines — paid within the Surgical/Non-surgical maximums (up to $300k), not a separate low cap. One of the strongest non-Pharmac positions in the market at this product tier.",
     "detail_points": [
-     "Non-Pharmac Subsidised Drugs Benefit: ALL Medsafe-registered drugs covered when prescribed by a specialist for a covered treatment, within Medsafe guidelines — paid within the Surgical/Non-surgical maximums (up to $300k), not a separate low cap",
-     "One of the strongest non-Pharmac positions in the market at this product tier"
-    ]
+     "{Non-Pharmac} Subsidised Drugs Benefit: ALL {Medsafe}-registered drugs covered when prescribed by a {specialist} for a covered treatment, within Medsafe guidelines — paid within the Surgical/Non-surgical maximums (up to $300k), not a separate low cap",
+     "One of the strongest non-{Pharmac} positions in the market at this product tier"
+    ],
+    "signal": "all-medsafe-within-max"
    },
    {
     "feature": "Follow-up care",
@@ -1157,8 +1237,9 @@
     "detail_points": [
      "Serious Illness follow-ups covered until cured or in remission (no fixed time window)",
      "Surgery follow-ups within 6 months",
-     "Second Opinion Benefit $4,000/yr, no excess"
-    ]
+     "Second Opinion Benefit $4,000/yr, no {excess}"
+    ],
+    "signal": "to-remission"
    },
    {
     "feature": "Specialist consultations",
@@ -1167,10 +1248,11 @@
     "short": "Surgery-linked; optional $4k+$4k/yr",
     "detail": "No standalone specialist consult benefit in base cover (consults covered when tied to surgery/admission within 6 months). Optional Specialist and Tests Benefit: $4,000/yr specialists + $4,000/yr tests (own $250 excess); 'specialist' here includes osteopath, naturopath, homeopath, chiropractor, acupuncturist.",
     "detail_points": [
-     "No standalone specialist consult benefit in base cover (consults covered when tied to surgery/admission within 6 months)",
-     "Optional Specialist and Tests Benefit: $4,000/yr specialists + $4,000/yr tests (own $250 excess)",
+     "No standalone {specialist} consult benefit in base cover (consults covered when tied to surgery/admission within 6 months)",
+     "Optional Specialist and Tests Benefit: $4,000/yr specialists + $4,000/yr tests (own $250 {excess})",
      "'specialist' here includes osteopath, naturopath, homeopath, chiropractor, acupuncturist"
-    ]
+    ],
+    "signal": "surgery-linked+opt8k"
    },
    {
     "feature": "Diagnostic imaging & tests",
@@ -1179,10 +1261,11 @@
     "short": "$200,000/yr Major Diagnostic",
     "detail": "Major Diagnostic Benefit: $200,000 per life per policy year for specialist-recommended diagnostics (MRI, CT, PET, colonoscopy, angiogram etc.) not tied to a surgery/admission; diagnosis-purpose only (screening/surveillance excluded); excess capped at $250.",
     "detail_points": [
-     "Major Diagnostic Benefit: $200,000 per life per policy year for specialist-recommended diagnostics (MRI, CT, PET, colonoscopy, angiogram etc.) not tied to a surgery/admission",
+     "Major Diagnostic Benefit: $200,000 per life per {policy year} for {specialist}-recommended diagnostics (MRI, CT, PET, colonoscopy, angiogram etc.) not tied to a surgery/admission",
      "Diagnosis-purpose only (screening/surveillance excluded)",
-     "Excess capped at $250"
-    ]
+     "{Excess} capped at $250"
+    ],
+    "signal": "200k"
    },
    {
     "feature": "Time-link conditions",
@@ -1193,7 +1276,8 @@
     "detail_points": [
      "6-month windows: pre-surgery diagnostics, pre/post consults, post prescriptions/tests/physio all within 6 months of the surgery or admission",
      "Diagnostics leading to treatment within 6 months are re-counted under the Surgical/Non-surgical maximums"
-    ]
+    ],
+    "signal": "6mo"
    },
    {
     "feature": "Pre-existing conditions",
@@ -1204,8 +1288,9 @@
     "detail_points": [
      "Underwritten at application (exclusions/loadings per Policy Schedule)",
      "Children: automatically covered free for first 3 months from birth",
-     "Can continue without health assessment if registered in time — effectively covering newborns before underwriting, a notable family feature"
-    ]
+     "Can continue without health assessment if registered in time — effectively covering newborns before {underwriting}, a notable family feature"
+    ],
+    "signal": "excluded"
    },
    {
     "feature": "Stand-down / waiting periods",
@@ -1214,10 +1299,11 @@
     "short": "Sterilisation 2 yrs; little else",
     "detail": "Sterilisation loyalty benefit after 2 years of premiums (prior approval required). Suicide-related Funeral Support exclusion first 13 months. No other general stand-downs identified.",
     "detail_points": [
-     "Sterilisation loyalty benefit after 2 years of premiums (prior approval required)",
+     "Sterilisation {loyalty benefit} after 2 years of premiums ({prior approval} required)",
      "Suicide-related Funeral Support exclusion first 13 months",
      "No other general stand-downs identified"
-    ]
+    ],
+    "signal": "2yr-sterilisation"
    },
    {
     "feature": "Congenital conditions",
@@ -1227,7 +1313,8 @@
     "detail": "All known congenital conditions excluded (inherited or external-factor), with no exception list — stricter than SC/nib/AIA on congenital.",
     "detail_points": [
      "All known congenital conditions excluded (inherited or external-factor), with no exception list — stricter than SC/nib/AIA on congenital"
-    ]
+    ],
+    "signal": "excluded-all"
    },
    {
     "feature": "GP / day-to-day add-on",
@@ -1238,8 +1325,9 @@
     "detail_points": [
      "No GP/day-to-day module",
      "GP, dentist, nurse, physio and prescription costs explicitly excluded except where tied to covered treatment",
-     "Optional Specialist & Tests Benefit is the only day-to-day-adjacent add-on"
-    ]
+     "Optional {Specialist} & Tests Benefit is the only day-to-day-adjacent add-on"
+    ],
+    "signal": "none"
    },
    {
     "feature": "Obstetrics / maternity",
@@ -1249,8 +1337,9 @@
     "detail": "Normal pregnancy, childbirth, caesareans, infertility all excluded. Obstetrician costs covered ONLY under the optional Specialist & Tests Benefit for complications of pregnancy (until 90 days post-pregnancy).",
     "detail_points": [
      "Normal pregnancy, childbirth, caesareans, infertility all excluded",
-     "Obstetrician costs covered ONLY under the optional Specialist & Tests Benefit for complications of pregnancy (until 90 days post-pregnancy)"
-    ]
+     "Obstetrician costs covered ONLY under the optional {Specialist} & Tests Benefit for complications of pregnancy (until 90 days post-pregnancy)"
+    ],
+    "signal": "excluded"
    },
    {
     "feature": "Mental health",
@@ -1260,7 +1349,8 @@
     "detail": "Psychiatric conditions and mental health disorders explicitly excluded — the clearest mental-health exclusion among the five insurers.",
     "detail_points": [
      "Psychiatric conditions and mental health disorders explicitly excluded — the clearest mental-health exclusion among the five insurers"
-    ]
+    ],
+    "signal": "excluded"
    },
    {
     "feature": "Telehealth",
@@ -1270,7 +1360,8 @@
     "detail": "Not in wording — no telehealth provision identified.",
     "detail_points": [
      "Not in wording — no telehealth provision identified"
-    ]
+    ],
+    "signal": "not-in-wording"
    },
    {
     "feature": "Prosthesis / specialised equipment",
@@ -1279,9 +1370,10 @@
     "short": "Within Surgical Benefit",
     "detail": "Prostheses covered within Surgical Benefit when required as a result of surgery (within the $300k maximum; no separate schedule cited).",
     "detail_points": [
-     "Prostheses covered within Surgical Benefit when required as a result of surgery (within the $300k maximum",
+     "{Prostheses} covered within Surgical Benefit when required as a result of surgery (within the $300k maximum",
      "No separate schedule cited)"
-    ]
+    ],
+    "signal": "within-max"
    },
    {
     "feature": "Approved-provider rules",
@@ -1295,7 +1387,8 @@
      "Unique: Australasian coverage — treatment in Australia reimbursed at NZ-equivalent rates",
      "Medical Tourism Benefit reimburses 75% of NZ cost if you choose treatment overseas",
      "Overseas Waiting List Benefit if NZ private care unavailable within 6 months"
-    ]
+    ],
+    "signal": "approved+australia"
    },
    {
     "feature": "Prior approval",
@@ -1305,8 +1398,9 @@
     "detail": "Pre-approval preferred but not mandatory (reimbursement claims accepted at claimant's risk). Prior approval required for sterilisation loyalty benefit.",
     "detail_points": [
      "Pre-approval preferred but not mandatory (reimbursement claims accepted at claimant's risk)",
-     "Prior approval required for sterilisation loyalty benefit"
-    ]
+     "{Prior approval} required for sterilisation {loyalty benefit}"
+    ],
+    "signal": "preferred"
    },
    {
     "feature": "Claims process",
@@ -1317,7 +1411,8 @@
     "detail_points": [
      "Paper-leaning process: claim form + original invoices to Partners Life (fax/email to start, originals required to pay)",
      "Contact 0800 145 433 or via adviser"
-    ]
+    ],
+    "signal": "paper"
    },
    {
     "feature": "Loyalty / no-claims benefits",
@@ -1328,7 +1423,8 @@
     "detail_points": [
      "Loyalty: sterilisation after 2 years",
      "Extras others don't have: Waiver of Premium on death of a life assured (3 yrs premiums refunded for survivors), Funeral Support $3,500, Medical Misadventure $30,000, Public Hospital Cash Grant $300/night (nights 4–13), Hospice Benefit $300/night"
-    ]
+    ],
+    "signal": "extras-not-loyalty"
    },
    {
     "feature": "Premium structure",
@@ -1340,7 +1436,8 @@
      "Not stated in wording",
      "Partners Life announced Journey Plan PMC premium +2.0% and policy fee $66.05/yr from 22 Apr 2026 — cite externally"
     ],
-    "internal_note": "EXTERNAL VERIFICATION NEEDED"
+    "internal_note": "EXTERNAL VERIFICATION NEEDED",
+    "signal": "not-stated"
    },
    {
     "feature": "Guaranteed wording upgrades",
@@ -1351,7 +1448,8 @@
     "detail_points": [
      "Children converting to their own policy get existing-or-current terms, whichever is MORE FAVOURABLE — a pro-customer conversion promise"
     ],
-    "internal_note": "General upgrade pass-back not stated — VERIFY"
+    "internal_note": "General upgrade pass-back not stated — VERIFY",
+    "signal": "child-conversion"
    },
    {
     "feature": "Key exclusions",
@@ -1361,7 +1459,8 @@
     "detail": "Extensive exclusion list: mental health, congenital (all), GP/dental/prescriptions (unless specified), normal pregnancy/caesareans, preventative care/screening, sleep apnoea investigations, laser eye, alcohol/drug-related, geriatric care, emergency acute care (public system's role), war/terrorism, criminal-offence injuries.",
     "detail_points": [
      "Extensive exclusion list: mental health, congenital (all), GP/dental/prescriptions (unless specified), normal pregnancy/caesareans, preventative care/screening, sleep apnoea investigations, laser eye, alcohol/drug-related, geriatric care, emergency acute care (public system's role), war/terrorism, criminal-offence injuries"
-    ]
+    ],
+    "signal": "list-pl"
    },
    {
     "feature": "Cover ceases / age limits",
@@ -1374,7 +1473,8 @@
      "Children may remain covered at any age while premiums paid",
      "Confirm current version with Partners Life/adviser before publishing"
     ],
-    "internal_note": "VERIFY whether current sold product (Journey Plan) differs — THIS DOC IS V11 of the prior-generation product"
+    "internal_note": "VERIFY whether current sold product (Journey Plan) differs — THIS DOC IS V11 of the prior-generation product",
+    "signal": "none-identified"
    }
   ],
   "uni": [
@@ -1385,12 +1485,13 @@
     "short": "No maximum per admission (spinal $200k lifetime)",
     "detail": "Surgery: 'No Maximum' per admission — 100% of reasonable charges for non-acute qualifying surgical procedures in licensed private hospitals (surgeon, anaesthetist, hospital, prostheses, ICU). Sub-limits: spinal surgery $200,000 lifetime; oral surgery no maximum; breast reconstruction no maximum. Excess applies.",
     "detail_points": [
-     "Surgery: 'No Maximum' per admission — 100% of reasonable charges for non-acute qualifying surgical procedures in licensed private hospitals (surgeon, anaesthetist, hospital, prostheses, ICU)",
+     "Surgery: 'No Maximum' per admission — 100% of {reasonable charges} for non-acute qualifying surgical procedures in licensed private hospitals (surgeon, anaesthetist, hospital, {prostheses}, ICU)",
      "Sub-limits: spinal surgery $200,000 lifetime",
      "Oral surgery no maximum",
      "Breast reconstruction no maximum",
-     "Excess applies"
-    ]
+     "{Excess} applies"
+    ],
+    "signal": "no-max-per-admission"
    },
    {
     "feature": "Non-surgical hospital maximum",
@@ -1399,10 +1500,11 @@
     "short": "$65,000/yr",
     "detail": "Medical Hospitalisation: $65,000 per policy year (non-acute, excludes psychiatric/geriatric) + $500 ancillary. Acute private hospitalisation grant $5,000/yr. Psychiatric/geriatric hospitalisation $5,000/yr.",
     "detail_points": [
-     "Medical Hospitalisation: $65,000 per policy year (non-acute, excludes psychiatric/geriatric) + $500 ancillary",
+     "Medical Hospitalisation: $65,000 per {policy year} (non-acute, excludes psychiatric/geriatric) + $500 ancillary",
      "Acute private hospitalisation grant $5,000/yr",
      "Psychiatric/geriatric hospitalisation $5,000/yr"
-    ]
+    ],
+    "signal": "65k"
    },
    {
     "feature": "Excess options",
@@ -1411,11 +1513,12 @@
     "short": "Voluntary — PER CLAIM",
     "detail": "Voluntary excess option applies PER CLAIM (not per year — differs from SC/nib/AIA annual excesses). Amount per Membership Certificate; benefits show where excess applies. Worth a 'what this means' explainer — per-claim excess changes the maths for multiple claims in a year.",
     "detail_points": [
-     "Voluntary excess option applies PER CLAIM (not per year — differs from SC/nib/AIA annual excesses)",
+     "Voluntary {excess} option applies PER CLAIM (not per year — differs from SC/nib/AIA annual excesses)",
      "Amount per Membership Certificate",
      "Benefits show where excess applies",
      "Worth a 'what this means' explainer — per-claim excess changes the maths for multiple claims in a year"
-    ]
+    ],
+    "signal": "per-claim"
    },
    {
     "feature": "Chemotherapy / radiotherapy cover",
@@ -1424,11 +1527,12 @@
     "short": "Chemo $65k/yr + radiation $65k/yr",
     "detail": "Chemotherapy: $65,000/yr (Pharmac drugs, oncologist treatment, hospital costs; includes genetic/genomic testing post-diagnosis). Radiation oncology: $65,000/yr. Cancer surgery under the no-maximum Surgery benefit.",
     "detail_points": [
-     "Chemotherapy: $65,000/yr (Pharmac drugs, oncologist treatment, hospital costs",
+     "Chemotherapy: $65,000/yr ({Pharmac} drugs, oncologist treatment, hospital costs",
      "Includes genetic/genomic testing post-diagnosis)",
      "Radiation oncology: $65,000/yr",
      "Cancer surgery under the no-maximum Surgery benefit"
-    ]
+    ],
+    "signal": "65k+65k"
    },
    {
     "feature": "Non-Pharmac medicines cap",
@@ -1437,10 +1541,11 @@
     "short": "$10k/yr chemo + $2k/yr any in-patient",
     "detail": "Non-Pharmac: chemo drugs (Medsafe-approved) up to $10,000/yr within the Chemotherapy benefit; PLUS separate In-Patient Non-Pharmac Subsidised Pharmaceuticals $2,000/yr (any condition, not just cancer); Day-to-Day module adds $1,000/yr non-Pharmac scripts.",
     "detail_points": [
-     "Non-Pharmac: chemo drugs (Medsafe-approved) up to $10,000/yr within the Chemotherapy benefit",
-     "PLUS separate In-Patient Non-Pharmac Subsidised Pharmaceuticals $2,000/yr (any condition, not just cancer)",
+     "{Non-Pharmac}: chemo drugs ({Medsafe}-approved) up to $10,000/yr within the Chemotherapy benefit",
+     "PLUS separate In-Patient Non-{Pharmac} Subsidised Pharmaceuticals $2,000/yr (any condition, not just cancer)",
      "Day-to-Day module adds $1,000/yr non-Pharmac scripts"
-    ]
+    ],
+    "signal": "10k+2k"
    },
    {
     "feature": "Follow-up care",
@@ -1449,8 +1554,9 @@
     "short": "5-year surveillance, $3k/yr",
     "detail": "Surveillance Following Cancer Treatment: specialist consults + investigations for 5 YEARS post-treatment, $3,000/yr — the longest defined cancer-surveillance window among the five.",
     "detail_points": [
-     "Surveillance Following Cancer Treatment: specialist consults + investigations for 5 YEARS post-treatment, $3,000/yr — the longest defined cancer-surveillance window among the five"
-    ]
+     "Surveillance Following Cancer Treatment: {specialist} consults + investigations for 5 YEARS post-treatment, $3,000/yr — the longest defined cancer-surveillance window among the five"
+    ],
+    "signal": "5yr-3k"
    },
    {
     "feature": "Specialist consultations",
@@ -1459,9 +1565,10 @@
     "short": "$300k/yr surgery-window; module $5k/yr",
     "detail": "Base: specialist consultations $300,000/yr within the 6-months-before/after-surgery window. Specialists Module S: standalone specialist consults $5,000/yr (GP-referred) + diagnostics $7,500 combined.",
     "detail_points": [
-     "Base: specialist consultations $300,000/yr within the 6-months-before/after-surgery window",
+     "Base: {specialist} consultations $300,000/yr within the 6-months-before/after-surgery window",
      "Specialists Module S: standalone specialist consults $5,000/yr (GP-referred) + diagnostics $7,500 combined"
-    ]
+    ],
+    "signal": "300k-window+mod5k"
    },
    {
     "feature": "Diagnostic imaging & tests",
@@ -1474,7 +1581,8 @@
      "Pre/post-surgery imaging (X-ray, mammography, ultrasound) combined $300,000/yr",
      "Gastroscopy/colonoscopy: no maximum (diagnostic)",
      "Surveillance scope 50% to $2,500 per 24 months"
-    ]
+    ],
+    "signal": "300k"
    },
    {
     "feature": "Time-link conditions",
@@ -1484,7 +1592,8 @@
     "detail": "Surgery-related benefits run 6 months before and 6 months after surgery (imaging, specialists, post-op therapy $1,500 per event incl. osteo/chiro/dietitian — wider therapy list than competitors).",
     "detail_points": [
      "Surgery-related benefits run 6 months before and 6 months after surgery (imaging, specialists, post-op therapy $1,500 per event incl. osteo/chiro/dietitian — wider therapy list than competitors)"
-    ]
+    ],
+    "signal": "6mo"
    },
    {
     "feature": "Pre-existing conditions",
@@ -1495,7 +1604,8 @@
     "detail_points": [
      "Pre-existing conditions not covered unless accepted by UniMed (underwritten)",
      "Group schemes can vary this via Special Joining Concessions — relevant for employer groups"
-    ]
+    ],
+    "signal": "excluded-group-concessions"
    },
    {
     "feature": "Stand-down / waiting periods",
@@ -1506,7 +1616,8 @@
     "detail_points": [
      "Loyalty waits: sterilisation after 3 years",
      "Obesity/breast-reduction surgery (50% to $8,000 lifetime), overseas treatment ($30,000/yr), prophylactic surgery ($40,000 lifetime) all after 5 years continuous membership"
-    ]
+    ],
+    "signal": "3-5yr-loyalty"
    },
    {
     "feature": "Congenital conditions",
@@ -1517,7 +1628,8 @@
     "detail_points": [
      "Congenital conditions not covered — no exception list (like Partners Life",
      "Stricter than SC/nib/AIA which carve out the 7 minor conditions)"
-    ]
+    ],
+    "signal": "excluded-all"
    },
    {
     "feature": "GP / day-to-day add-on",
@@ -1528,7 +1640,8 @@
     "detail_points": [
      "Module G (Day to Day): GP visits $65/visit NO annual maximum (unusual — competitors cap totals), after-hours $70, practice nurse $65, prescriptions $400/yr, labs $100/visit no max",
      "Module N (Natural Health) and Module D (Dental & Vision) also available"
-    ]
+    ],
+    "signal": "module-uncapped-gp"
    },
    {
     "feature": "Obstetrics / maternity",
@@ -1539,7 +1652,8 @@
     "detail_points": [
      "Obstetrics: $1,000/yr for obstetric conditions under Specialists Module (not base)",
      "No general maternity benefit"
-    ]
+    ],
+    "signal": "1k-module"
    },
    {
     "feature": "Mental health",
@@ -1550,7 +1664,8 @@
     "detail_points": [
      "Mental Health benefit IN BASE PLAN: $1,000/yr for psychiatrist, psychologist, psychotherapist OR counsellor consultations — the only base-plan mental-health consultation benefit among the five",
      "Plus psychiatric hospitalisation $5,000/yr, and Day-to-Day loyalty psychiatric consults (3 visits after 5 yrs)"
-    ]
+    ],
+    "signal": "1k-base+5k"
    },
    {
     "feature": "Telehealth",
@@ -1559,7 +1674,8 @@
     "short": "Not in plan document",
     "detail": "Not identified in plan document — VERIFY whether UniMed offers telehealth services outside the wording.",
     "detail_points": [],
-    "internal_note": "Not identified in plan document — VERIFY whether UniMed offers telehealth services outside the wording"
+    "internal_note": "Not identified in plan document — VERIFY whether UniMed offers telehealth services outside the wording",
+    "signal": "not-in-wording"
    },
    {
     "feature": "Prosthesis / specialised equipment",
@@ -1568,9 +1684,10 @@
     "short": "Within no-max Surgery benefit",
     "detail": "Surgically implanted prostheses covered within the no-maximum Surgery benefit (reasonable charges; no separate schedule cited — VERIFY approved-procedures list).",
     "detail_points": [
-     "Surgically implanted prostheses covered within the no-maximum Surgery benefit (reasonable charges"
+     "Surgically implanted {prostheses} covered within the no-maximum Surgery benefit ({reasonable charges}"
     ],
-    "internal_note": "No separate schedule cited — VERIFY approved-procedures list)"
+    "internal_note": "No separate schedule cited — VERIFY approved-procedures list)",
+    "signal": "within-no-max"
    },
    {
     "feature": "Approved-provider rules",
@@ -1581,7 +1698,8 @@
     "detail_points": [
      "'Licensed Private Hospital / private facility approved by UniMed' + reasonable-charge test",
      "Approved Surgical Procedures list governs what counts as a qualifying procedure (on UniMed website)"
-    ]
+    ],
+    "signal": "approved-hospitals"
    },
    {
     "feature": "Prior approval",
@@ -1590,9 +1708,10 @@
     "short": "Required for claims over $1,000",
     "detail": "Prior approval required for any claim over $1,000 (via Member Portal) — a lower, clearer threshold than competitors' discretionary approach. Approval states the covered amount and excess.",
     "detail_points": [
-     "Prior approval required for any claim over $1,000 (via Member Portal) — a lower, clearer threshold than competitors' discretionary approach",
-     "Approval states the covered amount and excess"
-    ]
+     "{Prior approval} required for any claim over $1,000 (via Member Portal) — a lower, clearer threshold than competitors' discretionary approach",
+     "Approval states the covered amount and {excess}"
+    ],
+    "signal": "required-over-1k"
    },
    {
     "feature": "Claims process",
@@ -1603,7 +1722,8 @@
     "detail_points": [
      "Claims/approvals via UniMed Member Portal",
      "Reimbursement model with invoices"
-    ]
+    ],
+    "signal": "portal"
    },
    {
     "feature": "Loyalty / no-claims benefits",
@@ -1616,7 +1736,8 @@
      "5-yr overseas treatment ($30k/yr), obesity/breast-reduction ($8k lifetime), prophylactic surgery ($40k lifetime)",
      "Module loyalty extras (hearing aid $1k/yr, psychiatric visits)",
      "Switching insurers resets all of it"
-    ]
+    ],
+    "signal": "strong-ladder"
    },
    {
     "feature": "Premium structure",
@@ -1628,7 +1749,8 @@
      "Not stated in wording",
      "UniMed is a NZ not-for-profit mutual (member-owned) — pricing set outside the plan document"
     ],
-    "internal_note": "EXTERNAL VERIFICATION NEEDED"
+    "internal_note": "EXTERNAL VERIFICATION NEEDED",
+    "signal": "not-stated"
    },
    {
     "feature": "Guaranteed wording upgrades",
@@ -1641,7 +1763,8 @@
      "1 Aug 2025)",
      "T&C separately versioned 2026"
     ],
-    "internal_note": "Change-application terms in T&C — VERIFY notice provisions for wording changes"
+    "internal_note": "Change-application terms in T&C — VERIFY notice provisions for wording changes",
+    "signal": "verify"
    },
    {
     "feature": "Key exclusions",
@@ -1651,7 +1774,8 @@
     "detail": "Key exclusions: pre-existing (unless accepted), ALL congenital, listed chronic conditions, acute care (public system), injuries (ACC's domain — but ACC Top-Up benefits exist), psychiatric/geriatric beyond stated limits.",
     "detail_points": [
      "Key exclusions: pre-existing (unless accepted), ALL congenital, listed chronic conditions, acute care (public system), injuries (ACC's domain — but ACC Top-Up benefits exist), psychiatric/geriatric beyond stated limits"
-    ]
+    ],
+    "signal": "list-uni"
    },
    {
     "feature": "Cover ceases / age limits",
@@ -1663,12 +1787,13 @@
      "No ceasing age identified",
      "NOTE: UniMed merged with Accuro (2024) — now NZ's 3rd-largest health insurer, ~140,000 members, member-owned mutual",
      "Good trust-signal facts for page copy (attribute externally)"
-    ]
+    ],
+    "signal": "none-identified"
    }
   ]
  },
- "schema_version": 3,
- "notes": "v3: adds insurer accent hex + logo path (official files to /logos/, fallback initial-tile), 'why' lines on notable features (render under at-a-glance values), a glossary object (dotted-underline tooltip any time a term appears), and detail_points (render modal details as these bullets, not the paragraph). 'detail' retained for compatibility. internal_note fields are audit flags — NEVER render them in the UI. Insurers now carry sources[] (label+url) — render the modal SOURCE line as a link to the insurer's matching source url.",
+ "schema_version": 4,
+ "notes": "v3: adds insurer accent hex + logo path (official files to /logos/, fallback initial-tile), 'why' lines on notable features (render under at-a-glance values), a glossary object (dotted-underline tooltip any time a term appears), and detail_points (render modal details as these bullets, not the paragraph). 'detail' retained for compatibility. internal_note fields are audit flags — NEVER render them in the UI. Insurers now carry sources[] (label+url) — render the modal SOURCE line as a link to the insurer's matching source url. v4: per-cell 'signal' (normalized value — notable-for-this-pair = feature.notable AND selected insurers' signals differ); 'synonyms' object (feature -> trigger phrases) and 'example_questions' for the ask engine (match case-insensitively, typo-tolerance in code); {term} markers sprinkled into definitions/why/detail_points — glossary lookup must be case-insensitive.",
  "accent_status": "Accents matched to supplied logos 19 Jul 2026 per Reuben's direction: nib = light logo green, PL = dark green-teal, UniMed = navy, AIA deepened.",
  "glossary": {
   "excess": "The amount you pay yourself when you claim, before the insurer pays the rest. A higher excess means cheaper premiums.",
@@ -1686,5 +1811,262 @@
   "loyalty benefit": "Extra cover that unlocks after years of continuous membership — and resets if you switch insurers.",
   "policy year": "The 12 months your benefit limits apply to, resetting at renewal. Also called a claims year.",
   "prior approval": "Asking the insurer to confirm cover before treatment. Skipping it can mean paying first and arguing later."
- }
+ },
+ "synonyms": {
+  "Surgical benefit maximum": [
+   "surgery",
+   "operation",
+   "op",
+   "surgical",
+   "knee",
+   "hip",
+   "shoulder",
+   "heart surgery",
+   "cardiac",
+   "bypass",
+   "hysterectomy",
+   "hernia",
+   "joint replacement",
+   "theatre",
+   "surgeon"
+  ],
+  "Non-surgical hospital maximum": [
+   "hospital stay",
+   "admission",
+   "medical admission",
+   "hospitalisation",
+   "hospitalization",
+   "ward"
+  ],
+  "Excess options": [
+   "excess",
+   "deductible",
+   "pay first",
+   "out of pocket",
+   "co-pay",
+   "copay"
+  ],
+  "Chemotherapy / radiotherapy cover": [
+   "chemo",
+   "chemotherapy",
+   "radiotherapy",
+   "radiation",
+   "oncology",
+   "cancer treatment",
+   "tumour",
+   "tumor"
+  ],
+  "Non-Pharmac medicines cap": [
+   "pharmac",
+   "non-pharmac",
+   "unfunded drugs",
+   "keytruda",
+   "immunotherapy",
+   "drug funding",
+   "medicine",
+   "medication",
+   "cancer drugs",
+   "targeted therapy"
+  ],
+  "Follow-up care": [
+   "follow up",
+   "followup",
+   "aftercare",
+   "surveillance",
+   "remission",
+   "check ups after"
+  ],
+  "Specialist consultations": [
+   "specialist",
+   "consultation",
+   "referral",
+   "dermatologist",
+   "cardiologist",
+   "gynaecologist",
+   "urologist",
+   "see a specialist"
+  ],
+  "Diagnostic imaging & tests": [
+   "mri",
+   "ct",
+   "ct scan",
+   "pet scan",
+   "x-ray",
+   "xray",
+   "ultrasound",
+   "scan",
+   "colonoscopy",
+   "gastroscopy",
+   "endoscopy",
+   "biopsy",
+   "blood test",
+   "tests",
+   "diagnostics",
+   "imaging"
+  ],
+  "Time-link conditions": [
+   "time limit",
+   "window",
+   "within months",
+   "6 months rule"
+  ],
+  "Pre-existing conditions": [
+   "pre-existing",
+   "preexisting",
+   "existing condition",
+   "already have",
+   "prior condition",
+   "medical history",
+   "asthma",
+   "diabetes",
+   "back problem"
+  ],
+  "Stand-down / waiting periods": [
+   "waiting period",
+   "stand down",
+   "standdown",
+   "wait",
+   "when covered",
+   "how long until"
+  ],
+  "Congenital conditions": [
+   "congenital",
+   "birth defect",
+   "born with",
+   "from birth"
+  ],
+  "GP / day-to-day add-on": [
+   "gp",
+   "doctor visit",
+   "doctors",
+   "prescription",
+   "scripts",
+   "dental",
+   "dentist",
+   "optical",
+   "glasses",
+   "physio",
+   "physiotherapy",
+   "day to day",
+   "everyday"
+  ],
+  "Obstetrics / maternity": [
+   "pregnancy",
+   "pregnant",
+   "maternity",
+   "obstetrics",
+   "baby",
+   "childbirth",
+   "birth",
+   "midwife",
+   "caesarean",
+   "c-section",
+   "ivf",
+   "infertility",
+   "fertility"
+  ],
+  "Mental health": [
+   "mental health",
+   "psychologist",
+   "psychiatrist",
+   "counselling",
+   "counseling",
+   "therapy",
+   "therapist",
+   "depression",
+   "anxiety",
+   "adhd",
+   "stress",
+   "burnout"
+  ],
+  "Telehealth": [
+   "telehealth",
+   "virtual gp",
+   "online doctor",
+   "video consult",
+   "phone consult"
+  ],
+  "Prosthesis / specialised equipment": [
+   "prosthesis",
+   "prostheses",
+   "implant",
+   "hip implant",
+   "pacemaker",
+   "lens",
+   "device"
+  ],
+  "Approved-provider rules": [
+   "network",
+   "provider",
+   "which hospital",
+   "affiliated",
+   "first choice",
+   "choose my surgeon",
+   "any doctor"
+  ],
+  "Prior approval": [
+   "approval",
+   "pre-approval",
+   "preapproval",
+   "authorisation",
+   "authorization",
+   "apply before"
+  ],
+  "Claims process": [
+   "claim",
+   "claims",
+   "reimbursement",
+   "how to claim",
+   "get paid back",
+   "invoice"
+  ],
+  "Loyalty / no-claims benefits": [
+   "loyalty",
+   "tenure",
+   "long term member",
+   "rewards",
+   "staying",
+   "switch penalty"
+  ],
+  "Premium structure": [
+   "premium",
+   "price",
+   "cost",
+   "how much",
+   "monthly cost",
+   "expensive",
+   "cheaper"
+  ],
+  "Guaranteed wording upgrades": [
+   "upgrades",
+   "policy changes",
+   "pass back",
+   "improvements",
+   "terms change"
+  ],
+  "Key exclusions": [
+   "exclusions",
+   "not covered",
+   "excluded",
+   "what's not covered",
+   "fine print"
+  ],
+  "Cover ceases / age limits": [
+   "age limit",
+   "too old",
+   "cover ends",
+   "expiry",
+   "cut off age"
+  ]
+ },
+ "example_questions": [
+  "Is counselling covered?",
+  "What happens if I need cancer drugs Pharmac doesn't fund?",
+  "Can I get an MRI without having surgery?",
+  "I have asthma — will that be covered?",
+  "How does the excess actually work?",
+  "Is pregnancy covered by any of these?",
+  "Do I have to use certain hospitals?",
+  "What do I lose if I switch insurers?"
+ ]
 }
