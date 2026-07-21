@@ -4,17 +4,21 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Users, Filter, MessageCircleQuestion, Share2 } from "lucide-react";
+import { Check, Users, Filter, Share2 } from "lucide-react";
 import useMediaQuery from "@/hooks/useMediaQuery";
-import InsurerLogo from "@/components/InsurerLogo";
+import InsurerMark from "@/components/InsurerMark";
 import ProductTypeSelector from "@/components/ProductTypeSelector";
-import InsurerPicker from "@/components/InsurerPicker";
 import FilterChips from "@/components/FilterChips";
 
 /**
- * Desktop-only right rail (>= 1200px). A control dock, no anchor links.
- * Icons/logos only — every element exposes its label via a hover tooltip.
- * Below 1200px this renders nothing — the MobileBottomBar takes over.
+ * Desktop-only right rail (>= 1200px). Three actions only: change
+ * insurers, filter, share. The Ask launcher is a separate bottom-right
+ * chat bubble (see AskLaunchBubble). Rail chips use circular marks; the
+ * insurer popover renders lean picker cards (mark + name + product,
+ * no version line) so five cards fit on one row without word-breaking.
+ *
+ * Toggle behaviour: clicking the icon/chip while its popover is open
+ * closes it. Click-away close still applies.
  */
 export default function ControlDock({
   insurers,
@@ -29,8 +33,6 @@ export default function ControlDock({
   diffOnly,
   onDiffOnlyChange,
   notableCount,
-  askOpen,
-  onToggleAsk,
   onShare,
   pickerOpen,
   onPickerOpenChange,
@@ -54,14 +56,15 @@ export default function ControlDock({
           boxShadow: "0 12px 40px rgba(22,28,39,0.10)",
         }}
       >
-        {/* Insurer picker trigger */}
         <Popover open={pickerOpen} onOpenChange={onPickerOpenChange}>
           <PopoverTrigger asChild>
             <button
               type="button"
+              onClick={() => onPickerOpenChange(!pickerOpen)}
               className="group relative gmc-tap flex items-center justify-center w-14 h-14 rounded-full transition-colors hover:bg-[color:var(--gmc-teal-tint)]"
               data-testid="dock-insurers"
               aria-label="Change insurers"
+              aria-expanded={pickerOpen}
             >
               <Users
                 className="w-6 h-6"
@@ -73,15 +76,23 @@ export default function ControlDock({
           </PopoverTrigger>
           <PopoverContent
             side="left"
-            align="center"
+            align="start"
             sideOffset={12}
-            className="w-[600px] max-w-[92vw] max-h-[80vh] overflow-y-auto p-6 bg-white rounded-[var(--gmc-r-card)] border shadow-[0_20px_60px_rgba(22,28,39,0.16)] z-[70]"
-            style={{ borderColor: "var(--gmc-line)" }}
+            avoidCollisions={false}
+            collisionPadding={16}
+            className="p-6 bg-white rounded-[var(--gmc-r-card)] border shadow-[0_20px_60px_rgba(22,28,39,0.16)] z-[70]"
+            style={{
+              borderColor: "var(--gmc-line)",
+              width: "min(88vw, 880px)",
+              maxHeight: "calc(100vh - 32px)",
+              overflowY: "auto",
+              marginTop: 16,
+            }}
             data-testid="dock-picker-popover"
           >
-            <div className="space-y-6">
+            <div className="space-y-5">
               <ProductTypeSelector value={productType} onChange={onProductType} />
-              <InsurerPicker
+              <RailPickerGrid
                 insurers={allInsurers}
                 selected={insurers.map((i) => i.id)}
                 onToggle={onToggleInsurer}
@@ -90,29 +101,28 @@ export default function ControlDock({
           </PopoverContent>
         </Popover>
 
-        {/* Individual insurer chips — logo only, larger */}
         {insurers.map((ins) => (
           <button
             key={ins.id}
             type="button"
-            onClick={() => onPickerOpenChange(true)}
-            className="group relative gmc-tap flex items-center justify-center w-14 h-14 rounded-full bg-white"
+            onClick={() => onPickerOpenChange(!pickerOpen)}
+            className="group relative gmc-tap flex items-center justify-center w-14 h-14 rounded-full"
             style={{ boxShadow: `inset 0 0 0 2px ${ins.accent || "var(--gmc-teal)"}` }}
             aria-label={`${ins.name} — change insurer`}
             data-testid={`dock-chip-${ins.id}`}
           >
-            <InsurerLogo insurer={ins} size={34} />
+            <InsurerMark insurer={ins} size={40} />
             <RailLabel>{ins.name}</RailLabel>
           </button>
         ))}
 
         <div className="h-px my-1 mx-3" style={{ background: "var(--gmc-line)" }} />
 
-        {/* Filter popover */}
         <Popover open={filterOpen} onOpenChange={setFilterOpen}>
           <PopoverTrigger asChild>
             <button
               type="button"
+              onClick={() => setFilterOpen(!filterOpen)}
               className="group relative gmc-tap flex items-center justify-center w-14 h-14 rounded-full transition-colors hover:bg-[color:var(--gmc-teal-tint)]"
               data-testid="dock-filter"
               aria-label="Filter groups"
@@ -172,29 +182,6 @@ export default function ControlDock({
           </PopoverContent>
         </Popover>
 
-        {/* Ask panel toggle */}
-        <button
-          type="button"
-          onClick={onToggleAsk}
-          className="group relative gmc-tap flex items-center justify-center w-14 h-14 rounded-full transition-colors hover:bg-[color:var(--gmc-teal-tint)]"
-          style={{
-            background: askOpen ? "var(--gmc-teal-tint)" : "transparent",
-          }}
-          data-testid="dock-ask"
-          aria-label="Ask a question"
-          aria-pressed={askOpen}
-        >
-          <MessageCircleQuestion
-            className="w-6 h-6"
-            strokeWidth={2.2}
-            style={{ color: "var(--gmc-teal-deep)" }}
-          />
-          <RailLabel>Ask a question</RailLabel>
-        </button>
-
-        <div className="h-px my-1 mx-3" style={{ background: "var(--gmc-line)" }} />
-
-        {/* Share */}
         <button
           type="button"
           onClick={onShare}
@@ -209,6 +196,78 @@ export default function ControlDock({
           />
           <RailLabel>Share link</RailLabel>
         </button>
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Compact picker used only inside the rail popover. Lean cards: circular
+ * mark + insurer name + product name. Version line is intentionally
+ * omitted here (still visible in the main InsurerPicker used elsewhere).
+ * Fixed 5-column grid so the layout matches the main picker.
+ */
+function RailPickerGrid({ insurers, selected, onToggle }) {
+  return (
+    <div>
+      <div className="flex items-baseline justify-between gap-4 mb-3">
+        <div className="gmc-eyebrow">Choose insurers</div>
+        <div
+          className="text-xs font-semibold"
+          style={{ color: "var(--gmc-muted)" }}
+          data-testid="rail-picker-count"
+        >
+          {selected.length} of 3 selected
+        </div>
+      </div>
+      <div className="grid grid-cols-5 gap-3">
+        {insurers.map((ins) => {
+          const isSel = selected.includes(ins.id);
+          const disabled = !isSel && selected.length >= 3;
+          const accent = ins.accent || "var(--gmc-teal)";
+          return (
+            <button
+              key={ins.id}
+              type="button"
+              onClick={() => onToggle(ins.id)}
+              aria-pressed={isSel}
+              disabled={disabled}
+              className={`text-left p-3 rounded-[var(--gmc-r-ctl)] border-[1.5px] transition-all bg-white hover:-translate-y-0.5 ${
+                disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"
+              }`}
+              style={{
+                borderColor: isSel ? accent : "var(--gmc-line-soft)",
+                background: isSel ? "var(--gmc-teal-tint)" : "white",
+                boxShadow: isSel ? `0 6px 20px -12px ${accent}` : "none",
+              }}
+              data-testid={`rail-insurer-${ins.id}`}
+            >
+              <div className="flex items-center justify-between gap-2">
+                <InsurerMark insurer={ins} size={36} />
+                {isSel && (
+                  <div
+                    className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0"
+                    style={{ background: accent }}
+                  >
+                    <Check className="w-3 h-3 text-white" strokeWidth={3} />
+                  </div>
+                )}
+              </div>
+              <div
+                className="mt-3 font-extrabold text-[14px] leading-tight break-normal"
+                style={{ color: isSel ? accent : "var(--gmc-ink)" }}
+              >
+                {ins.name}
+              </div>
+              <div
+                className="mt-1 text-[12px] font-semibold leading-snug"
+                style={{ color: "var(--gmc-muted)" }}
+              >
+                {ins.product}
+              </div>
+            </button>
+          );
+        })}
       </div>
     </div>
   );

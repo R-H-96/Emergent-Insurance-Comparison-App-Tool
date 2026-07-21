@@ -1,49 +1,47 @@
-import InsurerLogo from "@/components/InsurerLogo";
 import { Pencil } from "lucide-react";
+import InsurerMark from "@/components/InsurerMark";
 
 /**
- * Slim strip at the top of the comparison surface — always shows the
- * currently selected insurers with a "Change" button that opens the picker
- * popover (no scrolling / anchor navigation).
+ * Slim strip at the top of the comparison surface: shows the currently
+ * selected insurers as circular-mark + name chips. Change button sits
+ * inline right after the last chip (inline with what it changes).
  */
 export default function InsurerStrip({ insurers, onChange }) {
   return (
     <div
-      className="flex flex-wrap items-center justify-between gap-3 py-3 mb-3"
-      style={{
-        borderBottom: "1px solid var(--gmc-line)",
-      }}
+      className="flex flex-wrap items-center gap-3 py-3 mb-3"
+      style={{ borderBottom: "1px solid var(--gmc-line)" }}
       data-testid="insurer-strip"
     >
-      <div className="flex items-center gap-3 flex-wrap">
-        <span
-          className="text-[11px] font-bold uppercase tracking-[0.1em]"
-          style={{ color: "var(--gmc-muted)" }}
-        >
-          Comparing
-        </span>
-        <div className="flex items-center gap-2 flex-wrap">
-          {insurers.map((ins) => (
-            <div
-              key={ins.id}
-              className="flex items-center gap-2 pl-1 pr-3 py-1 rounded-full bg-white border"
-              style={{
-                borderColor: "var(--gmc-line)",
-                boxShadow: `inset 3px 0 0 ${ins.accent || "var(--gmc-teal)"}`,
-              }}
-              data-testid={`strip-chip-${ins.id}`}
+      <span
+        className="text-[11px] font-bold uppercase tracking-[0.1em]"
+        style={{ color: "var(--gmc-muted)" }}
+      >
+        Comparing
+      </span>
+      {insurers.map((ins) => {
+        const accent = ins.accent || "var(--gmc-teal)";
+        return (
+          <div
+            key={ins.id}
+            className="flex items-center gap-2 pl-1 pr-4 py-1 rounded-full"
+            style={{
+              background: "var(--gmc-teal-tint)",
+              border: `1.5px solid ${accent}`,
+              boxShadow: `0 4px 12px -8px ${accent}`,
+            }}
+            data-testid={`strip-chip-${ins.id}`}
+          >
+            <InsurerMark insurer={ins} size={28} />
+            <span
+              className="text-[13px] font-extrabold"
+              style={{ color: accent }}
             >
-              <InsurerLogo insurer={ins} size={22} />
-              <span
-                className="text-[12px] font-bold"
-                style={{ color: ins.accent || "var(--gmc-ink)" }}
-              >
-                {ins.name}
-              </span>
-            </div>
-          ))}
-        </div>
-      </div>
+              {ins.name}
+            </span>
+          </div>
+        );
+      })}
       <button
         type="button"
         className="gmc-btn-outline gmc-tap"

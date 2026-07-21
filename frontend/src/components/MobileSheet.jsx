@@ -20,6 +20,7 @@ export default function MobileSheet({
   onClose,
   title,
   eyebrow,
+  titleIcon,
   testId = "mobile-sheet",
   children,
   footer,
@@ -149,10 +150,11 @@ export default function MobileSheet({
                   )}
                   {title && (
                     <h2
-                      className="text-[18px] leading-tight font-extrabold"
+                      className="text-[18px] leading-tight font-extrabold flex items-center gap-2"
                       style={{ color: "var(--gmc-ink)", fontFamily: "'Plus Jakarta Sans', sans-serif" }}
                     >
-                      {title}
+                      {titleIcon}
+                      <span>{title}</span>
                     </h2>
                   )}
                 </div>

@@ -3,6 +3,7 @@ import { ChevronDown, ChevronRight } from "lucide-react";
 import { VerifiedIcon } from "@/components/VerifiedBadge";
 import GlossaryText from "@/components/GlossaryText";
 import InsurerLogo from "@/components/InsurerLogo";
+import FeatureIcon from "@/components/FeatureIcon";
 import { isNotableForSelection } from "@/lib/notable";
 import { pushEvent } from "@/lib/analytics";
 
@@ -259,10 +260,11 @@ export default function ComparisonTable({
                     >
                       <div className="p-4">
                         <div
-                          className="font-bold text-[14px] leading-snug"
+                          className="flex items-center gap-2 font-bold text-[14px] leading-snug"
                           style={{ color: "var(--gmc-ink)" }}
                         >
-                          {f.feature}
+                          <FeatureIcon name={f.feature} size={18} />
+                          <span>{f.feature}</span>
                         </div>
                         <GlossaryText
                           tag="div"
@@ -378,10 +380,11 @@ export default function ComparisonTable({
                       data-testid={`mobile-row-${f.feature.replace(/\s+/g, "-").toLowerCase()}`}
                     >
                       <div
-                        className="font-bold text-[14px]"
+                        className="flex items-center gap-2 font-bold text-[14px]"
                         style={{ color: "var(--gmc-ink)" }}
                       >
-                        {f.feature}
+                        <FeatureIcon name={f.feature} size={18} />
+                        <span>{f.feature}</span>
                       </div>
                       <GlossaryText
                         tag="div"

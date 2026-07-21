@@ -10,7 +10,8 @@ import MobileSheet from "@/components/MobileSheet";
 import useMediaQuery from "@/hooks/useMediaQuery";
 import { VerifiedBadge } from "@/components/VerifiedBadge";
 import GlossaryText from "@/components/GlossaryText";
-import InsurerLogo from "@/components/InsurerLogo";
+import InsurerMark from "@/components/InsurerMark";
+import FeatureIcon from "@/components/FeatureIcon";
 import CTA from "@/components/CTA";
 
 export default function DetailModal({ feature, insurers, lookup, glossary, onClose }) {
@@ -41,7 +42,7 @@ export default function DetailModal({ feature, insurers, lookup, glossary, onClo
           >
             <div className="flex items-start justify-between gap-3 flex-wrap">
               <div className="flex items-center gap-3">
-                <InsurerLogo insurer={ins} size={32} />
+                <InsurerMark insurer={ins} size={32} />
                 <div>
                   <div
                     className="font-extrabold text-[16px]"
@@ -171,6 +172,7 @@ export default function DetailModal({ feature, insurers, lookup, glossary, onClo
         onClose={onClose}
         eyebrow={feature.group}
         title={feature.feature}
+        titleIcon={<FeatureIcon name={feature.feature} size={20} />}
         testId="detail-sheet"
         footer={Footer}
       >
@@ -199,13 +201,14 @@ export default function DetailModal({ feature, insurers, lookup, glossary, onClo
             {feature.group}
           </div>
           <DialogTitle
-            className="text-2xl font-extrabold tracking-tight text-left"
+            className="text-2xl font-extrabold tracking-tight text-left flex items-center gap-2.5"
             style={{
               color: "var(--gmc-ink)",
               fontFamily: "'Plus Jakarta Sans', sans-serif",
             }}
           >
-            {feature.feature}
+            <FeatureIcon name={feature.feature} size={22} strokeWidth={2.2} />
+            <span>{feature.feature}</span>
           </DialogTitle>
           <DialogDescription asChild>
             <GlossaryText

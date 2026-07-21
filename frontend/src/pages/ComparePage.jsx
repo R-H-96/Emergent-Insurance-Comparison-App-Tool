@@ -10,6 +10,7 @@ import DetailModal from "@/components/DetailModal";
 import Disclaimer from "@/components/Disclaimer";
 import AskCompact from "@/components/AskCompact";
 import AskPanel from "@/components/AskPanel";
+import AskLaunchBubble from "@/components/AskLaunchBubble";
 import ControlDock from "@/components/ControlDock";
 import MobileBottomBar from "@/components/MobileBottomBar";
 import useAskEngine from "@/hooks/useAskEngine";
@@ -209,9 +210,9 @@ export default function ComparePage({ embed = false, initialGroups = [] }) {
               <InsurerPicker insurers={data.insurers} selected={selected} onToggle={toggleInsurer} />
             </div>
           </section>
-          <AskCompact askState={askState} examples={data.example_questions || []} onResultScroll={() => setAskOpen(true)} />
         </>
       )}
+      <AskCompact askState={askState} examples={data.example_questions || []} onResultScroll={() => setAskOpen(true)} />
 
       <ComparisonSurface
         density={density}
@@ -251,11 +252,15 @@ export default function ComparePage({ embed = false, initialGroups = [] }) {
         diffOnly={diffOnly}
         onDiffOnlyChange={setDiffOnly}
         notableCount={notableCount}
-        askOpen={askOpen}
-        onToggleAsk={() => setAskOpen((o) => !o)}
         onShare={share}
         pickerOpen={pickerOpen}
         onPickerOpenChange={setPickerOpen}
+      />
+
+      <AskLaunchBubble
+        open={askOpen}
+        onToggle={() => setAskOpen((o) => !o)}
+        hidden={!!openFeature}
       />
 
       <AskPanel

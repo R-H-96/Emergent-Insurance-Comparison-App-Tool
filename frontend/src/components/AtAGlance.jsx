@@ -1,6 +1,7 @@
 import { Sparkles, ArrowRight } from "lucide-react";
 import { VerifiedIcon } from "@/components/VerifiedBadge";
 import GlossaryText from "@/components/GlossaryText";
+import FeatureIcon from "@/components/FeatureIcon";
 import { isNotableForSelection } from "@/lib/notable";
 
 /**
@@ -82,10 +83,11 @@ export default function AtAGlance({
               data-testid={`glance-card-${f.feature.replace(/\s+/g, "-").toLowerCase()}`}
             >
               <div
-                className="font-extrabold text-[15px] leading-snug"
+                className="flex items-center gap-2 font-extrabold text-[15px] leading-snug"
                 style={{ color: "var(--gmc-ink)" }}
               >
-                {f.feature}
+                <FeatureIcon name={f.feature} size={18} />
+                <span>{f.feature}</span>
               </div>
               <GlossaryText
                 tag="p"
