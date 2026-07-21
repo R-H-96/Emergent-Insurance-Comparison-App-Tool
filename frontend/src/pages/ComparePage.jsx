@@ -15,6 +15,7 @@ import ControlDock from "@/components/ControlDock";
 import MobileBottomBar from "@/components/MobileBottomBar";
 import useAskEngine from "@/hooks/useAskEngine";
 import useMediaQuery from "@/hooks/useMediaQuery";
+import useCompareContextBridge from "@/hooks/useCompareContextBridge";
 import { countNotableForSelection } from "@/lib/notable";
 import { pushEvent } from "@/lib/analytics";
 
@@ -97,6 +98,10 @@ export default function ComparePage({ embed = false, initialGroups = [] }) {
     () => data.insurers.filter((i) => selected.includes(i.id)),
     [selected],
   );
+
+  // Privacy-restricted context bridge: writes {product, insurers, timestamp}
+  // to localStorage.gmc_compare_context on any .gmc-quote-trigger click.
+  useCompareContextBridge({ productType, selectedInsurers });
 
   const lookup = useMemo(() => {
     const out = {};

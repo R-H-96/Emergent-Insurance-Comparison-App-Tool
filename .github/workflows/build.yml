@@ -1,0 +1,68 @@
+name: Build & Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+
+# Only one concurrent Pages deployment at a time.
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    name: Build (CRA, PUBLIC_URL=.)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: yarn
+          cache-dependency-path: frontend/yarn.lock
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Build (relative paths so the app runs from any sub-path)
+        env:
+          PUBLIC_URL: "."
+          CI: "false" # tolerate CRA warnings as non-fatal
+        run: yarn build
+
+      # GitHub Pages does a 404 on client-side routes; SPA fallback = copy
+      # index.html to 404.html so refreshes deep-link correctly.
+      - name: SPA 404 fallback
+        run: cp build/index.html build/404.html
+
+      - name: Disable Jekyll (allow leading-underscore files if any)
+        run: touch build/.nojekyll
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: frontend/build
+
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4
