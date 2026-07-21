@@ -102,6 +102,21 @@ Rebuilt as a **static, backend-less comparison tool** for Get My Cover (NZ), ren
 - ✅ **Accent colours** consistently applied: picker card border/text (selected), at-a-glance mini-block left stripe + insurer name, table column-header top stripe + name, detail-modal left stripe + name
 - ✅ **Detail modal bullets**: full text rendered from `detail_points` as `<ul>` (falls back to `detail` if points missing)
 - ✅ **At-a-glance `why` line**: italic muted sentence rendered under the per-insurer value grid
+
+## Implemented (v6.1 — Polish Round, Feb 21 2026)
+- ✅ **New `InsurerMark` component** — 2-format logo system: `sc / nib / aia` use circular symbol PNGs cropped and generated into `/logos/marks/*.png` (128×128); `pl / uni` render as accent-coloured solid circles with white initials. Uniform sizes: 40px rail, 32px modal blocks, 28px strip chips, 20px inline. `flex-shrink-0` + fixed dims → same baseline in every context.
+- ✅ **`InsurerStrip` overhaul** — single `mark + name` chip per insurer (no more duplicate wordmark + name); `Change` button placed inline right after the last chip; teal-tint pill with accent `inset box-shadow` for crisp 1.5px stroke (defeats subpixel snapping).
+- ✅ **Rail insurer popover** — `marginTop: 16` for 16px viewport gap; `min(88vw, 880px)` wide with `grid-cols-5` so 5 cards fit on one row without wrapping; **version line removed** in this rail context (still shown in the main InsurerPicker used elsewhere). Cards render: mark + name + product only.
+- ✅ **Rail toggle-to-close** — clicking `dock-insurers` while its popover is open closes it (same for `dock-filter`). Click-away close still works via Radix Popover.
+- ✅ **Filter toggle exact spec** — `38×22` track (`border-radius: 9999px`), `16px` white thumb at `top: 3px; left: 3px`, off `#D5DAEA`, on `#14B5AF`; `!important` on width/height to defeat the `.gmc-tap` 44px min-target; verified via `getBoundingClientRect` and `getComputedStyle(...,'::after')`.
+- ✅ **`AskLaunchBubble`** — classic bottom-right chat bubble on desktop (>=1200px only), 56×56, teal accent gradient, `MessageCircleQuestion` icon; hidden when a detail modal is open.
+- ✅ **Ask icon removed from rail** — the ControlDock now shows only: insurers, filter, share.
+- ✅ **AskCompact restored on all viewports** — sits above the "Comparing" strip so it's directly above "The things people usually ask about".
+- ✅ **`FeatureIcon` component** — explicit lucide icon map for all 25 feature titles per brand kit (Scissors, Building2, Wallet, Zap, Pill, RotateCcw, Stethoscope, ScanLine, Clock, History, Hourglass, Baby, Home, HeartPulse, Brain, Video, Bone, MapPin, CheckCircle2, FileText, Award, TrendingUp, ShieldCheck, XCircle, CalendarClock). Rendered 18px in At-a-Glance cards + Full Comparison rows (desktop grid & mobile stacked cards); 20px in mobile sheet header; 22px in desktop dialog title.
+- ✅ **DetailModal** — per-insurer blocks now use `InsurerMark` (32px) instead of the wordmark `InsurerLogo`; `DialogDescription` restored to satisfy Radix a11y (no more console warning).
+- ✅ **Consistency sweep** — spacing on 4px scale; single radius (`--gmc-r-ctl`) per control class; strip stroke via `inset box-shadow` (no border shorthand snapping).
+- ✅ Testing agent iteration_3 — full sweep, 100% pass across mobile + desktop, `retest_needed: false`.
+
 - ✅ **Glossary mechanism**: `<GlossaryText>` parses `{term}` markers → dotted-underline `<button>` opens a shadcn Popover with the term + definition (mobile-friendly, keyboard-focusable). No markers in current text so rendering is unchanged; ready for future edits.
 - ✅ **Feedback input** ("Can't find what you're looking for?"): text input stores to `localStorage.gmc_feedback_questions`; on submit shows "Good question — that's one for an adviser" + `.gmc-quote-trigger` button
 - ✅ **`?embed=1&groups=X,Y`** URL parsing (App.js): validates group names against JSON, pre-opens only those groups in the table (other groups remain browsable via chevron)

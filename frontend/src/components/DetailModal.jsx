@@ -210,12 +210,11 @@ export default function DetailModal({ feature, insurers, lookup, glossary, onClo
             <FeatureIcon name={feature.feature} size={22} strokeWidth={2.2} />
             <span>{feature.feature}</span>
           </DialogTitle>
-          <DialogDescription asChild>
+          <DialogDescription className="text-sm mt-2 text-left" style={{ color: "var(--gmc-body)" }}>
             <GlossaryText
-              tag="p"
+              tag="span"
               text={feature.definition}
               glossary={glossary}
-              className="text-sm mt-2 text-left"
             />
           </DialogDescription>
         </DialogHeader>

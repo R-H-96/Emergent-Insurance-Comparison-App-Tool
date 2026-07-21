@@ -27,8 +27,7 @@ export default function InsurerStrip({ insurers, onChange }) {
             className="flex items-center gap-2 pl-1 pr-4 py-1 rounded-full"
             style={{
               background: "var(--gmc-teal-tint)",
-              border: `1.5px solid ${accent}`,
-              boxShadow: `0 4px 12px -8px ${accent}`,
+              boxShadow: `inset 0 0 0 1.5px ${accent}, 0 4px 12px -8px ${accent}`,
             }}
             data-testid={`strip-chip-${ins.id}`}
           >
