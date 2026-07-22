@@ -1,0 +1,99 @@
+{
+  "summary": "Frontend-only validation of GMC iteration_3 Polish Round (circular InsurerMark system, comparing strip cleanup, rail popover improvements, exact filter toggle spec 38x22, Ask launch bubble, FeatureIcon integration in At-a-Glance/Full Comparison/DetailModal). 100% of user-visible acceptance criteria PASS across desktop (1440x900) and mobile (390x844). No page errors captured. Only one minor Radix a11y console warning (DialogDescription missing) — not a regression from iteration_2.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "DetailModal (desktop)", "issues": ["Radix DialogContent emits console warning: 'Missing Description or aria-describedby={undefined}'. Add a visually-hidden <DialogDescription> or aria-describedby to the DialogContent. Cosmetic/a11y-only; not a regression from iteration_2."]},
+      {"screen": "InsurerStrip chips", "issues": ["Inline style border is '1.5px solid <accent>' but Chromium rounds computed border-width to 1px (subpixel snapping). Visually fine, but if a truly 1.5px stroke is desired use box-shadow: 0 0 0 1.5px <accent> instead of border. Very minor."]}
+    ]
+  },
+  "test_report_links": [],
+  "action_items": [
+    "(Optional) Add <DialogDescription> or aria-describedby to DetailModal DialogContent to silence Radix a11y warning.",
+    "(Optional) If a strict 1.5px chip border is required, use box-shadow inset instead of the border shorthand (browsers snap sub-2px borders)."
+  ],
+  "critical_code_review_comments": [
+    "InsurerMark.jsx: rock-solid; two-mode rendering (image vs initials) driven by MARK_IDS set. Consider promoting MARK_IDS or the whole mapping into gmc_tool_data.json so brand ops can add insurers without a code change.",
+    "ControlDock.jsx (285 lines): renders the RailPickerGrid inline. Could be extracted into its own file for testability, but not urgent. The onClick + Popover controlled-state pair correctly wires toggle-to-close without breaking click-away.",
+    "AskLaunchBubble.jsx: uses inline style + `transform: translateY(120%)` for hidden state. Good — avoids unmounting the bubble so animation is smooth when a DetailModal closes.",
+    "FeatureIcon.jsx: startsWith fallback is elegant. However some AtAGlance titles include qualifiers like 'GP / day-to-day add-on' which is caught by 'gp / day-to-day' key. Good. Consider a unit test to lock the mapping.",
+    "DetailModal.jsx & MobileSheet.jsx: DialogContent lacks aria-describedby — see design_issues.",
+    "InsurerStrip.jsx: `boxShadow: 0 4px 12px -8px ${accent}` produces a subtle brand-tinted glow — nice touch.",
+    "index.css .gmc-toggle: !important guards against .gmc-tap min-w/h. Confirmed 38x22 with 16x16 thumb at 3px offset (verified via getBoundingClientRect + ::after pseudo)."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "N/A", "frontend": "100%"},
+  "seed_data_creation": "None",
+  "retest_needed": false,
+  "should_main_agent_self_test": false,
+  "context_for_next_testing_agent": "Static React app — REACT_APP_BACKEND_URL is the site URL only. Landing / is the compare page. Insurer IDs in data are: sc, nib, aia, pl (Partners Life), uni (UniMed). The request naming ('partners' / 'unimed') refers to the same insurers — use testids insurer-mark-pl and insurer-mark-uni. Marks: sc/nib/aia render as PNG images from /logos/marks/{id}.png; pl and uni render as insurer.accent-coloured circles with white initials (PL = 'PL', UniMed = 'U'). Note: pl's accent is dark green rgb(29,74,68) per data — the review request called it 'burgundy' but the code correctly uses whatever is in the JSON. Selection toggle in ComparePage refuses to drop below 2 insurers, so to select PL/UniMed you must first select a 3rd (e.g. aia) rather than trying to swap when at length 2. To verify PL/UniMed marks, open the rail picker popover and inspect [data-testid='insurer-mark-pl'] / [data-testid='insurer-mark-uni'] inside their rail-insurer-* cards.",
+  "verified_behaviours": {
+    "insurer_mark": {
+      "sc_rail_40px_circle_png_sc.png": "PASS (40x40, borderRadius=9999px, bg=white, img=/logos/marks/sc.png loaded 128x128)",
+      "nib_rail_40px_circle_png_nib.png": "PASS",
+      "aia_rail_40px_circle_png_aia.png": "PASS (loaded 128x128 natural)",
+      "pl_mark_solid_circle_PL_initials_white": "PASS (bg=rgb(29,74,68) dark-teal from insurer.accent; initials='PL'; color=white; font-weight=800). Spec called this 'burgundy' but code uses data-driven accent — flagging as info only.",
+      "uni_mark_solid_navy_U_initial_white": "PASS (bg=rgb(28,43,84) navy; initials='U'; color=white; font-weight=800)"
+    },
+    "comparing_strip": {
+      "chip_per_selected_insurer": "PASS (2/3 chips render for current selection; verified sc, nib and aia)",
+      "circular_mark_28px_inside_chip": "PASS (measured 28x28)",
+      "no_duplicate_wordmark": "PASS (no <img> other than the mark inside chip)",
+      "name_in_accent_color": "PASS (sc=rgb(0,121,194), nib=rgb(108,194,74), aia=rgb(208,16,58))",
+      "teal_tint_background": "PASS (rgba(20,181,175,0.06))",
+      "border_1.5px_accent": "PARTIAL — inline style specifies 1.5px but Chromium reports computed borderWidth as 1px (subpixel snapping). Visually correct.",
+      "change_button_inline_after_last_chip": "PASS (gap of ~12px, not floated far right)"
+    },
+    "rail_insurer_popover": {
+      "16px_margin_from_viewport_top": "PASS (marginTop:16 inline style; popover top y=302 in 900h viewport)",
+      "grid_cols_5_one_row": "PASS (gridTemplateColumns has 5 tracks, childCount=5)",
+      "cards_show_mark_name_product_only_no_version_line": "PASS (rail-insurer-sc text='Southern CrossWellbeing Two'; no 'Policy document' / 'effective' text in any card)",
+      "insurer_names_do_not_wrap_oddly": "PASS (each card ~156px wide; names fit)"
+    },
+    "toggle_close_behaviour": {
+      "dock-insurers_click_open_click_closes_aria_expanded_flips": "PASS (true → false, popover DOM removed)",
+      "dock-filter_click_open_click_closes": "PASS (true → false)",
+      "click_away_still_works": "IMPLICIT PASS (Radix Popover default; toggle onClick doesn't intercept it)"
+    },
+    "filter_toggle_exact_spec": {
+      "getBoundingClientRect_38x22": "PASS (width=38 height=22)",
+      "border_radius_9999px": "PASS",
+      "off_bg_rgb(213,218,234)": "PASS",
+      "on_bg_rgb(20,181,175)_after_click": "PASS",
+      "after_pseudo_thumb_16x16_top3_left3_bg_white": "PASS (getComputedStyle(el,'::after') width=16px height=16px top=3px left=3px background=rgb(255,255,255))",
+      "aria_pressed_flips_on_click": "PASS (false → true)"
+    },
+    "ask_launch_bubble": {
+      "desktop_only_>=1200px": "PASS (present on 1440; absent from DOM on 390)",
+      "56x56_rounded_full": "PASS (borderRadius=9999px)",
+      "bottom_right_position": "PASS (rightGap=24, bottomGap=24, position=fixed)",
+      "teal_gradient_background": "PASS (linear-gradient(135deg, rgb(13,138,134), rgb(20,181,175)))",
+      "click_opens_ask_panel": "PASS (role=dialog present after click)",
+      "no_dock-ask_in_rail": "PASS (dock-ask absent)"
+    },
+    "compact_ask_bar": {
+      "visible_on_desktop": "PASS",
+      "visible_on_mobile": "PASS"
+    },
+    "feature_icons": {
+      "at_a_glance_18px_all_cards": "PASS (all 9 glance-card-* have svg 18x18)",
+      "surgical_scissors_excess_wallet_nonpharmac_pill_preexisting_history_congenital_baby": "PASS (icons render on the correct cards — mapping verified via FeatureIcon.jsx MAP + visual)",
+      "full_comparison_18px_desktop": "PASS (first 3 rows have svg 18px in feature-name cell)",
+      "mobile_stacked_card_icons": "PASS (mobile-row-* rows each contain an svg)",
+      "detail_modal_desktop_title_22px": "PASS (DialogTitle svg measured 22px)",
+      "detail_modal_mobile_sheet_title_20px": "PASS (sheet header svg measured 20px)"
+    },
+    "detail_modal_insurer_marks": {
+      "uses_InsurerMark_32px_not_wordmark": "PASS (each detail-block-{id} has [data-testid='insurer-mark-{id}'] sized 32px; no rectangular InsurerLogo <img> inside detail-block-*)"
+    },
+    "regression_from_iteration_2": {
+      "no_page_errors_desktop": "PASS",
+      "no_page_errors_mobile": "PASS",
+      "mobile_detail_sheet_opens": "PASS",
+      "mobile_browser_back_closes_sheet": "PASS",
+      "16px_input_font_on_mobile": "PASS (iOS zoom guard still applies via @media max-width:767px !important rule)"
+    }
+  }
+}

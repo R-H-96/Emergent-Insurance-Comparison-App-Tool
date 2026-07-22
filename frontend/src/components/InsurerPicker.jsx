@@ -1,0 +1,82 @@
+import { Check } from "lucide-react";
+import InsurerLogo from "@/components/InsurerLogo";
+
+export default function InsurerPicker({ insurers, selected, onToggle }) {
+  return (
+    <div data-testid="insurer-picker">
+      <div className="flex items-baseline justify-between gap-4 flex-wrap mb-4">
+        <div>
+          <div className="gmc-eyebrow mb-2">Choose insurers</div>
+          <h2 className="gmc-h2 text-2xl sm:text-3xl">
+            Pick 2 or 3 to compare
+          </h2>
+        </div>
+        <div
+          className="text-xs font-semibold"
+          style={{ color: "var(--gmc-muted)" }}
+          data-testid="insurer-count"
+        >
+          {selected.length} of 3 selected
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+        {insurers.map((ins) => {
+          const isSelected = selected.includes(ins.id);
+          const disabled = !isSelected && selected.length >= 3;
+          const accent = ins.accent || "var(--gmc-teal)";
+          return (
+            <button
+              key={ins.id}
+              type="button"
+              onClick={() => onToggle(ins.id)}
+              aria-pressed={isSelected}
+              disabled={disabled}
+              className={`text-left p-4 rounded-[var(--gmc-r-ctl)] border-[1.5px] transition-all bg-white hover:-translate-y-0.5 ${
+                disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"
+              }`}
+              style={{
+                borderColor: isSelected ? accent : "var(--gmc-line-soft)",
+                background: isSelected ? "var(--gmc-teal-tint)" : "white",
+                boxShadow: isSelected
+                  ? `0 6px 20px -12px ${accent}`
+                  : "none",
+              }}
+              data-testid={`insurer-${ins.id}`}
+            >
+              <div className="flex items-start justify-between gap-2">
+                <InsurerLogo insurer={ins} size={32} />
+                {isSelected && (
+                  <div
+                    className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0"
+                    style={{ background: accent }}
+                  >
+                    <Check className="w-3 h-3 text-white" strokeWidth={3} />
+                  </div>
+                )}
+              </div>
+              <div
+                className="mt-3 font-extrabold text-[15px] leading-tight"
+                style={{ color: isSelected ? accent : "var(--gmc-ink)" }}
+              >
+                {ins.name}
+              </div>
+              <div
+                className="mt-1 text-xs font-semibold"
+                style={{ color: "var(--gmc-muted)" }}
+              >
+                {ins.product}
+              </div>
+              <div
+                className="mt-2 text-[11px] leading-relaxed"
+                style={{ color: "var(--gmc-muted)" }}
+              >
+                {ins.version}
+              </div>
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}

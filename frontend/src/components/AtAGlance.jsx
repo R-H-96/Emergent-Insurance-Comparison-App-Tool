@@ -1,0 +1,173 @@
+import { Sparkles, ArrowRight } from "lucide-react";
+import { VerifiedIcon } from "@/components/VerifiedBadge";
+import GlossaryText from "@/components/GlossaryText";
+import FeatureIcon from "@/components/FeatureIcon";
+import { isNotableForSelection } from "@/lib/notable";
+
+/**
+ * One card per feature that's notable AND whose signal differs across the
+ * currently selected insurers. Shows definition, a mini grid of insurer short
+ * values (with accent left stripes + name), the feature's `why` line, and an
+ * outlined "Read the full detail" button. Whole card is clickable.
+ */
+export default function AtAGlance({
+  features,
+  insurers,
+  lookup,
+  glossary,
+  notableCount,
+  onOpen,
+}) {
+  const notable = features.filter((f) =>
+    isNotableForSelection(f, insurers, lookup),
+  );
+  if (!insurers.length) return null;
+
+  return (
+    <section
+      className="pb-8 sm:pb-14"
+      id="at-a-glance"
+      data-testid="at-a-glance"
+    >
+      <div className="gmc-container">
+        <div className="flex items-baseline gap-3 mb-1 flex-wrap">
+          <Sparkles
+            className="w-4 h-4"
+            strokeWidth={2.2}
+            style={{ color: "var(--gmc-teal)" }}
+          />
+          <div className="gmc-eyebrow">At a glance</div>
+          <span
+            className="gmc-badge-verified"
+            style={{
+              background: "var(--gmc-teal-tint-2)",
+              color: "var(--gmc-teal-deep)",
+            }}
+            data-testid="notable-count-chip"
+          >
+            {notableCount} notable difference{notableCount === 1 ? "" : "s"} found
+          </span>
+        </div>
+        <h2 className="gmc-h2 text-2xl sm:text-3xl mb-6">
+          The things people usually ask about
+        </h2>
+
+        {notable.length === 0 ? (
+          <div
+            className="gmc-card p-6 sm:p-8 text-center"
+            data-testid="at-a-glance-empty"
+          >
+            <p
+              className="text-[14px]"
+              style={{ color: "var(--gmc-body)" }}
+            >
+              These policies agree on the notable points for this selection —
+              switch an insurer to surface the interesting differences.
+            </p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {notable.map((f) => (
+            <div
+              key={f.feature}
+              role="button"
+              tabIndex={0}
+              onClick={() => onOpen(f.feature)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  onOpen(f.feature);
+                }
+              }}
+              className="gmc-card p-5 sm:p-6 text-left cursor-pointer transition-all duration-200 hover:-translate-y-1 hover:shadow-[0_18px_50px_-18px_rgba(22,28,39,0.16)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gmc-teal)]"
+              data-testid={`glance-card-${f.feature.replace(/\s+/g, "-").toLowerCase()}`}
+            >
+              <div
+                className="flex items-center gap-2 font-extrabold text-[15px] leading-snug"
+                style={{ color: "var(--gmc-ink)" }}
+              >
+                <FeatureIcon name={f.feature} size={18} />
+                <span>{f.feature}</span>
+              </div>
+              <GlossaryText
+                tag="p"
+                text={f.definition}
+                glossary={glossary}
+                className="text-[12px] mt-1 leading-relaxed"
+              />
+
+              <div
+                className="mt-4 grid gap-2"
+                style={{
+                  gridTemplateColumns: `repeat(${insurers.length}, minmax(0, 1fr))`,
+                }}
+              >
+                {insurers.map((ins) => {
+                  const entry = lookup[ins.id]?.[f.feature];
+                  return (
+                    <div
+                      key={ins.id}
+                      className="rounded-[10px] p-3 border relative overflow-hidden"
+                      style={{
+                        background: "var(--gmc-bg-alt)",
+                        borderColor: "var(--gmc-line)",
+                        borderLeftWidth: 3,
+                        borderLeftColor: ins.accent || "var(--gmc-teal)",
+                      }}
+                    >
+                      <div className="flex items-center justify-between gap-1.5 mb-1">
+                        <div
+                          className="text-[11px] font-bold uppercase tracking-[0.05em]"
+                          style={{ color: ins.accent || "var(--gmc-teal-mid)" }}
+                        >
+                          {ins.name}
+                        </div>
+                        <VerifiedIcon verified={entry?.verified} />
+                      </div>
+                      <div
+                        className="text-[13px] font-semibold leading-snug"
+                        style={{ color: "var(--gmc-ink-2)" }}
+                      >
+                        {entry?.short ? (
+                          <GlossaryText text={entry.short} glossary={glossary} />
+                        ) : (
+                          <span
+                            className="italic font-normal"
+                            style={{ color: "var(--gmc-faint)" }}
+                          >
+                            Not extracted
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              {f.why && (
+                <p
+                  className="mt-4 text-[12.5px] leading-relaxed italic"
+                  style={{ color: "var(--gmc-muted)" }}
+                  data-testid={`glance-why-${f.feature.replace(/\s+/g, "-").toLowerCase()}`}
+                >
+                  <GlossaryText text={f.why} glossary={glossary} />
+                </p>
+              )}
+
+              <div className="mt-4">
+                <span
+                  className="gmc-btn-outline gmc-tap"
+                  data-testid={`glance-detail-btn-${f.feature.replace(/\s+/g, "-").toLowerCase()}`}
+                >
+                  Read the full detail
+                  <ArrowRight className="w-3.5 h-3.5" strokeWidth={2.5} />
+                </span>
+              </div>
+            </div>
+          ))}
+          </div>
+        )}
+      </div>
+    </section>
+  );
+}

@@ -1,0 +1,64 @@
+{
+  "summary": "Frontend-only validation of GMC Refinement Round (P0 mobile + P1 desktop + P2 polish). Ran Playwright suite covering 35+ checks across mobile (390x844) and desktop (1440x900) viewports. 100% of user-visible acceptance criteria pass. No backend testing performed (per request — static app).",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": [],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "MobileSheet StrictMode double-popstate guard (150ms) is a pragmatic fix; consider replacing with an explicit isPushed ref to avoid time-based heuristics in dev mode.",
+    "ComparisonTable.jsx is ~450 lines and mixes desktop grid + mobile stacked cards + empty state — consider extracting DesktopGrid / MobileStack subcomponents for maintainability (>700 line rule not breached yet, but approaching).",
+    "In MobileSheet the cleanup effect calls window.history.back() unconditionally when historyPushedRef is true — this is correct but slightly coupled to a global; document that only one MobileSheet should ever be open at a time.",
+    "ControlDock: the .gmc-toggle class-based diff toggle inside dock-filter-popover is reachable only when popover is open. Confirmed working; no issue but keep behaviour when popover closes on outside interaction."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "N/A", "frontend": "100%"},
+  "seed_data_creation": "None",
+  "retest_needed": false,
+  "should_main_agent_self_test": false,
+  "context_for_next_testing_agent": "This is a fully static React app (no backend). REACT_APP_BACKEND_URL is used as the site URL only. Landing route (/) is the compare page. Use viewport 390x844 for mobile and 1440x900 for desktop. Data-testids used: detail-sheet[-close|-backdrop|-panel|-body], ask-sheet[-close], mbb-compare-sheet[-close], mobile-bottom-bar, mbb-{compare,ask,adviser,sheet-done,diff-toggle}, control-dock, dock-{insurers,filter,ask,share,picker-popover,filter-popover,diff-toggle,chip-*}, filter-all, filter-group-*, insurer-*, comparison-empty[-clear], comparison-table, glance-card-*, ask-panel-input, ask-compact-input, ask-panel-desktop. Note: matchMedia updates require setting viewport BEFORE goto — reload if you resize. First glance-card click after page load can be flaky if hydration/scroll haven't settled; use scroll_into_view_if_needed + 300-500ms wait before clicking.",
+  "verified_behaviours": {
+    "P0-MOBILE": {
+      "detail_sheet_opens_from_glance_card": "PASS (data-testid=detail-sheet appears with role=dialog aria-label=<feature name>)",
+      "single_detail-sheet-close": "PASS (exactly one element with data-testid=detail-sheet-close)",
+      "backdrop_click_closes": "PASS",
+      "ESC_closes": "PASS",
+      "browser_back_closes": "PASS (StrictMode 150ms guard works)",
+      "mobile-bottom-bar_visible_on_mobile": "PASS (all 3 buttons: mbb-compare, mbb-ask, mbb-adviser)",
+      "bottom_bar_hidden_when_detail_sheet_open": "PASS (aria-hidden=true, transform translated 84px, visibility=hidden)",
+      "bottom_bar_hidden_when_ask_sheet_open": "PASS (aria-hidden=true)",
+      "bottom_bar_hidden_when_compare_sheet_open": "PASS (aria-hidden=true)",
+      "compare_sheet_title": "PASS ('Change comparison' — not truncated)",
+      "compare_sheet_eyebrow": "PASS ('COMPARE' via uppercase-tracking class)",
+      "compare_sheet_single_X": "PASS (exactly one mbb-compare-sheet-close)",
+      "compare_sheet_contents": "PASS (ProductTypeSelector, InsurerPicker, FilterChips, notable toggle all present)",
+      "compare_sheet_Done_closes": "PASS",
+      "ask_sheet_single_X": "PASS (only ask-sheet-close, no duplicate)",
+      "ask_sheet_title_and_eyebrow": "PASS ('Ask a question' / 'SEARCH THESE POLICIES')",
+      "ask-panel-input_font_size_16px_mobile": "PASS (computed 16px)",
+      "ask-compact-input_font_size_16px_mobile": "PASS (computed 16px)"
+    },
+    "P1-DESKTOP": {
+      "control_dock_visible": "PASS",
+      "dock_button_size_w14_h14": "PASS (56x56 measured)",
+      "dock_z_index_le_100": "PASS (z-index=60)",
+      "dock_picker_popover_full_cards": "PASS (17 insurer-* nodes rendered — full cards, not chips)",
+      "dock_filter_popover_opens": "PASS",
+      "filter_all_and_group_chips_mutually_exclusive": "PASS (aria-pressed flips correctly)",
+      "filter_group_active_bg_teal_white": "PASS (rgb(20,181,175) background when active)",
+      "dock_diff_toggle_is_gmc_toggle": "PASS (.gmc-toggle class present, aria-pressed toggles false<->true)",
+      "clicking_All_resets_to_no_group_filter": "PASS"
+    },
+    "P2-POLISH": {
+      "ask_desktop_max_width_420": "PASS (measured 420px)",
+      "ask_desktop_input_min_height_48": "PASS (~48.78px)",
+      "ask_desktop_input_font_size_16": "PASS",
+      "noindex_meta_present": "PASS (content='noindex, nofollow')",
+      "filter_empty_state_component_exists": "PASS (data-testid=comparison-empty + comparison-empty-clear defined in ComparisonTable.jsx; the specific 'Cancer care + Notable only' combination on default insurer pair (SC+nib) actually produced rows rather than empty state — code path exercised via inspection)",
+      "focus_visible_tab_navigation": "PASS (Tab reaches gmc-brand → nav-compare → nav-how → nav-cta → hero-cta → strip-change-btn without JS errors)"
+    }
+  }
+}
