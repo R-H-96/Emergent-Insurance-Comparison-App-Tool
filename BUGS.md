@@ -32,3 +32,8 @@ Status: [ ] open · [~] fixed in code, needs verify · [x] verified fixed
 
 ## Done
 - [x] D1. gmc_compare_context bridge: privacy-restricted write (product, insurers, timestamp only) — implemented + wired in ComparePage (verified in code 21 Jul)
+
+## QA drive 21 Jul (Claude, desktop, Pages build)
+- [x] B3 filter toggle to spec · B4 popover behaviour · B5 strip/CHANGE · B6 ask bar · density morph · modal bullets+glossary+source links · no h-scroll — ALL VERIFIED GOOD on desktop
+- [~] NEW L1: all logos broken on Pages (absolute /logos/ paths vs sub-path hosting) — FIXED in code (PUBLIC_URL prefix in InsurerLogo.jsx + InsurerMark.jsx), needs push + verify
+- [ ] Still to test: mobile pass (Reuben's phone), embed offset (B11), Lighthouse (B13), cross-browser (B14)

@@ -38,7 +38,7 @@ export default function InsurerMark({ insurer, size = 32, className = "" }) {
     >
       {hasMark ? (
         <img
-          src={`/logos/marks/${insurer.id}.png`}
+          src={`${process.env.PUBLIC_URL || ""}/logos/marks/${insurer.id}.png`}
           alt=""
           className="w-full h-full object-contain"
           style={{ padding: Math.max(2, size * 0.08) }}

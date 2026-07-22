@@ -25,7 +25,7 @@ export default function InsurerLogo({ insurer, size = 40, className = "" }) {
     >
       {hasLogo ? (
         <img
-          src={insurer.logo}
+          src={`${process.env.PUBLIC_URL || ""}${insurer.logo}`}
           alt={`${insurer.name} logo`}
           className="max-h-[70%] max-w-[85%] object-contain"
           loading="lazy"
