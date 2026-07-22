@@ -340,13 +340,13 @@ export default function ComparisonTable({
                   />
                 )}
                 <span
-                  className="text-[11px] font-bold uppercase tracking-[0.1em]"
+                  className="text-[13px] font-bold uppercase tracking-[0.1em]"
                   style={{ color: "var(--gmc-teal-deep)" }}
                 >
                   {group}
                 </span>
                 <span
-                  className="text-[11px] font-semibold"
+                  className="text-[12px] font-semibold"
                   style={{ color: "var(--gmc-muted)" }}
                 >
                   · {visibleFeats.length}
@@ -380,7 +380,7 @@ export default function ComparisonTable({
                       data-testid={`mobile-row-${f.feature.replace(/\s+/g, "-").toLowerCase()}`}
                     >
                       <div
-                        className="flex items-center gap-2 font-bold text-[14px]"
+                        className="flex items-center gap-2 font-bold text-[16px]"
                         style={{ color: "var(--gmc-ink)" }}
                       >
                         <FeatureIcon name={f.feature} size={18} />
@@ -390,7 +390,7 @@ export default function ComparisonTable({
                         tag="div"
                         text={f.definition}
                         glossary={glossary}
-                        className="text-[12px] mt-1 leading-relaxed"
+                        className="text-[13.5px] mt-1 leading-relaxed"
                       />
                       <div className="mt-3 space-y-2">
                         {insurers.map((ins) => {
@@ -419,7 +419,7 @@ export default function ComparisonTable({
                                 <VerifiedIcon verified={entry?.verified} />
                               </div>
                               <div
-                                className="text-[13px] font-semibold leading-snug"
+                                className="text-[14px] font-semibold leading-snug"
                                 style={{ color: "var(--gmc-ink-2)" }}
                               >
                                 {entry?.short ? (

@@ -28,9 +28,20 @@ export default function MobileBottomBar({
   notableCount,
   onOpenAsk,
   hidden = false,
+  compareOpen: compareOpenProp,
+  onCompareOpenChange,
 }) {
   const isMobile = !useMediaQuery("(min-width: 1200px)");
-  const [compareOpen, setCompareOpen] = useState(false);
+  const [compareOpenInternal, setCompareOpenInternal] = useState(false);
+
+  // Controlled when a parent passes compareOpen/onCompareOpenChange (so the
+  // "Change" button in InsurerStrip can open this same sheet), else internal.
+  const isControlled = compareOpenProp !== undefined;
+  const compareOpen = isControlled ? compareOpenProp : compareOpenInternal;
+  const setCompareOpen = (v) => {
+    if (onCompareOpenChange) onCompareOpenChange(v);
+    if (!isControlled) setCompareOpenInternal(v);
+  };
 
   if (!isMobile) return null;
 

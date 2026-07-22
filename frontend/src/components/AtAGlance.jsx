@@ -2,6 +2,7 @@ import { Sparkles, ArrowRight } from "lucide-react";
 import { VerifiedIcon } from "@/components/VerifiedBadge";
 import GlossaryText from "@/components/GlossaryText";
 import FeatureIcon from "@/components/FeatureIcon";
+import InsurerMark from "@/components/InsurerMark";
 import { isNotableForSelection } from "@/lib/notable";
 
 /**
@@ -83,7 +84,7 @@ export default function AtAGlance({
               data-testid={`glance-card-${f.feature.replace(/\s+/g, "-").toLowerCase()}`}
             >
               <div
-                className="flex items-center gap-2 font-extrabold text-[15px] leading-snug"
+                className="flex items-center gap-2 font-extrabold text-[17px] sm:text-[15px] leading-snug"
                 style={{ color: "var(--gmc-ink)" }}
               >
                 <FeatureIcon name={f.feature} size={18} />
@@ -93,14 +94,12 @@ export default function AtAGlance({
                 tag="p"
                 text={f.definition}
                 glossary={glossary}
-                className="text-[12px] mt-1 leading-relaxed"
+                className="text-[13.5px] sm:text-[12px] mt-1 leading-relaxed"
               />
 
               <div
-                className="mt-4 grid gap-2"
-                style={{
-                  gridTemplateColumns: `repeat(${insurers.length}, minmax(0, 1fr))`,
-                }}
+                className="mt-4 gmc-glance-grid"
+                style={{ "--cols": insurers.length }}
               >
                 {insurers.map((ins) => {
                   const entry = lookup[ins.id]?.[f.feature];
@@ -115,17 +114,20 @@ export default function AtAGlance({
                         borderLeftColor: ins.accent || "var(--gmc-teal)",
                       }}
                     >
-                      <div className="flex items-center justify-between gap-1.5 mb-1">
-                        <div
-                          className="text-[11px] font-bold uppercase tracking-[0.05em]"
-                          style={{ color: ins.accent || "var(--gmc-teal-mid)" }}
-                        >
-                          {ins.name}
+                      <div className="flex items-center justify-between gap-1.5 mb-1.5">
+                        <div className="flex items-center gap-1.5 min-w-0">
+                          <InsurerMark insurer={ins} size={18} />
+                          <div
+                            className="text-[11.5px] sm:text-[11px] font-bold uppercase tracking-[0.05em] truncate"
+                            style={{ color: ins.accent || "var(--gmc-teal-mid)" }}
+                          >
+                            {ins.name}
+                          </div>
                         </div>
                         <VerifiedIcon verified={entry?.verified} />
                       </div>
                       <div
-                        className="text-[13px] font-semibold leading-snug"
+                        className="text-[14px] sm:text-[13px] font-semibold leading-snug"
                         style={{ color: "var(--gmc-ink-2)" }}
                       >
                         {entry?.short ? (

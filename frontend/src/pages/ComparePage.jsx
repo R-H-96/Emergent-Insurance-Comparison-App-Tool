@@ -159,6 +159,9 @@ export default function ComparePage({ embed = false, initialGroups = [] }) {
   const locateFeature = (featureName) => {
     const feat = data.features.find((f) => f.feature === featureName);
     if (!feat) return;
+    // "Show me" comes from the ask panel — close it so the located row is
+    // visible (critical on mobile, where the panel is a full-height sheet).
+    setAskOpen(false);
     // Switch to Full comparison if we're in Glance mode
     if (density !== "full") setDensity("full");
     if (diffOnly) setDiffOnly(false);
@@ -295,6 +298,8 @@ export default function ComparePage({ embed = false, initialGroups = [] }) {
         notableCount={notableCount}
         onOpenAsk={() => setAskOpen(true)}
         hidden={askOpen || !!openFeature}
+        compareOpen={pickerOpen}
+        onCompareOpenChange={setPickerOpen}
       />
 
       {embed ? (

@@ -35,5 +35,14 @@ Status: [ ] open · [~] fixed in code, needs verify · [x] verified fixed
 
 ## QA drive 21 Jul (Claude, desktop, Pages build)
 - [x] B3 filter toggle to spec · B4 popover behaviour · B5 strip/CHANGE · B6 ask bar · density morph · modal bullets+glossary+source links · no h-scroll — ALL VERIFIED GOOD on desktop
-- [~] NEW L1: all logos broken on Pages (absolute /logos/ paths vs sub-path hosting) — FIXED in code (PUBLIC_URL prefix in InsurerLogo.jsx + InsurerMark.jsx), needs push + verify
+- [x] NEW L1: all logos broken on Pages (absolute /logos/ paths vs sub-path hosting) — FIXED (PUBLIC_URL prefix), VERIFIED by Reuben 22 Jul (logos showing)
 - [ ] Still to test: mobile pass (Reuben's phone), embed offset (B11), Lighthouse (B13), cross-browser (B14)
+
+## Polish round 22 Jul (Claude, code — all need Reuben verify on Pages build)
+- [~] P1. At-a-glance cards: added small round InsurerMark (size 18) next to each insurer name in the value tiles (AtAGlance.jsx). Verify logos show + align.
+- [~] P2. At-a-glance value tiles now stack vertically on mobile, side-by-side on ≥640px (new `.gmc-glance-grid` in index.css, `--cols` var). Verify on phone.
+- [~] P3. Mobile type bump: At-a-glance card heading 15→17px, definition 12→13.5px, tile value 13→14px (all mobile-only, desktop unchanged). Full-comparison mobile cards + 'Core limits' group headers also bumped. Verify readability.
+- [~] P4. FIX mobile "Change" button was dead: InsurerStrip → onOpenPicker set `pickerOpen`, which only the desktop ControlDock listened to. MobileBottomBar's compare sheet is now controlled by that same state (ComparePage passes compareOpen/onCompareOpenChange). Verify Change opens the sheet on phone.
+- [~] P5. FIX mobile sheet close-X hidden behind Safari chrome: MobileSheet maxHeight switched vh→dvh (dynamic viewport) + close button stops pointerdown so drag can't swallow the tap (MobileSheet.jsx). Verify X visible + tappable on iOS.
+- [~] P6. FIX chat "Show me" left the ask sheet open: locateFeature now closes the ask panel (setAskOpen(false)) so the located row is visible (ComparePage.jsx). Verify on phone.
+- Note: verified all changed files parse (Babel jsx); full CRA build not runnable in this env — CI Pages build is the real check.

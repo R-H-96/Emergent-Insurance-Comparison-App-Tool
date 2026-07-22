@@ -24,8 +24,12 @@ export default function MobileSheet({
   testId = "mobile-sheet",
   children,
   footer,
-  maxHeight = "92vh",
+  maxHeight = "92dvh",
 }) {
+  // Normalise any legacy "vh" callers to dynamic viewport height so the
+  // sticky header (and its close X) never sits behind iOS Safari's chrome.
+  const resolvedMaxHeight =
+    typeof maxHeight === "string" ? maxHeight.replace(/vh$/, "dvh") : maxHeight;
   const reduce = useReducedMotion();
   const bodyRef = useRef(null);
   const historyPushedRef = useRef(false);
@@ -113,7 +117,7 @@ export default function MobileSheet({
             aria-modal="true"
             aria-label={title || "Sheet"}
             className="relative w-full max-w-[720px] bg-white rounded-t-[var(--gmc-r-card)] overflow-hidden flex flex-col shadow-[0_-8px_40px_rgba(0,0,0,0.18)]"
-            style={{ maxHeight }}
+            style={{ maxHeight: resolvedMaxHeight }}
             initial={reduce ? { y: 0 } : { y: "100%" }}
             animate={{ y: 0 }}
             exit={reduce ? { y: 0 } : { y: "100%" }}
@@ -161,6 +165,7 @@ export default function MobileSheet({
                 <button
                   type="button"
                   onClick={onClose}
+                  onPointerDown={(e) => e.stopPropagation()}
                   className="gmc-tap flex items-center justify-center w-10 h-10 rounded-full flex-shrink-0 hover:bg-[color:var(--gmc-bg-alt)]"
                   aria-label="Close"
                   data-testid={`${testId}-close`}
