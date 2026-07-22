@@ -340,18 +340,6 @@ body {
   box-shadow: inset 3px 0 0 var(--gmc-teal);
 }
 
-/* At-a-glance per-insurer value tiles: stacked on mobile, side-by-side on sm+ */
-.gmc-glance-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 0.5rem;
-}
-@media (min-width: 640px) {
-  .gmc-glance-grid {
-    grid-template-columns: repeat(var(--cols, 2), minmax(0, 1fr));
-  }
-}
-
 /* Outlined button style used on at-a-glance cards, sheet CTAs etc. */
 .gmc-btn-outline {
   display: inline-flex;

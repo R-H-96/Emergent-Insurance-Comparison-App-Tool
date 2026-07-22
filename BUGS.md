@@ -47,3 +47,12 @@ Status: [ ] open · [~] fixed in code, needs verify · [x] verified fixed
 - [~] P6. FIX chat "Show me" left the ask sheet open: locateFeature now closes the ask panel (setAskOpen(false)) so the located row is visible (ComparePage.jsx). Verify on phone.
 - [~] P7. FIX mobile detail card: top cut off on landing + scrolling up dismissed it. Root cause = whole sheet was draggable, so body swipes moved/closed the sheet. Now drag-to-dismiss only starts from the header/handle (useDragControls + dragListener=false); body scrolls freely (MobileSheet.jsx). Verify: open a card on phone, header visible on landing, can scroll full content, only a header pull-down closes it.
 - Note: verified all changed files parse (Babel jsx); full CRA build not runnable in this env — CI Pages build is the real check.
+
+## At-a-glance redesign 22 Jul (Claude, code — needs Reuben verify + adviser sign-off)
+Replaces the old notable-card grid with a layered, differentiated surface: radar hero → care journey → differences reel. New files: data/glanceModel.js, components/InsurerRadar.jsx, CareJourney.jsx, DiffReel.jsx, TierBadge.jsx. AtAGlance.jsx recomposed.
+- [~] R1. InsurerRadar — six-theme shape per selected insurer (2–3), derived from THEME_BANDS. Verify shapes render + labels don't clip on mobile.
+- [~] R2. CareJourney — 5-stage strip, leader per stage from bands. Verify 5-col layout on narrow phones (may want 2-row wrap if too tight).
+- [~] R3. DiffReel — reuses existing pair-aware notable engine (no new judgments); inline values + tap-through to detail. Verify tap opens the right feature.
+- [~] R4. TierBadge — shared factual band pill (Standard/Higher/Highest).
+- [ ] **R5. COMPLIANCE — THEME_BANDS in data/glanceModel.js are a first-pass editorial read of limit SIZE, drafted from the policy values. Must be reviewed + signed off (ideally by an adviser) before launch. They are labelled factual ("largest stated limit"), never "best". Adjusting a band updates radar + journey automatically.**
+- [ ] R6. Copy check: radar/journey/diff disclaimers read as factual, not advice.
