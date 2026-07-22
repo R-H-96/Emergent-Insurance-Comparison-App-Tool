@@ -25,7 +25,7 @@ Status: [ ] open · [~] fixed in code, needs verify · [x] verified fixed
 
 ## Infra / integration (Claude)
 - [~] I1. GitHub Actions workflow: fixed branch trigger (added Edit-3) + removed yarn.lock dependency (repo has no lockfile — npm install now). Needs: push + enable Pages + confirm green run
-- [ ] I2. Site-modal patch (host site, not this repo): read localStorage.gmc_compare_context, consent step ("share what you compared" — unticked by default, shows chips, optional free-text), append to HubSpot submit as tool_context. Claude writes against the Webflow footer embed
+- [~] I2. Site-modal consent add-on written (gmc_consent_addon_FOOTER.html in website folder). Fetch-interceptor approach, existing form untouched. Needs: Reuben pastes into Webflow footer + adds tool_context + tool_context_note fields to HubSpot form + test.
 - [ ] I3. HubSpot: add tool_context property/field to quote form (Reuben)
 - [ ] I4. Formal code review of Edit-3 (Claude) — components, askEngine, notable.js, analytics
 - [ ] I5. Decide Pages URL as interim preview vs keeping Emergent preview URL (Emergent preview may expire without credits — assume Pages is canonical)
