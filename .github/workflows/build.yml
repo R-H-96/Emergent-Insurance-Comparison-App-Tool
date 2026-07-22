@@ -38,7 +38,7 @@ jobs:
         env:
           PUBLIC_URL: "."
           CI: "false" # tolerate CRA warnings as non-fatal
-        run: yarn build
+        run: npm run build
 
       # GitHub Pages does a 404 on client-side routes; SPA fallback = copy
       # index.html to 404.html so refreshes deep-link correctly.
