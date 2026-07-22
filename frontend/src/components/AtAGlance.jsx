@@ -20,6 +20,7 @@ export default function AtAGlance({
   glossary,
   notableCount,
   onOpen,
+  onOpenGroup,
 }) {
   const notable = features.filter((f) => isNotableForSelection(f, insurers, lookup));
   if (!insurers.length) return null;
@@ -49,8 +50,8 @@ export default function AtAGlance({
           </div>
         ) : (
           <div className="space-y-4 sm:space-y-5">
-            <InsurerRadar insurers={insurers} />
-            <CareJourney insurers={insurers} />
+            <InsurerRadar insurers={insurers} onOpenTheme={onOpenGroup} />
+            <CareJourney insurers={insurers} lookup={lookup} />
             <DiffReel
               features={notable}
               insurers={insurers}

@@ -175,6 +175,15 @@ export default function ComparePage({ embed = false, initialGroups = [] }) {
     }, 60);
   };
 
+  const openGroup = (group) => {
+    if (density !== "full") setDensity("full");
+    if (diffOnly) setDiffOnly(false);
+    setActiveGroups([group]);
+    setTimeout(() => {
+      document.getElementById("comparison-surface")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 60);
+  };
+
   const share = async () => {
     const url = window.location.href;
     const shareData = { title: "Compare NZ health insurance", text: "Side-by-side comparison", url };
@@ -242,6 +251,7 @@ export default function ComparePage({ embed = false, initialGroups = [] }) {
         preOpenGroups={preOpenGroups}
         flashFeature={flashFeature}
         onOpenFeature={openFeatureAndTrack}
+        onOpenGroup={openGroup}
         onShare={share}
         linkCopied={linkCopied}
         onOpenPicker={() => setPickerOpen(true)}

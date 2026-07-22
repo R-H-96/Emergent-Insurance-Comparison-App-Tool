@@ -56,3 +56,10 @@ Replaces the old notable-card grid with a layered, differentiated surface: radar
 - [~] R4. TierBadge — shared factual band pill (Standard/Higher/Highest).
 - [ ] **R5. COMPLIANCE — THEME_BANDS in data/glanceModel.js are a first-pass editorial read of limit SIZE, drafted from the policy values. Must be reviewed + signed off (ideally by an adviser) before launch. They are labelled factual ("largest stated limit"), never "best". Adjusting a band updates radar + journey automatically.**
 - [ ] R6. Copy check: radar/journey/diff disclaimers read as factual, not advice.
+
+## At-a-glance interactivity round 22 Jul (Claude, code — desktop pass, then mobile)
+- [~] R7. Radar = "Coverage profile" card: title/key split, bigger heading, 6 SVG axis icons, labelled rings (Standard/Higher/Highest).
+- [~] R8. Radar interactivity: hover an insurer (shape/legend/summary) to isolate; hover a vertex for per-insurer band tooltip; click a vertex/label to jump to that theme in Full comparison (onOpenGroup wired ComparePage→Surface→AtAGlance→radar).
+- [~] R9. Radar side panel: factual "broadest stated limits in …" per insurer, using the empty desktop space.
+- [~] R10. Care journey: new heading "Across your health journey", bigger type, connective path line, leading value under each stage, shared Standard/Higher/Highest key.
+- [ ] R11. Verify on desktop build: axis icons position correctly (nested-SVG x/y), tooltip anchors to the hovered vertex, jump lands on the right group. Then mobile: radar shrinks OK, side panel stacks under, journey path hidden on <sm (connector is sm+ only).

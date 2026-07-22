@@ -50,11 +50,11 @@ export const BAND_META = {
 // Care-journey stages. Each points at a radar theme; the "leader" at a stage
 // is simply whichever selected insurer(s) hold the highest band for that theme.
 export const JOURNEY_STAGES = [
-  { id: "everyday", label: "Everyday", theme: "extras", icon: "user" },
-  { id: "tests", label: "Tests", theme: "specialists", icon: "search" },
-  { id: "surgery", label: "Surgery", theme: "core", icon: "scissors" },
-  { id: "cancer", label: "Cancer", theme: "cancer", icon: "heart" },
-  { id: "aftercare", label: "Aftercare", theme: "loyalty", icon: "refresh" },
+  { id: "everyday", label: "Everyday", theme: "extras", icon: "user", headline: "GP / day-to-day add-on" },
+  { id: "tests", label: "Tests", theme: "specialists", icon: "search", headline: "Specialist consultations" },
+  { id: "surgery", label: "Surgery", theme: "core", icon: "scissors", headline: "Surgical benefit maximum" },
+  { id: "cancer", label: "Cancer", theme: "cancer", icon: "heart", headline: "Chemotherapy / radiotherapy cover" },
+  { id: "aftercare", label: "Aftercare", theme: "loyalty", icon: "refresh", headline: "Loyalty / no-claims benefits" },
 ];
 
 // score 0–1 for the radar, from a 1–3 band.
@@ -71,4 +71,13 @@ export function leadersForTheme(themeId, insurers) {
     (ins) => (THEME_BANDS[ins.id]?.[themeId] || 0) === best,
   );
   return { band: best, leaders, tied: leaders.length === insurers.length };
+}
+
+// Factual "standout" line for one insurer: the theme labels where it holds its
+// own highest band (used by the radar side-summary). Describes limit size only.
+export function standoutThemes(insurerId) {
+  const bands = THEME_BANDS[insurerId] || {};
+  const top = Math.max(...RADAR_THEMES.map((t) => bands[t.id] || 0));
+  const labels = RADAR_THEMES.filter((t) => (bands[t.id] || 0) === top).map((t) => t.label);
+  return { band: top, labels };
 }

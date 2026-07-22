@@ -34,6 +34,7 @@ export default function ComparisonSurface({
   preOpenGroups,
   flashFeature,
   onOpenFeature,
+  onOpenGroup,
   onShare,
   linkCopied,
   onOpenPicker,
@@ -168,6 +169,7 @@ export default function ComparisonSurface({
                   glossary={glossary}
                   notableCount={notableCount}
                   onOpen={onOpenFeature}
+                  onOpenGroup={onOpenGroup}
                 />
               ) : (
                 <ComparisonTable
