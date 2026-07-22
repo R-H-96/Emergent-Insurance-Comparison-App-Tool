@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
-import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion, useDragControls } from "framer-motion";
 import { X } from "lucide-react";
 
 /**
@@ -31,6 +31,7 @@ export default function MobileSheet({
   const resolvedMaxHeight =
     typeof maxHeight === "string" ? maxHeight.replace(/vh$/, "dvh") : maxHeight;
   const reduce = useReducedMotion();
+  const dragControls = useDragControls();
   const bodyRef = useRef(null);
   const historyPushedRef = useRef(false);
   // Keep the latest onClose in a ref so effects don't re-fire on prop identity changes
@@ -123,6 +124,8 @@ export default function MobileSheet({
             exit={reduce ? { y: 0 } : { y: "100%" }}
             transition={reduce ? { duration: 0 } : { type: "spring", stiffness: 380, damping: 38 }}
             drag={reduce ? false : "y"}
+            dragListener={false}
+            dragControls={dragControls}
             dragConstraints={{ top: 0, bottom: 0 }}
             dragElastic={{ top: 0, bottom: 0.4 }}
             onDragEnd={(_e, info) => {
@@ -130,10 +133,15 @@ export default function MobileSheet({
             }}
             data-testid={`${testId}-panel`}
           >
-            {/* Drag handle + sticky header */}
+            {/* Drag handle + sticky header — ONLY this region initiates the
+                drag-to-dismiss, so the scrollable body below can scroll
+                freely without the sheet closing. */}
             <div
               className="sticky top-0 z-10 flex-shrink-0 bg-white border-b"
-              style={{ borderColor: "var(--gmc-line)" }}
+              style={{ borderColor: "var(--gmc-line)", touchAction: "none" }}
+              onPointerDown={(e) => {
+                if (!reduce) dragControls.start(e);
+              }}
             >
               <div className="flex justify-center pt-2 pb-1">
                 <div
