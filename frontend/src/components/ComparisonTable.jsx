@@ -81,6 +81,7 @@ export default function ComparisonTable({
       else next.add(group);
       return next;
     });
+    pushEvent("gmc_group_open", { group });
   };
 
   const cols = insurers.length;
@@ -186,7 +187,7 @@ export default function ComparisonTable({
               <button
                 type="button"
                 onClick={() => toggleGroup(group)}
-                className="w-full grid text-left transition-colors"
+                className="w-full grid text-left transition-colors hover:bg-[color:var(--gmc-bg-soft)]"
                 style={{
                   gridTemplateColumns: gridTemplate,
                   background: "var(--gmc-bg-alt)",
@@ -281,7 +282,7 @@ export default function ComparisonTable({
                             className="p-4 flex items-start gap-2"
                             style={{
                               borderLeft: "1px solid var(--gmc-line)",
-                              background: columnTints[i],
+                              background: isNotablePair ? "transparent" : columnTints[i],
                             }}
                             data-testid={`cell-${ins.id}-${f.feature.replace(/\s+/g, "-").toLowerCase()}`}
                           >
@@ -292,12 +293,7 @@ export default function ComparisonTable({
                               {entry?.short ? (
                                 <GlossaryText text={entry.short} glossary={glossary} />
                               ) : (
-                                <span
-                                  className="italic font-normal"
-                                  style={{ color: "var(--gmc-faint)" }}
-                                >
-                                  Not extracted
-                                </span>
+                                <span style={{ color: "var(--gmc-faint)" }}>—</span>
                               )}
                             </div>
                             <VerifiedIcon verified={entry?.verified} />
@@ -321,7 +317,7 @@ export default function ComparisonTable({
               <button
                 type="button"
                 onClick={() => toggleGroup(group)}
-                className="w-full flex items-center gap-2 p-4 gmc-tap text-left"
+                className="w-full flex items-center gap-2 p-4 gmc-tap text-left transition-colors hover:bg-[color:var(--gmc-bg-soft)]"
                 style={{ background: "var(--gmc-bg-alt)" }}
                 aria-expanded={!isCollapsed}
                 data-testid={`mobile-group-toggle-${group}`}
@@ -425,23 +421,16 @@ export default function ComparisonTable({
                                 {entry?.short ? (
                                   <GlossaryText text={entry.short} glossary={glossary} />
                                 ) : (
-                                  <span
-                                    className="italic font-normal"
-                                    style={{ color: "var(--gmc-faint)" }}
-                                  >
-                                    Not extracted
-                                  </span>
+                                  <span style={{ color: "var(--gmc-faint)" }}>—</span>
                                 )}
                               </div>
                             </div>
                           );
                         })}
                       </div>
-                      <div
-                        className="mt-3 text-[11px] font-bold uppercase tracking-[0.1em]"
-                        style={{ color: "var(--gmc-teal-mid)" }}
-                      >
-                        Tap for full detail →
+                      <div className="mt-3 flex items-center gap-1" style={{ color: "var(--gmc-teal-mid)" }}>
+                        <span className="text-[12px] font-bold">View full detail</span>
+                        <ChevronRight className="w-3.5 h-3.5" strokeWidth={2.5} />
                       </div>
                     </div>
                   );

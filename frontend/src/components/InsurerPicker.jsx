@@ -37,9 +37,9 @@ export default function InsurerPicker({ insurers, selected, onToggle }) {
               }`}
               style={{
                 borderColor: isSelected ? accent : "var(--gmc-line-soft)",
-                background: isSelected ? "var(--gmc-teal-tint)" : "white",
+                background: isSelected ? "var(--gmc-teal-tint-2)" : "white",
                 boxShadow: isSelected
-                  ? `0 6px 20px -12px ${accent}`
+                  ? `0 0 0 2px ${accent}, 0 6px 20px -12px ${accent}`
                   : "none",
               }}
               data-testid={`insurer-${ins.id}`}
@@ -68,7 +68,7 @@ export default function InsurerPicker({ insurers, selected, onToggle }) {
                 {ins.product}
               </div>
               <div
-                className="mt-2 text-[11px] leading-relaxed"
+                className="mt-2 text-[12px] leading-relaxed"
                 style={{ color: "var(--gmc-muted)" }}
               >
                 {ins.version}

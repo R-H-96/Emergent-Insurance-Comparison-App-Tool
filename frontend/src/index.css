@@ -207,7 +207,7 @@ body {
 }
 .gmc-chip[aria-pressed="true"] {
   border-color: var(--gmc-teal);
-  background: var(--gmc-teal-tint);
+  background: var(--gmc-teal-tint-2);
   color: var(--gmc-teal-mid);
 }
 .gmc-chip:disabled {
@@ -335,9 +335,10 @@ body {
   animation: gmcFlash 2.2s ease-out both;
 }
 
-/* Notable row: teal left-edge marker bar (replaces full green wash) */
+/* Notable row: teal left-edge marker + subtle background wash */
 .gmc-notable-row {
   box-shadow: inset 3px 0 0 var(--gmc-teal);
+  background-color: var(--gmc-teal-tint);
 }
 
 /* Outlined button style used on at-a-glance cards, sheet CTAs etc. */
@@ -430,5 +431,6 @@ select:focus-visible {
   a { color: inherit; text-decoration: underline; }
   .gmc-notable-row {
     box-shadow: inset 4px 0 0 #000 !important;
+    background-color: transparent !important;
   }
 }

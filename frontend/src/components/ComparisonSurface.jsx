@@ -203,7 +203,9 @@ function SegBtn({ active, onClick, icon: Icon, label, testid, badge }) {
       role="tab"
       aria-selected={active}
       onClick={onClick}
-      className="gmc-tap inline-flex items-center gap-2 px-4 py-2 rounded-full text-[13px] font-semibold transition-all"
+      className={`gmc-tap inline-flex items-center gap-2 px-4 py-2 rounded-full text-[13px] transition-all ${
+        active ? "font-bold" : "font-semibold"
+      }`}
       style={{
         background: active ? "var(--gmc-teal)" : "transparent",
         color: active ? "white" : "var(--gmc-body)",
