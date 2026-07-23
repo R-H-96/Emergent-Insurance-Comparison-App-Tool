@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useRef } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
-import { Sparkles, Table2, Copy, Check } from "lucide-react";
-import { toast } from "sonner";
+import { Sparkles, Table2 } from "lucide-react";
 import AtAGlance from "@/components/AtAGlance";
 import ComparisonTable from "@/components/ComparisonTable";
 import FilterChips from "@/components/FilterChips";
@@ -9,11 +8,6 @@ import TrustLine from "@/components/TrustLine";
 import InsurerStrip from "@/components/InsurerStrip";
 import { pushEvent } from "@/lib/analytics";
 
-/**
- * Unified surface for At-a-glance + Full comparison. A sticky segmented
- * control switches between densities. Toggle morphs in place via framer-motion
- * crossfade + auto-height. Respects prefers-reduced-motion.
- */
 export default function ComparisonSurface({
   density,
   onDensityChange,
@@ -67,13 +61,13 @@ export default function ComparisonSurface({
       <div className="gmc-container">
         <InsurerStrip insurers={insurers} onChange={onOpenPicker} />
 
-        {/* Sticky segmented control — offset supports floating nav via --gmc-sticky-offset */}
+        {/* Sticky segmented control */}
         <div
           className="sticky z-[40] py-3 -mx-4 px-4 sm:mx-0 sm:px-0"
           style={{ top: "var(--gmc-sticky-offset, 0px)", background: "var(--gmc-bg)" }}
           data-testid="density-sticky"
         >
-          <div className="flex items-center gap-3 justify-between">
+          <div className="flex items-center justify-between gap-3">
             <div
               role="tablist"
               aria-label="Comparison density"
@@ -85,8 +79,8 @@ export default function ComparisonSurface({
                 active={density === "glance"}
                 onClick={() => setDensity("glance")}
                 icon={Sparkles}
-                label="At a glance"
-                shortLabel="Glance"
+                label="Quick Comparison"
+                shortLabel="Quick"
                 testid="density-glance"
                 badge={notableCount}
               />
@@ -94,49 +88,30 @@ export default function ComparisonSurface({
                 active={density === "full"}
                 onClick={() => setDensity("full")}
                 icon={Table2}
-                label="Full comparison"
+                label="Full Comparison"
                 shortLabel="Full"
                 testid="density-full"
               />
             </div>
 
-            <div className="flex items-center gap-2">
-              {/* Notable toggle: hidden on mobile — available in MobileBottomBar sheet */}
-              {density === "full" && (
-                <button
-                  type="button"
-                  className="gmc-chip gmc-tap hidden sm:inline-flex"
-                  aria-pressed={diffOnly}
-                  onClick={() => onDiffOnlyChange(!diffOnly)}
-                  data-testid="differences-only-toggle"
-                >
-                  <span
-                    className="gmc-toggle"
-                    aria-pressed={diffOnly}
-                    aria-hidden="true"
-                    tabIndex={-1}
-                  />
-                  Notable only ({notableCount})
-                </button>
-              )}
-              {/* Share: icon-only on mobile, full label on sm+ */}
+            {/* Notable toggle — desktop only, full density only */}
+            {density === "full" && (
               <button
                 type="button"
-                className="gmc-chip gmc-tap"
-                onClick={onShare}
-                data-testid="copy-link-btn"
-                aria-label="Share this comparison"
+                className="gmc-chip gmc-tap hidden sm:inline-flex"
+                aria-pressed={diffOnly}
+                onClick={() => onDiffOnlyChange(!diffOnly)}
+                data-testid="differences-only-toggle"
               >
-                {linkCopied ? (
-                  <Check className="w-3.5 h-3.5" strokeWidth={2.5} />
-                ) : (
-                  <Copy className="w-3.5 h-3.5" strokeWidth={2.2} />
-                )}
-                <span className="hidden sm:inline">
-                  {linkCopied ? "Copied" : "Share"}
-                </span>
+                <span
+                  className="gmc-toggle"
+                  aria-pressed={diffOnly}
+                  aria-hidden="true"
+                  tabIndex={-1}
+                />
+                Notable differences
               </button>
-            </div>
+            )}
           </div>
         </div>
 
@@ -152,7 +127,6 @@ export default function ComparisonSurface({
           </div>
         )}
 
-        {/* Morphing content */}
         <motion.div
           layout={!reduce}
           transition={transition}
