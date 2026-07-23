@@ -30,27 +30,21 @@ function readInitialState() {
   const params = new URLSearchParams(window.location.search);
   const parseCsv = (v, allow) =>
     v ? v.split(",").map((s) => decodeURIComponent(s.trim())).filter((s) => allow.has(s)) : null;
-
   let insurerIds = parseCsv(params.get("insurers"), VALID_INSURER_IDS);
   if (insurerIds && (insurerIds.length < 2 || insurerIds.length > 3)) insurerIds = null;
-
   const diffParam = params.get("diff");
   const diffOnly = diffParam === "1" || diffParam === "true" ? true : diffParam === "0" ? false : null;
-
   const activeGroups = parseCsv(params.get("groups"), VALID_GROUPS);
   const densityParam = params.get("density");
   const density = densityParam === "full" || densityParam === "glance" ? densityParam : null;
-
   let stored = null;
   try {
     const raw = window.localStorage.getItem(LS_KEY);
     if (raw) stored = JSON.parse(raw);
   } catch (_err) { stored = null; }
-
   return {
     insurers: insurerIds || (stored?.insurers?.length >= 2 && stored.insurers.every((id) => VALID_INSURER_IDS.has(id))
-      ? stored.insurers
-      : ["sc", "nib"]),
+      ? stored.insurers : ["sc", "nib"]),
     diffOnly: diffOnly !== null ? diffOnly : !!stored?.diffOnly,
     activeGroups: activeGroups || (Array.isArray(stored?.activeGroups) ? stored.activeGroups.filter((g) => VALID_GROUPS.has(g)) : []),
     density: density || stored?.density || "glance",
@@ -59,7 +53,6 @@ function readInitialState() {
 
 export default function ComparePage({ embed = false, initialGroups = [] }) {
   const initial = useMemo(() => readInitialState(), []);
-
   const [productType, setProductType] = useState("health");
   const [selected, setSelected] = useState(initial.insurers);
   const [diffOnly, setDiffOnly] = useState(initial.diffOnly);
@@ -70,7 +63,6 @@ export default function ComparePage({ embed = false, initialGroups = [] }) {
   const [linkCopied, setLinkCopied] = useState(false);
   const [askOpen, setAskOpen] = useState(false);
   const [pickerOpen, setPickerOpen] = useState(false);
-
   const flashTimer = useRef(null);
   const firstMount = useRef(true);
   const isDesktop = useMediaQuery("(min-width: 1200px)");
@@ -82,25 +74,16 @@ export default function ComparePage({ embed = false, initialGroups = [] }) {
     params.set("density", density);
     if (diffOnly) params.set("diff", "1"); else params.delete("diff");
     if (activeGroups.length) params.set("groups", activeGroups.join(",")); else params.delete("groups");
-
     window.history.replaceState(null, "",
       window.location.pathname + (params.toString() ? `?${params.toString()}` : "") + window.location.hash);
-
     try {
-      window.localStorage.setItem(LS_KEY, JSON.stringify({
-        insurers: selected, diffOnly, activeGroups, density, savedAt: Date.now(),
-      }));
+      window.localStorage.setItem(LS_KEY, JSON.stringify({ insurers: selected, diffOnly, activeGroups, density, savedAt: Date.now() }));
     } catch (_err) {}
-
     if (firstMount.current) firstMount.current = false;
     else pushEvent("gmc_select_insurers", { insurers: selected });
   }, [productType, selected, diffOnly, activeGroups, density]);
 
-  const selectedInsurers = useMemo(
-    () => data.insurers.filter((i) => selected.includes(i.id)),
-    [selected],
-  );
-
+  const selectedInsurers = useMemo(() => data.insurers.filter((i) => selected.includes(i.id)), [selected]);
   useCompareContextBridge({ productType, selectedInsurers });
 
   const lookup = useMemo(() => {
@@ -123,18 +106,8 @@ export default function ComparePage({ embed = false, initialGroups = [] }) {
     () => countNotableForSelection(data.features, selectedInsurers, lookup),
     [selectedInsurers, lookup],
   );
-
-  const currentFeature = useMemo(
-    () => data.features.find((f) => f.feature === openFeature) || null,
-    [openFeature],
-  );
-
-  const askState = useAskEngine({
-    features: data.features,
-    data: data.data,
-    glossary: data.glossary,
-    synonyms: data.synonyms,
-  });
+  const currentFeature = useMemo(() => data.features.find((f) => f.feature === openFeature) || null, [openFeature]);
+  const askState = useAskEngine({ features: data.features, data: data.data, glossary: data.glossary, synonyms: data.synonyms });
 
   const toggleInsurer = (id) => {
     setSelected((prev) => {
@@ -148,7 +121,6 @@ export default function ComparePage({ embed = false, initialGroups = [] }) {
   };
 
   const toggleGroup = (g) => setActiveGroups((prev) => prev.includes(g) ? prev.filter((x) => x !== g) : [...prev, g]);
-
   const preOpenGroups = initialGroups.length > 0 ? initialGroups : activeGroups.length > 0 ? activeGroups : undefined;
 
   const openFeatureAndTrack = (featureName) => {
@@ -183,14 +155,9 @@ export default function ComparePage({ embed = false, initialGroups = [] }) {
 
   const share = async () => {
     const url = window.location.href;
-    const shareData = { title: "Compare NZ health insurance", text: "Side-by-side comparison", url };
     pushEvent("gmc_share", { method: "trigger", url });
     if (typeof navigator !== "undefined" && navigator.share) {
-      try {
-        await navigator.share(shareData);
-        pushEvent("gmc_share", { method: "native" });
-        return;
-      } catch (_err) {}
+      try { await navigator.share({ title: "Compare NZ health insurance", text: "Side-by-side comparison", url }); return; } catch (_err) {}
     }
     try {
       await navigator.clipboard.writeText(url);
@@ -198,9 +165,7 @@ export default function ComparePage({ embed = false, initialGroups = [] }) {
       toast.success("Copied!");
       pushEvent("gmc_share", { method: "clipboard" });
       setTimeout(() => setLinkCopied(false), 1600);
-    } catch (_err) {
-      toast.error("Could not share — long-press the address bar instead.");
-    }
+    } catch (_err) { toast.error("Could not share — long-press the address bar instead."); }
   };
 
   const pickerCollapsed = selected.length >= 2;
@@ -210,7 +175,6 @@ export default function ComparePage({ embed = false, initialGroups = [] }) {
       {!embed && <GmcNav />}
       {!embed && <Hero />}
 
-      {/* Mobile insurer picker: collapsed strip when already comparing, full picker for onboarding */}
       {!isDesktop && (
         <AnimatePresence mode="wait" initial={false}>
           {pickerCollapsed ? (
@@ -226,22 +190,20 @@ export default function ComparePage({ embed = false, initialGroups = [] }) {
                 <button
                   type="button"
                   className="gmc-tap w-full flex items-center justify-between gap-3 px-4 py-3 rounded-[var(--gmc-r-ctl)] transition-colors"
-                  style={{
-                    background: "var(--gmc-teal-tint)",
-                    border: "1px solid var(--gmc-line)",
-                  }}
+                  style={{ background: "var(--gmc-teal-tint)", border: "1px solid var(--gmc-line)" }}
                   onClick={() => setPickerOpen(true)}
                   data-testid="picker-collapsed-strip"
                 >
                   <div className="flex items-center gap-3 min-w-0 flex-1">
+                    {/* Overlapping insurer circles */}
                     <div className="flex flex-shrink-0">
                       {selectedInsurers.map((ins, i) => (
                         <div
                           key={ins.id}
                           style={{
-                            width: 34,
-                            height: 34,
-                            marginLeft: i > 0 ? -10 : 0,
+                            width: 40,
+                            height: 40,
+                            marginLeft: i > 0 ? -12 : 0,
                             boxShadow: "0 0 0 2.5px white",
                             borderRadius: "50%",
                             position: "relative",
@@ -250,7 +212,7 @@ export default function ComparePage({ embed = false, initialGroups = [] }) {
                             flexShrink: 0,
                           }}
                         >
-                          <InsurerMark insurer={ins} size={34} />
+                          <InsurerMark insurer={ins} size={40} />
                         </div>
                       ))}
                     </div>
@@ -261,19 +223,29 @@ export default function ComparePage({ embed = false, initialGroups = [] }) {
                       >
                         Comparing
                       </div>
-                      <div
-                        className="text-[13px] font-extrabold leading-tight truncate"
-                        style={{ color: "var(--gmc-ink)" }}
-                      >
-                        {selectedInsurers.map((i) => i.name).join(" vs ")}
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        {selectedInsurers.map((ins, i) => (
+                          <span key={ins.id}>
+                            <span
+                              className="text-[13px] font-extrabold leading-tight"
+                              style={{ color: ins.accent || "var(--gmc-ink)" }}
+                            >
+                              {ins.name}
+                            </span>
+                            {i < selectedInsurers.length - 1 && (
+                              <span
+                                className="text-[13px] font-semibold mx-1"
+                                style={{ color: "var(--gmc-muted)" }}
+                              >
+                                vs
+                              </span>
+                            )}
+                          </span>
+                        ))}
                       </div>
                     </div>
                   </div>
-                  <Pencil
-                    className="w-4 h-4 flex-shrink-0"
-                    strokeWidth={2}
-                    style={{ color: "var(--gmc-teal-mid)" }}
-                  />
+                  <Pencil className="w-4 h-4 flex-shrink-0" strokeWidth={2} style={{ color: "var(--gmc-teal-mid)" }} />
                 </button>
               </div>
             </motion.div>
@@ -285,21 +257,12 @@ export default function ComparePage({ embed = false, initialGroups = [] }) {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.15 }}
             >
-              <section
-                className={embed ? "pt-6 sm:pt-10 pb-4" : "pb-4"}
-                data-testid="product-type-section"
-              >
-                <div className="gmc-container">
-                  <ProductTypeSelector value={productType} onChange={setProductType} />
-                </div>
+              <section className={embed ? "pt-6 sm:pt-10 pb-4" : "pb-4"} data-testid="product-type-section">
+                <div className="gmc-container"><ProductTypeSelector value={productType} onChange={setProductType} /></div>
               </section>
               <section className="pb-6 sm:pb-8" data-testid="insurer-picker-section">
                 <div className="gmc-container">
-                  <InsurerPicker
-                    insurers={data.insurers}
-                    selected={selected}
-                    onToggle={toggleInsurer}
-                  />
+                  <InsurerPicker insurers={data.insurers} selected={selected} onToggle={toggleInsurer} />
                 </div>
               </section>
             </motion.div>
@@ -307,112 +270,54 @@ export default function ComparePage({ embed = false, initialGroups = [] }) {
         </AnimatePresence>
       )}
 
-      {/* Desktop-only ask bar above comparison surface */}
       {isDesktop && (
-        <AskCompact
-          askState={askState}
-          examples={data.example_questions || []}
-          onResultScroll={() => setAskOpen(true)}
-        />
+        <AskCompact askState={askState} examples={data.example_questions || []} onResultScroll={() => setAskOpen(true)} />
       )}
 
       <ComparisonSurface
-        density={density}
-        onDensityChange={setDensity}
-        insurers={selectedInsurers}
-        allInsurers={data.insurers}
-        onToggleInsurer={toggleInsurer}
-        features={data.features}
-        data={data.data}
-        glossary={data.glossary}
-        lookup={lookup}
-        groupList={groupList}
-        activeGroups={activeGroups}
-        onToggleGroup={toggleGroup}
-        onClearGroups={() => setActiveGroups([])}
-        diffOnly={diffOnly}
-        onDiffOnlyChange={setDiffOnly}
-        notableCount={notableCount}
-        preOpenGroups={preOpenGroups}
-        flashFeature={flashFeature}
-        onOpenFeature={openFeatureAndTrack}
-        onOpenGroup={openGroup}
-        onShare={share}
-        linkCopied={linkCopied}
-        onOpenPicker={() => setPickerOpen(true)}
+        density={density} onDensityChange={setDensity}
+        insurers={selectedInsurers} allInsurers={data.insurers} onToggleInsurer={toggleInsurer}
+        features={data.features} data={data.data} glossary={data.glossary} lookup={lookup}
+        groupList={groupList} activeGroups={activeGroups} onToggleGroup={toggleGroup} onClearGroups={() => setActiveGroups([])}
+        diffOnly={diffOnly} onDiffOnlyChange={setDiffOnly} notableCount={notableCount}
+        preOpenGroups={preOpenGroups} flashFeature={flashFeature}
+        onOpenFeature={openFeatureAndTrack} onOpenGroup={openGroup}
+        onShare={share} linkCopied={linkCopied} onOpenPicker={() => setPickerOpen(true)}
       />
 
       <ControlDock
-        insurers={selectedInsurers}
-        allInsurers={data.insurers}
-        onToggleInsurer={toggleInsurer}
-        productType={productType}
-        onProductType={setProductType}
-        groups={groupList}
-        activeGroups={activeGroups}
-        onToggleGroup={toggleGroup}
-        onClearGroups={() => setActiveGroups([])}
-        diffOnly={diffOnly}
-        onDiffOnlyChange={setDiffOnly}
-        notableCount={notableCount}
-        onShare={share}
-        pickerOpen={pickerOpen}
-        onPickerOpenChange={setPickerOpen}
+        insurers={selectedInsurers} allInsurers={data.insurers} onToggleInsurer={toggleInsurer}
+        productType={productType} onProductType={setProductType}
+        groups={groupList} activeGroups={activeGroups} onToggleGroup={toggleGroup} onClearGroups={() => setActiveGroups([])}
+        diffOnly={diffOnly} onDiffOnlyChange={setDiffOnly} notableCount={notableCount}
+        onShare={share} pickerOpen={pickerOpen} onPickerOpenChange={setPickerOpen}
       />
 
-      {/* Desktop: floating ask bubble + panel */}
       {isDesktop && (
         <>
-          <AskLaunchBubble
-            open={askOpen}
-            onToggle={() => setAskOpen((o) => !o)}
-            hidden={!!openFeature}
-          />
+          <AskLaunchBubble open={askOpen} onToggle={() => setAskOpen((o) => !o)} hidden={!!openFeature} />
           <AskPanel
-            open={askOpen}
-            onClose={() => setAskOpen(false)}
-            askState={askState}
-            examples={data.example_questions || []}
-            insurers={selectedInsurers}
-            lookup={lookup}
-            glossary={data.glossary}
-            onLocate={locateFeature}
-            onOpenFeature={openFeatureAndTrack}
+            open={askOpen} onClose={() => setAskOpen(false)}
+            askState={askState} examples={data.example_questions || []}
+            insurers={selectedInsurers} lookup={lookup} glossary={data.glossary}
+            onLocate={locateFeature} onOpenFeature={openFeatureAndTrack}
           />
         </>
       )}
 
-      {/* Mobile: unified floating action button (Ask + Compare) */}
       <MobileFAB
-        askState={askState}
-        examples={data.example_questions || []}
-        insurers={selectedInsurers}
-        lookup={lookup}
-        glossary={data.glossary}
-        onLocate={locateFeature}
-        onOpenFeature={openFeatureAndTrack}
-        allInsurers={data.insurers}
-        onToggleInsurer={toggleInsurer}
-        productType={productType}
-        onProductType={setProductType}
-        groups={groupList}
-        activeGroups={activeGroups}
-        onToggleGroup={toggleGroup}
-        onClearGroups={() => setActiveGroups([])}
-        diffOnly={diffOnly}
-        onDiffOnlyChange={setDiffOnly}
-        notableCount={notableCount}
-        hidden={!!openFeature}
-        compareOpen={pickerOpen}
-        onCompareOpenChange={setPickerOpen}
+        askState={askState} examples={data.example_questions || []}
+        insurers={selectedInsurers} lookup={lookup} glossary={data.glossary}
+        onLocate={locateFeature} onOpenFeature={openFeatureAndTrack}
+        allInsurers={data.insurers} onToggleInsurer={toggleInsurer}
+        productType={productType} onProductType={setProductType}
+        groups={groupList} activeGroups={activeGroups} onToggleGroup={toggleGroup} onClearGroups={() => setActiveGroups([])}
+        diffOnly={diffOnly} onDiffOnlyChange={setDiffOnly} notableCount={notableCount}
+        hidden={!!openFeature} compareOpen={pickerOpen} onCompareOpenChange={setPickerOpen}
       />
 
       {embed ? (
-        <section
-          className="py-6 border-t"
-          style={{ borderColor: "var(--gmc-line)", background: "var(--gmc-bg-alt)" }}
-          data-testid="embed-disclaimer"
-        >
+        <section className="py-6 border-t" style={{ borderColor: "var(--gmc-line)", background: "var(--gmc-bg-alt)" }} data-testid="embed-disclaimer">
           <div className="gmc-container">
             <p className="text-[12px] leading-relaxed" style={{ color: "var(--gmc-body)" }}>
               Summaries for general information only, not financial advice. Always confirm against the insurer&apos;s current policy document. Insurer logos are used to identify the products compared. Get My Cover is independent and is not affiliated with or endorsed by any insurer.
@@ -423,15 +328,11 @@ export default function ComparePage({ embed = false, initialGroups = [] }) {
         <Disclaimer />
       )}
 
-      {/* Bottom clearance so FAB doesn’t obscure last content on mobile */}
       <div className="h-16 xl:hidden print:hidden" aria-hidden="true" />
 
       <DetailModal
-        feature={currentFeature}
-        insurers={selectedInsurers}
-        lookup={lookup}
-        glossary={data.glossary}
-        onClose={() => setOpenFeature(null)}
+        feature={currentFeature} insurers={selectedInsurers} lookup={lookup}
+        glossary={data.glossary} onClose={() => setOpenFeature(null)}
       />
     </div>
   );

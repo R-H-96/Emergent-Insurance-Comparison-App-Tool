@@ -1,13 +1,13 @@
 import { useMemo, useState, useEffect } from "react";
-import { ChevronDown, ChevronRight } from "lucide-react";
+import { ChevronDown, ChevronRight, Sparkles } from "lucide-react";
 import { VerifiedIcon } from "@/components/VerifiedBadge";
 import GlossaryText from "@/components/GlossaryText";
+import InsurerMark from "@/components/InsurerMark";
 import InsurerLogo from "@/components/InsurerLogo";
 import FeatureIcon from "@/components/FeatureIcon";
 import { isNotableForSelection } from "@/lib/notable";
 import { pushEvent } from "@/lib/analytics";
 
-// Turn "#RRGGBB" into "rgba(r,g,b,alpha)"
 function hexToRgba(hex, alpha) {
   if (!hex || typeof hex !== "string") return `rgba(20,181,175,${alpha})`;
   const h = hex.replace("#", "");
@@ -18,16 +18,8 @@ function hexToRgba(hex, alpha) {
 const rowId = (name) => `row-${name.replace(/\s+/g, "-").toLowerCase()}`;
 
 export default function ComparisonTable({
-  insurers,
-  features,
-  data,
-  glossary,
-  diffOnly,
-  activeGroups,
-  openGroups,
-  flashFeature,
-  onOpenFeature,
-  onClearFilters,
+  insurers, features, data, glossary, diffOnly, activeGroups,
+  openGroups, flashFeature, onOpenFeature, onClearFilters,
 }) {
   const grouped = useMemo(() => {
     const g = new Map();
@@ -41,25 +33,20 @@ export default function ComparisonTable({
   const defaultCollapsed = useMemo(() => {
     const s = new Set();
     const opens = openGroups && openGroups.length > 0 ? openGroups : ["Core limits"];
-    grouped.forEach(([group]) => {
-      if (!opens.includes(group)) s.add(group);
-    });
+    grouped.forEach(([group]) => { if (!opens.includes(group)) s.add(group); });
     return s;
   }, [grouped, openGroups]);
 
   const [collapsed, setCollapsed] = useState(defaultCollapsed);
   useEffect(() => setCollapsed(defaultCollapsed), [defaultCollapsed]);
 
-  // When flashFeature changes, ensure its group is open
   useEffect(() => {
     if (!flashFeature) return;
     const f = features.find((x) => x.feature === flashFeature);
     if (!f) return;
     setCollapsed((prev) => {
       if (!prev.has(f.group)) return prev;
-      const next = new Set(prev);
-      next.delete(f.group);
-      return next;
+      const next = new Set(prev); next.delete(f.group); return next;
     });
   }, [flashFeature, features]);
 
@@ -67,9 +54,7 @@ export default function ComparisonTable({
     const out = {};
     insurers.forEach((ins) => {
       out[ins.id] = {};
-      (data[ins.id] || []).forEach((row) => {
-        out[ins.id][row.feature] = row;
-      });
+      (data[ins.id] || []).forEach((row) => { out[ins.id][row.feature] = row; });
     });
     return out;
   }, [insurers, data]);
@@ -77,8 +62,7 @@ export default function ComparisonTable({
   const toggleGroup = (group) => {
     setCollapsed((prev) => {
       const next = new Set(prev);
-      if (next.has(group)) next.delete(group);
-      else next.add(group);
+      if (next.has(group)) next.delete(group); else next.add(group);
       return next;
     });
     pushEvent("gmc_group_open", { group });
@@ -86,14 +70,10 @@ export default function ComparisonTable({
 
   const cols = insurers.length;
   const gridTemplate = `minmax(0, 1.2fr) repeat(${cols}, minmax(0, 1fr))`;
-
-  // Per-insurer column background tints
   const columnTints = insurers.map((i) => hexToRgba(i.accent, 0.08));
 
   const visibleGrouped = grouped
-    .filter(([group]) =>
-      activeGroups.length === 0 ? true : activeGroups.includes(group),
-    )
+    .filter(([group]) => activeGroups.length === 0 ? true : activeGroups.includes(group))
     .map(([group, feats]) => {
       const visible = diffOnly
         ? feats.filter((f) => isNotableForSelection(f, insurers, lookup))
@@ -107,17 +87,10 @@ export default function ComparisonTable({
     return (
       <div className="gmc-card p-10 text-center" data-testid="comparison-empty">
         <p className="text-[14px] font-semibold" style={{ color: "var(--gmc-ink)" }}>
-          {hasFilters
-            ? "No rows in this group for this pair."
-            : "No features match your current filters."}
+          {hasFilters ? "No rows in this group for this pair." : "No features match your current filters."}
         </p>
         {hasFilters && (
-          <button
-            type="button"
-            className="gmc-btn-outline gmc-tap mt-4"
-            onClick={onClearFilters}
-            data-testid="comparison-empty-clear"
-          >
+          <button type="button" className="gmc-btn-outline gmc-tap mt-4" onClick={onClearFilters} data-testid="comparison-empty-clear">
             Clear filters
           </button>
         )}
@@ -127,19 +100,12 @@ export default function ComparisonTable({
 
   return (
     <>
-      {/* Desktop grid */}
-      <div
-        className="gmc-card overflow-hidden hidden md:block"
-        data-testid="comparison-table"
-      >
-        {/* Header row */}
+      {/* ── Desktop grid ── */}
+      <div className="gmc-card overflow-hidden hidden md:block" data-testid="comparison-table">
+        {/* Header */}
         <div
           className="grid"
-          style={{
-            gridTemplateColumns: gridTemplate,
-            borderBottom: "1px solid var(--gmc-line)",
-            background: "var(--gmc-card)",
-          }}
+          style={{ gridTemplateColumns: gridTemplate, borderBottom: "1px solid var(--gmc-line)", background: "var(--gmc-card)" }}
         >
           <div className="p-4 gmc-eyebrow">Feature</div>
           {insurers.map((ins, i) => (
@@ -156,24 +122,15 @@ export default function ComparisonTable({
               <div className="flex items-center gap-2.5">
                 <InsurerLogo insurer={ins} size={32} />
                 <div>
-                  <div
-                    className="font-extrabold text-[15px] leading-tight"
-                    style={{ color: ins.accent || "var(--gmc-ink)" }}
-                  >
+                  <div className="font-extrabold text-[15px] leading-tight" style={{ color: ins.accent || "var(--gmc-ink)" }}>
                     {ins.name}
                   </div>
-                  <div
-                    className="text-[12px] font-semibold mt-0.5"
-                    style={{ color: "var(--gmc-muted)" }}
-                  >
+                  <div className="text-[12px] font-semibold mt-0.5" style={{ color: "var(--gmc-muted)" }}>
                     {ins.product}
                   </div>
                 </div>
               </div>
-              <div
-                className="text-[11px] mt-1.5 leading-snug"
-                style={{ color: "var(--gmc-muted)" }}
-              >
+              <div className="text-[11px] mt-1.5 leading-snug" style={{ color: "var(--gmc-muted)" }}>
                 {ins.version}
               </div>
             </div>
@@ -184,257 +141,213 @@ export default function ComparisonTable({
           const isCollapsed = collapsed.has(group);
           return (
             <div key={group} data-testid={`group-${group}`}>
+              {/* Group header — redesigned: gradient + left accent + pill count */}
               <button
                 type="button"
                 onClick={() => toggleGroup(group)}
-                className="w-full grid text-left transition-colors hover:bg-[color:var(--gmc-bg-soft)]"
+                className="w-full grid text-left transition-colors"
                 style={{
                   gridTemplateColumns: gridTemplate,
-                  background: "var(--gmc-bg-alt)",
+                  background: "linear-gradient(to right, var(--gmc-teal-tint-2) 0%, var(--gmc-bg-alt) 55%)",
                   borderBottom: "1px solid var(--gmc-line)",
+                  borderLeft: "4px solid var(--gmc-teal)",
                 }}
                 aria-expanded={!isCollapsed}
                 data-testid={`group-toggle-${group}`}
               >
-                <div className="p-3 flex items-center gap-2">
-                  {isCollapsed ? (
-                    <ChevronRight
-                      className="w-4 h-4"
-                      strokeWidth={2.5}
-                      style={{ color: "var(--gmc-teal-deep)" }}
-                    />
-                  ) : (
-                    <ChevronDown
-                      className="w-4 h-4"
-                      strokeWidth={2.5}
-                      style={{ color: "var(--gmc-teal-deep)" }}
-                    />
-                  )}
-                  <span
-                    className="text-[11px] font-bold uppercase tracking-[0.1em]"
-                    style={{ color: "var(--gmc-teal-deep)" }}
+                <div className="p-3.5 flex items-center gap-2.5">
+                  <div
+                    className="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0"
+                    style={{ background: "var(--gmc-teal-tint)", color: "var(--gmc-teal-deep)" }}
                   >
+                    {isCollapsed
+                      ? <ChevronRight className="w-3.5 h-3.5" strokeWidth={2.5} />
+                      : <ChevronDown className="w-3.5 h-3.5" strokeWidth={2.5} />}
+                  </div>
+                  <span className="text-[13px] font-bold" style={{ color: "var(--gmc-ink)" }}>
                     {group}
                   </span>
                   <span
-                    className="text-[11px] font-semibold"
-                    style={{ color: "var(--gmc-muted)" }}
+                    className="inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-bold"
+                    style={{ background: "var(--gmc-teal-tint-2)", color: "var(--gmc-teal-deep)" }}
                   >
-                    · {visibleFeats.length} row{visibleFeats.length === 1 ? "" : "s"}
+                    {visibleFeats.length}
                   </span>
                 </div>
                 {insurers.map((ins) => (
-                  <div
-                    key={ins.id}
-                    className="p-3"
-                    style={{ borderLeft: "1px solid var(--gmc-line)" }}
-                  />
+                  <div key={ins.id} className="p-3.5" style={{ borderLeft: "1px solid var(--gmc-line)" }} />
                 ))}
               </button>
 
-              {!isCollapsed &&
-                visibleFeats.map((f) => {
-                  const isFlashing = flashFeature === f.feature;
-                  const isNotablePair = isNotableForSelection(f, insurers, lookup);
-                  return (
-                    <div
-                      key={f.feature}
-                      id={rowId(f.feature)}
-                      className={`grid group cursor-pointer transition-colors hover:bg-[color:var(--gmc-teal-tint)] ${
-                        isNotablePair ? "gmc-notable-row" : ""
-                      } ${isFlashing ? "gmc-flash" : ""}`}
-                      style={{
-                        gridTemplateColumns: gridTemplate,
-                        borderBottom: "1px solid var(--gmc-line)",
-                        scrollMarginTop: 96,
-                      }}
-                      onClick={() => onOpenFeature(f.feature)}
-                      role="button"
-                      tabIndex={0}
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter" || e.key === " ") {
-                          e.preventDefault();
-                          onOpenFeature(f.feature);
-                        }
-                      }}
-                      data-testid={`row-${f.feature.replace(/\s+/g, "-").toLowerCase()}`}
-                    >
-                      <div className="p-4">
-                        <div
-                          className="flex items-center gap-2 font-bold text-[14px] leading-snug"
-                          style={{ color: "var(--gmc-ink)" }}
-                        >
-                          <FeatureIcon name={f.feature} size={18} />
-                          <span>{f.feature}</span>
-                        </div>
-                        <GlossaryText
-                          tag="div"
-                          text={f.definition}
-                          glossary={glossary}
-                          className="text-[12px] mt-1 leading-relaxed"
-                        />
-                      </div>
-                      {insurers.map((ins, i) => {
-                        const entry = lookup[ins.id]?.[f.feature];
-                        return (
-                          <div
-                            key={ins.id}
-                            className="p-4 flex items-start gap-2"
-                            style={{
-                              borderLeft: "1px solid var(--gmc-line)",
-                              background: isNotablePair ? "transparent" : columnTints[i],
-                            }}
-                            data-testid={`cell-${ins.id}-${f.feature.replace(/\s+/g, "-").toLowerCase()}`}
+              {!isCollapsed && visibleFeats.map((f) => {
+                const isFlashing = flashFeature === f.feature;
+                const isNotablePair = isNotableForSelection(f, insurers, lookup);
+                return (
+                  <div
+                    key={f.feature}
+                    id={rowId(f.feature)}
+                    className={`grid group cursor-pointer transition-colors hover:bg-[color:var(--gmc-teal-tint)] ${
+                      isNotablePair ? "gmc-notable-row" : ""
+                    } ${isFlashing ? "gmc-flash" : ""}`}
+                    style={{ gridTemplateColumns: gridTemplate, borderBottom: "1px solid var(--gmc-line)", scrollMarginTop: 96 }}
+                    onClick={() => onOpenFeature(f.feature)}
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onOpenFeature(f.feature); } }}
+                    data-testid={`row-${f.feature.replace(/\s+/g, "-").toLowerCase()}`}
+                  >
+                    <div className="p-4">
+                      <div className="flex items-center gap-2 font-bold text-[14px] leading-snug" style={{ color: "var(--gmc-ink)" }}>
+                        <FeatureIcon name={f.feature} size={18} />
+                        <span>{f.feature}</span>
+                        {isNotablePair && (
+                          <span
+                            className="inline-flex items-center justify-center w-5 h-5 rounded-full flex-shrink-0"
+                            style={{ background: "var(--gmc-teal)", color: "white" }}
+                            title="Notable difference"
                           >
-                            <div
-                              className="text-[13px] font-semibold leading-snug flex-1"
-                              style={{ color: "var(--gmc-ink-2)" }}
-                            >
-                              {entry?.short ? (
-                                <GlossaryText text={entry.short} glossary={glossary} />
-                              ) : (
-                                <span style={{ color: "var(--gmc-faint)" }}>—</span>
-                              )}
-                            </div>
-                            <VerifiedIcon verified={entry?.verified} />
-                          </div>
-                        );
-                      })}
+                            <Sparkles className="w-2.5 h-2.5" strokeWidth={2.5} />
+                          </span>
+                        )}
+                      </div>
+                      <GlossaryText tag="div" text={f.definition} glossary={glossary} className="text-[12px] mt-1 leading-relaxed" />
                     </div>
-                  );
-                })}
+                    {insurers.map((ins, i) => {
+                      const entry = lookup[ins.id]?.[f.feature];
+                      return (
+                        <div
+                          key={ins.id}
+                          className="p-4 flex items-start gap-2"
+                          style={{
+                            borderLeft: "1px solid var(--gmc-line)",
+                            background: isNotablePair ? "transparent" : columnTints[i],
+                          }}
+                          data-testid={`cell-${ins.id}-${f.feature.replace(/\s+/g, "-").toLowerCase()}`}
+                        >
+                          <div className="text-[13px] font-semibold leading-snug flex-1" style={{ color: "var(--gmc-ink-2)" }}>
+                            {entry?.short ? <GlossaryText text={entry.short} glossary={glossary} /> : <span style={{ color: "var(--gmc-faint)" }}>—</span>}
+                          </div>
+                          <VerifiedIcon verified={entry?.verified} />
+                        </div>
+                      );
+                    })}
+                  </div>
+                );
+              })}
             </div>
           );
         })}
       </div>
 
-      {/* Mobile stacked cards */}
+      {/* ── Mobile stacked cards ── */}
       <div className="md:hidden space-y-4" data-testid="comparison-mobile">
         {visibleGrouped.map(([group, , visibleFeats]) => {
           const isCollapsed = collapsed.has(group);
           return (
             <div key={group} className="gmc-card overflow-hidden">
+              {/* Mobile group header */}
               <button
                 type="button"
                 onClick={() => toggleGroup(group)}
-                className="w-full flex items-center gap-2 p-4 gmc-tap text-left transition-colors hover:bg-[color:var(--gmc-bg-soft)]"
-                style={{ background: "var(--gmc-bg-alt)" }}
+                className="w-full flex items-center gap-2.5 p-4 gmc-tap text-left transition-colors"
+                style={{
+                  background: "linear-gradient(to right, var(--gmc-teal-tint-2), var(--gmc-bg-alt) 70%)",
+                  borderLeft: "4px solid var(--gmc-teal)",
+                }}
                 aria-expanded={!isCollapsed}
                 data-testid={`mobile-group-toggle-${group}`}
               >
-                {isCollapsed ? (
-                  <ChevronRight
-                    className="w-4 h-4"
-                    strokeWidth={2.5}
-                    style={{ color: "var(--gmc-teal-deep)" }}
-                  />
-                ) : (
-                  <ChevronDown
-                    className="w-4 h-4"
-                    strokeWidth={2.5}
-                    style={{ color: "var(--gmc-teal-deep)" }}
-                  />
-                )}
-                <span
-                  className="text-[13px] font-bold uppercase tracking-[0.1em]"
-                  style={{ color: "var(--gmc-teal-deep)" }}
+                <div
+                  className="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0"
+                  style={{ background: "var(--gmc-teal-tint)", color: "var(--gmc-teal-deep)" }}
                 >
+                  {isCollapsed
+                    ? <ChevronRight className="w-3.5 h-3.5" strokeWidth={2.5} />
+                    : <ChevronDown className="w-3.5 h-3.5" strokeWidth={2.5} />}
+                </div>
+                <span className="text-[14px] font-bold" style={{ color: "var(--gmc-ink)" }}>
                   {group}
                 </span>
                 <span
-                  className="text-[12px] font-semibold"
-                  style={{ color: "var(--gmc-muted)" }}
+                  className="ml-auto inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-bold"
+                  style={{ background: "var(--gmc-teal-tint-2)", color: "var(--gmc-teal-deep)" }}
                 >
-                  · {visibleFeats.length}
+                  {visibleFeats.length}
                 </span>
               </button>
 
-              {!isCollapsed &&
-                visibleFeats.map((f) => {
-                  const isFlashing = flashFeature === f.feature;
-                  const isNotablePair = isNotableForSelection(f, insurers, lookup);
-                  return (
-                    <div
-                      key={f.feature}
-                      id={rowId(f.feature)}
-                      className={`p-4 border-t cursor-pointer ${
-                        isNotablePair ? "gmc-notable-row" : ""
-                      } ${isFlashing ? "gmc-flash" : ""}`}
-                      style={{
-                        borderColor: "var(--gmc-line)",
-                        scrollMarginTop: 96,
-                      }}
-                      onClick={() => onOpenFeature(f.feature)}
-                      role="button"
-                      tabIndex={0}
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter" || e.key === " ") {
-                          e.preventDefault();
-                          onOpenFeature(f.feature);
-                        }
-                      }}
-                      data-testid={`mobile-row-${f.feature.replace(/\s+/g, "-").toLowerCase()}`}
-                    >
-                      <div
-                        className="flex items-center gap-2 font-bold text-[16px]"
-                        style={{ color: "var(--gmc-ink)" }}
-                      >
-                        <FeatureIcon name={f.feature} size={18} />
-                        <span>{f.feature}</span>
-                      </div>
-                      <GlossaryText
-                        tag="div"
-                        text={f.definition}
-                        glossary={glossary}
-                        className="text-[13.5px] mt-1 leading-relaxed"
-                      />
-                      <div className="mt-3 space-y-2">
-                        {insurers.map((ins) => {
-                          const entry = lookup[ins.id]?.[f.feature];
-                          return (
-                            <div
-                              key={ins.id}
-                              className="rounded-[10px] p-3 border"
-                              style={{
-                                background: hexToRgba(ins.accent, 0.05),
-                                borderColor: "var(--gmc-line)",
-                                borderLeftWidth: 3,
-                                borderLeftColor: ins.accent || "var(--gmc-teal)",
-                              }}
-                            >
-                              <div className="flex items-center justify-between gap-2 mb-1">
-                                <div className="flex items-center gap-2">
-                                  <InsurerLogo insurer={ins} size={22} />
-                                  <div
-                                    className="text-[11px] font-bold uppercase tracking-[0.05em]"
-                                    style={{ color: ins.accent || "var(--gmc-teal-mid)" }}
-                                  >
-                                    {ins.name}
-                                  </div>
-                                </div>
-                                <VerifiedIcon verified={entry?.verified} />
-                              </div>
-                              <div
-                                className="text-[14px] font-semibold leading-snug"
-                                style={{ color: "var(--gmc-ink-2)" }}
-                              >
-                                {entry?.short ? (
-                                  <GlossaryText text={entry.short} glossary={glossary} />
-                                ) : (
-                                  <span style={{ color: "var(--gmc-faint)" }}>—</span>
-                                )}
-                              </div>
-                            </div>
-                          );
-                        })}
-                      </div>
-                      <div className="mt-3 flex items-center gap-1" style={{ color: "var(--gmc-teal-mid)" }}>
-                        <span className="text-[12px] font-bold">View full detail</span>
-                        <ChevronRight className="w-3.5 h-3.5" strokeWidth={2.5} />
-                      </div>
+              {!isCollapsed && visibleFeats.map((f) => {
+                const isFlashing = flashFeature === f.feature;
+                const isNotablePair = isNotableForSelection(f, insurers, lookup);
+                return (
+                  <div
+                    key={f.feature}
+                    id={rowId(f.feature)}
+                    className={`p-4 border-t cursor-pointer ${
+                      isNotablePair ? "gmc-notable-row" : ""
+                    } ${isFlashing ? "gmc-flash" : ""}`}
+                    style={{ borderColor: "var(--gmc-line)", scrollMarginTop: 96 }}
+                    onClick={() => onOpenFeature(f.feature)}
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onOpenFeature(f.feature); } }}
+                    data-testid={`mobile-row-${f.feature.replace(/\s+/g, "-").toLowerCase()}`}
+                  >
+                    <div className="flex items-center gap-2 font-bold text-[16px]" style={{ color: "var(--gmc-ink)" }}>
+                      <FeatureIcon name={f.feature} size={18} />
+                      <span>{f.feature}</span>
+                      {isNotablePair && (
+                        <span
+                          className="inline-flex items-center justify-center w-5 h-5 rounded-full flex-shrink-0"
+                          style={{ background: "var(--gmc-teal)", color: "white" }}
+                          title="Notable difference"
+                        >
+                          <Sparkles className="w-2.5 h-2.5" strokeWidth={2.5} />
+                        </span>
+                      )}
                     </div>
-                  );
-                })}
+                    <GlossaryText tag="div" text={f.definition} glossary={glossary} className="text-[13.5px] mt-1 leading-relaxed" />
+                    <div className="mt-3 space-y-2">
+                      {insurers.map((ins) => {
+                        const entry = lookup[ins.id]?.[f.feature];
+                        return (
+                          <div
+                            key={ins.id}
+                            className="rounded-[10px] p-3 border"
+                            style={{
+                              background: hexToRgba(ins.accent, 0.05),
+                              borderColor: "var(--gmc-line)",
+                              borderLeftWidth: 3,
+                              borderLeftColor: ins.accent || "var(--gmc-teal)",
+                            }}
+                          >
+                            <div className="flex items-center justify-between gap-2 mb-1">
+                              <div className="flex items-center gap-2">
+                                {/* Circular mark — replaces rectangular InsurerLogo */}
+                                <InsurerMark insurer={ins} size={28} />
+                                <div
+                                  className="text-[12px] font-bold"
+                                  style={{ color: ins.accent || "var(--gmc-teal-mid)" }}
+                                >
+                                  {ins.name}
+                                </div>
+                              </div>
+                              <VerifiedIcon verified={entry?.verified} />
+                            </div>
+                            <div className="text-[14px] font-semibold leading-snug" style={{ color: "var(--gmc-ink-2)" }}>
+                              {entry?.short ? <GlossaryText text={entry.short} glossary={glossary} /> : <span style={{ color: "var(--gmc-faint)" }}>—</span>}
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                    <div className="mt-3 flex items-center gap-1" style={{ color: "var(--gmc-teal-mid)" }}>
+                      <span className="text-[12px] font-bold">View full detail</span>
+                      <ChevronRight className="w-3.5 h-3.5" strokeWidth={2.5} />
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           );
         })}

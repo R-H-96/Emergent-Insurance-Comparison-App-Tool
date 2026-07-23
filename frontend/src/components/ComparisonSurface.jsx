@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { Sparkles, Table2 } from "lucide-react";
 import AtAGlance from "@/components/AtAGlance";
@@ -9,69 +9,46 @@ import InsurerStrip from "@/components/InsurerStrip";
 import { pushEvent } from "@/lib/analytics";
 
 export default function ComparisonSurface({
-  density,
-  onDensityChange,
-  insurers,
-  allInsurers,
-  onToggleInsurer,
-  features,
-  data,
-  glossary,
-  lookup,
-  groupList,
-  activeGroups,
-  onToggleGroup,
-  onClearGroups,
-  diffOnly,
-  onDiffOnlyChange,
-  notableCount,
-  preOpenGroups,
-  flashFeature,
-  onOpenFeature,
-  onOpenGroup,
-  onShare,
-  linkCopied,
-  onOpenPicker,
+  density, onDensityChange,
+  insurers, allInsurers, onToggleInsurer,
+  features, data, glossary, lookup,
+  groupList, activeGroups, onToggleGroup, onClearGroups,
+  diffOnly, onDiffOnlyChange, notableCount,
+  preOpenGroups, flashFeature, onOpenFeature, onOpenGroup,
+  onShare, linkCopied, onOpenPicker,
 }) {
   const reduce = useReducedMotion();
   const initialFire = useRef(true);
 
   useEffect(() => {
-    if (initialFire.current) {
-      initialFire.current = false;
-      return;
-    }
+    if (initialFire.current) { initialFire.current = false; return; }
     pushEvent("gmc_density_toggle", { density });
   }, [density]);
 
-  const setDensity = (d) => {
-    if (d !== density) onDensityChange(d);
-  };
-
-  const transition = reduce
-    ? { duration: 0 }
-    : { duration: 0.28, ease: [0.16, 1, 0.3, 1] };
+  const setDensity = (d) => { if (d !== density) onDensityChange(d); };
+  const transition = reduce ? { duration: 0 } : { duration: 0.28, ease: [0.16, 1, 0.3, 1] };
 
   return (
-    <section
-      id="comparison-surface"
-      className="pb-12 sm:pb-16"
-      data-testid="comparison-surface"
-    >
+    <section id="comparison-surface" className="pb-12 sm:pb-16" data-testid="comparison-surface">
       <div className="gmc-container">
         <InsurerStrip insurers={insurers} onChange={onOpenPicker} />
 
-        {/* Sticky segmented control */}
+        {/* Sticky density bar */}
         <div
           className="sticky z-[40] py-3 -mx-4 px-4 sm:mx-0 sm:px-0"
           style={{ top: "var(--gmc-sticky-offset, 0px)", background: "var(--gmc-bg)" }}
           data-testid="density-sticky"
         >
           <div className="flex items-center justify-between gap-3">
+            {/*
+             * Segmented control: full-width on mobile (flex) so the tabs own
+             * the entire row now that the notable toggle is gone from mobile.
+             * Reverts to inline-flex on sm+ where the notable toggle may appear.
+             */}
             <div
               role="tablist"
               aria-label="Comparison density"
-              className="inline-flex p-1 rounded-full bg-white border shadow-[0_2px_10px_rgba(22,28,39,0.04)]"
+              className="flex sm:inline-flex p-1 rounded-full bg-white border shadow-[0_2px_10px_rgba(22,28,39,0.04)]"
               style={{ borderColor: "var(--gmc-line)" }}
               data-testid="density-segmented"
             >
@@ -103,12 +80,7 @@ export default function ComparisonSurface({
                 onClick={() => onDiffOnlyChange(!diffOnly)}
                 data-testid="differences-only-toggle"
               >
-                <span
-                  className="gmc-toggle"
-                  aria-pressed={diffOnly}
-                  aria-hidden="true"
-                  tabIndex={-1}
-                />
+                <span className="gmc-toggle" aria-pressed={diffOnly} aria-hidden="true" tabIndex={-1} />
                 Notable differences
               </button>
             )}
@@ -127,11 +99,7 @@ export default function ComparisonSurface({
           </div>
         )}
 
-        <motion.div
-          layout={!reduce}
-          transition={transition}
-          className="mt-4 sm:mt-6"
-        >
+        <motion.div layout={!reduce} transition={transition} className="mt-4 sm:mt-6">
           <AnimatePresence mode="wait" initial={false}>
             <motion.div
               key={density}
@@ -143,29 +111,15 @@ export default function ComparisonSurface({
             >
               {density === "glance" ? (
                 <AtAGlance
-                  features={features}
-                  insurers={insurers}
-                  lookup={lookup}
-                  glossary={glossary}
-                  notableCount={notableCount}
-                  onOpen={onOpenFeature}
-                  onOpenGroup={onOpenGroup}
+                  features={features} insurers={insurers} lookup={lookup} glossary={glossary}
+                  notableCount={notableCount} onOpen={onOpenFeature} onOpenGroup={onOpenGroup}
                 />
               ) : (
                 <ComparisonTable
-                  insurers={insurers}
-                  features={features}
-                  data={data}
-                  glossary={glossary}
-                  diffOnly={diffOnly}
-                  activeGroups={activeGroups}
-                  openGroups={preOpenGroups}
-                  flashFeature={flashFeature}
-                  onOpenFeature={onOpenFeature}
-                  onClearFilters={() => {
-                    onClearGroups();
-                    if (diffOnly) onDiffOnlyChange(false);
-                  }}
+                  insurers={insurers} features={features} data={data} glossary={glossary}
+                  diffOnly={diffOnly} activeGroups={activeGroups} openGroups={preOpenGroups}
+                  flashFeature={flashFeature} onOpenFeature={onOpenFeature}
+                  onClearFilters={() => { onClearGroups(); if (diffOnly) onDiffOnlyChange(false); }}
                 />
               )}
             </motion.div>
@@ -183,15 +137,13 @@ function SegBtn({ active, onClick, icon: Icon, label, shortLabel, testid, badge 
       role="tab"
       aria-selected={active}
       onClick={onClick}
-      className={`gmc-tap inline-flex items-center gap-2 px-4 py-2 rounded-full text-[13px] transition-all ${
+      className={`gmc-tap flex sm:inline-flex flex-1 sm:flex-none items-center justify-center gap-2 px-4 py-2 rounded-full text-[13px] transition-all ${
         active ? "font-bold" : "font-semibold"
       }`}
       style={{
         background: active ? "var(--gmc-teal)" : "transparent",
         color: active ? "white" : "var(--gmc-body)",
-        boxShadow: active
-          ? "0 4px 14px rgba(20,181,175,0.28)"
-          : "none",
+        boxShadow: active ? "0 4px 14px rgba(20,181,175,0.28)" : "none",
       }}
       data-testid={testid}
     >

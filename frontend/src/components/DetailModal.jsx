@@ -24,9 +24,7 @@ export default function DetailModal({ feature, insurers, lookup, glossary, onClo
         const entry = lookup[ins.id]?.[feature.feature];
         const points = entry?.detail_points && entry.detail_points.length > 0
           ? entry.detail_points
-          : entry?.detail
-            ? [entry.detail]
-            : [];
+          : entry?.detail ? [entry.detail] : [];
         const sources = Array.isArray(ins.sources) ? ins.sources : [];
         return (
           <div
@@ -42,10 +40,11 @@ export default function DetailModal({ feature, insurers, lookup, glossary, onClo
           >
             <div className="flex items-start justify-between gap-3 flex-wrap">
               <div className="flex items-center gap-3">
-                <InsurerMark insurer={ins} size={32} />
+                {/* Circular insurer mark — larger for visual presence */}
+                <InsurerMark insurer={ins} size={44} />
                 <div>
                   <div
-                    className="font-extrabold text-[16px]"
+                    className="font-extrabold text-[17px]"
                     style={{ color: ins.accent || "var(--gmc-ink)" }}
                   >
                     {ins.name}
@@ -65,35 +64,22 @@ export default function DetailModal({ feature, insurers, lookup, glossary, onClo
               <>
                 <div
                   className="mt-3 rounded-[10px] px-3 py-2.5 inline-block text-[14px] font-semibold"
-                  style={{
-                    background: "var(--gmc-teal-tint)",
-                    color: "var(--gmc-teal-deep)",
-                  }}
+                  style={{ background: "var(--gmc-teal-tint)", color: "var(--gmc-teal-deep)" }}
                 >
                   <GlossaryText text={entry.short} glossary={glossary} />
                 </div>
 
                 {points.length > 0 && (
-                  <ul
-                    className="mt-3 space-y-1.5 list-disc pl-5"
-                    data-testid={`detail-points-${ins.id}`}
-                  >
+                  <ul className="mt-3 space-y-1.5 list-disc pl-5" data-testid={`detail-points-${ins.id}`}>
                     {points.map((p, i) => (
-                      <li
-                        key={i}
-                        className="text-[14px] leading-relaxed"
-                        style={{ color: "var(--gmc-ink-2)" }}
-                      >
+                      <li key={i} className="text-[14px] leading-relaxed" style={{ color: "var(--gmc-ink-2)" }}>
                         <GlossaryText text={p} glossary={glossary} />
                       </li>
                     ))}
                   </ul>
                 )}
 
-                <div
-                  className="mt-4 pt-3 border-t"
-                  style={{ borderColor: "var(--gmc-line)" }}
-                >
+                <div className="mt-4 pt-3 border-t" style={{ borderColor: "var(--gmc-line)" }}>
                   <div
                     className="text-[10px] font-bold uppercase tracking-[0.1em] mb-1.5"
                     style={{ color: "var(--gmc-body)" }}
@@ -110,7 +96,6 @@ export default function DetailModal({ feature, insurers, lookup, glossary, onClo
                             rel="noopener noreferrer"
                             className="inline-flex items-center gap-1.5 text-[12px] underline decoration-dotted underline-offset-2 hover:decoration-solid"
                             style={{ color: "var(--gmc-teal-deep)" }}
-                            data-testid={`source-link-${ins.id}-${i}`}
                           >
                             {s.label}
                             <ExternalLink className="w-3 h-3" strokeWidth={2} />
@@ -118,28 +103,20 @@ export default function DetailModal({ feature, insurers, lookup, glossary, onClo
                         </li>
                       ))}
                       {entry.source && (
-                        <li
-                          className="text-[11px] mt-1"
-                          style={{ color: "var(--gmc-muted)" }}
-                        >
+                        <li className="text-[11px] mt-1" style={{ color: "var(--gmc-muted)" }}>
                           Cited passage: {entry.source}
                         </li>
                       )}
                     </ul>
                   ) : (
-                    <div
-                      className="text-[12px]"
-                      style={{ color: "var(--gmc-muted)" }}
-                    >
+                    <div className="text-[12px]" style={{ color: "var(--gmc-muted)" }}>
                       {entry.source}
                     </div>
                   )}
                 </div>
               </>
             ) : (
-              <p className="mt-4 text-[18px] font-light" style={{ color: "var(--gmc-faint)" }}>
-                —
-              </p>
+              <p className="mt-4 text-[18px] font-light" style={{ color: "var(--gmc-faint)" }}>—</p>
             )}
           </div>
         );
@@ -152,10 +129,7 @@ export default function DetailModal({ feature, insurers, lookup, glossary, onClo
       className="p-5 sm:p-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3"
       style={{ background: "var(--gmc-bg-alt)" }}
     >
-      <p
-        className="text-[13px] leading-relaxed max-w-md"
-        style={{ color: "var(--gmc-body)" }}
-      >
+      <p className="text-[13px] leading-relaxed max-w-md" style={{ color: "var(--gmc-body)" }}>
         Not sure how this applies to you? Ask an adviser — free.
       </p>
       <CTA label="Ask an adviser — free" data-testid="detail-modal-cta" />
@@ -173,10 +147,7 @@ export default function DetailModal({ feature, insurers, lookup, glossary, onClo
         testId="detail-sheet"
         footer={Footer}
       >
-        <div
-          className="px-5 pt-4 pb-2 text-[13px]"
-          style={{ color: "var(--gmc-body)" }}
-        >
+        <div className="px-5 pt-4 pb-2 text-[13px]" style={{ color: "var(--gmc-body)" }}>
           <GlossaryText tag="span" text={feature.definition} glossary={glossary} />
         </div>
         {Body}
@@ -199,39 +170,24 @@ export default function DetailModal({ feature, insurers, lookup, glossary, onClo
           </div>
           <DialogTitle
             className="text-2xl font-extrabold tracking-tight text-left flex items-center gap-2.5"
-            style={{
-              color: "var(--gmc-ink)",
-              fontFamily: "'Plus Jakarta Sans', sans-serif",
-            }}
+            style={{ color: "var(--gmc-ink)", fontFamily: "'Plus Jakarta Sans', sans-serif" }}
           >
             <FeatureIcon name={feature.feature} size={22} strokeWidth={2.2} />
             <span>{feature.feature}</span>
           </DialogTitle>
           <DialogDescription className="text-sm mt-2 text-left" style={{ color: "var(--gmc-body)" }}>
-            <GlossaryText
-              tag="span"
-              text={feature.definition}
-              glossary={glossary}
-            />
+            <GlossaryText tag="span" text={feature.definition} glossary={glossary} />
           </DialogDescription>
         </DialogHeader>
-
         {Body}
-
         <div
           className="p-6 sm:p-8 pt-2 border-t flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
           style={{ borderColor: "var(--gmc-line)", background: "var(--gmc-bg-alt)" }}
         >
-          <p
-            className="text-[13px] leading-relaxed max-w-md"
-            style={{ color: "var(--gmc-body)" }}
-          >
+          <p className="text-[13px] leading-relaxed max-w-md" style={{ color: "var(--gmc-body)" }}>
             Not sure how this applies to you? Ask an adviser — free.
           </p>
-          <CTA
-            label="Ask an adviser — free"
-            data-testid="detail-modal-cta"
-          />
+          <CTA label="Ask an adviser — free" data-testid="detail-modal-cta" />
         </div>
       </DialogContent>
     </Dialog>
