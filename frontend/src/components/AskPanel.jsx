@@ -9,9 +9,9 @@ import GlossaryText from "@/components/GlossaryText";
 import CTA from "@/components/CTA";
 
 /**
- * Floating ask panel — desktop drawer (~380px) anchored bottom-right; on
- * mobile it renders as a proper bottom sheet with drag-to-dismiss and a
- * single sticky header (no duplicate close buttons).
+ * Floating ask panel — desktop drawer (~420px) anchored bottom-right.
+ * On mobile the content is surfaced via MobileFAB's Ask tab instead;
+ * this component renders nothing below xl.
  */
 export default function AskPanel({
   open,
@@ -27,95 +27,66 @@ export default function AskPanel({
   const isDesktop = useMediaQuery("(min-width: 1200px)");
   const reduce = useReducedMotion();
 
-  if (isDesktop) {
-    return (
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            key="ask-panel"
-            initial={reduce ? { opacity: 0 } : { opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={reduce ? { opacity: 0 } : { opacity: 0, y: 20 }}
-            transition={{ duration: reduce ? 0 : 0.22, ease: [0.16, 1, 0.3, 1] }}
-            className="fixed right-24 bottom-6 z-[80] w-[420px] max-w-[420px] max-h-[70vh] flex flex-col rounded-[var(--gmc-r-card)] overflow-hidden"
-            style={{
-              background: "white",
-              border: "1px solid var(--gmc-line)",
-              boxShadow: "0 20px 60px rgba(22,28,39,0.18)",
-            }}
-            data-testid="ask-panel-desktop"
-          >
-            <DesktopHeader onClose={onClose} />
-            <AskPanelBody
-              askState={askState}
-              examples={examples}
-              insurers={insurers}
-              lookup={lookup}
-              glossary={glossary}
-              onLocate={(f) => onLocate(f)}
-              onOpenFeature={onOpenFeature}
-            />
-          </motion.div>
-        )}
-      </AnimatePresence>
-    );
-  }
+  if (!isDesktop) return null;
 
   return (
-    <MobileSheet
-      open={open}
-      onClose={onClose}
-      title="Ask a question"
-      eyebrow="Search these policies"
-      testId="ask-sheet"
-      maxHeight="88vh"
-    >
-      <AskPanelBody
-        askState={askState}
-        examples={examples}
-        insurers={insurers}
-        lookup={lookup}
-        glossary={glossary}
-        onLocate={onLocate}
-        onOpenFeature={onOpenFeature}
-      />
-    </MobileSheet>
-  );
-}
-
-function DesktopHeader({ onClose }) {
-  return (
-    <div
-      className="flex items-center justify-between gap-2 px-4 py-3 border-b flex-shrink-0"
-      style={{ borderColor: "var(--gmc-line)" }}
-    >
-      <div className="flex items-center gap-2">
-        <MessageCircleQuestion
-          className="w-4 h-4"
-          strokeWidth={2.2}
-          style={{ color: "var(--gmc-teal-mid)" }}
-        />
-        <div
-          className="font-extrabold text-[15px]"
-          style={{ color: "var(--gmc-ink)" }}
+    <AnimatePresence>
+      {open && (
+        <motion.div
+          key="ask-panel"
+          initial={reduce ? { opacity: 0 } : { opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={reduce ? { opacity: 0 } : { opacity: 0, y: 20 }}
+          transition={{ duration: reduce ? 0 : 0.22, ease: [0.16, 1, 0.3, 1] }}
+          className="fixed right-24 bottom-6 z-[80] w-[420px] max-w-[420px] max-h-[70vh] flex flex-col rounded-[var(--gmc-r-card)] overflow-hidden"
+          style={{
+            background: "white",
+            border: "1px solid var(--gmc-line)",
+            boxShadow: "0 20px 60px rgba(22,28,39,0.18)",
+          }}
+          data-testid="ask-panel-desktop"
         >
-          Ask a question
-        </div>
-      </div>
-      <button
-        type="button"
-        onClick={onClose}
-        className="gmc-tap w-9 h-9 rounded-full flex items-center justify-center hover:bg-[color:var(--gmc-bg-alt)]"
-        data-testid="ask-panel-close"
-        aria-label="Close ask panel"
-      >
-        <X className="w-4 h-4" style={{ color: "var(--gmc-body)" }} />
-      </button>
-    </div>
+          <div
+            className="flex items-center justify-between gap-2 px-4 py-3 border-b flex-shrink-0"
+            style={{ borderColor: "var(--gmc-line)" }}
+          >
+            <div className="flex items-center gap-2">
+              <MessageCircleQuestion
+                className="w-4 h-4"
+                strokeWidth={2.2}
+                style={{ color: "var(--gmc-teal-mid)" }}
+              />
+              <div className="font-extrabold text-[15px]" style={{ color: "var(--gmc-ink)" }}>
+                Ask a question
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={onClose}
+              className="gmc-tap w-9 h-9 rounded-full flex items-center justify-center hover:bg-[color:var(--gmc-bg-alt)]"
+              data-testid="ask-panel-close"
+              aria-label="Close ask panel"
+            >
+              <X className="w-4 h-4" style={{ color: "var(--gmc-body)" }} />
+            </button>
+          </div>
+          <AskPanelBody
+            askState={askState}
+            examples={examples}
+            insurers={insurers}
+            lookup={lookup}
+            glossary={glossary}
+            onLocate={onLocate}
+            onOpenFeature={onOpenFeature}
+          />
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 }
 
-function AskPanelBody({ askState, examples, insurers, lookup, glossary, onLocate, onOpenFeature }) {
+// Named export so MobileFAB can embed the body directly in its Ask tab
+export function AskPanelBody({ askState, examples, insurers, lookup, glossary, onLocate, onOpenFeature }) {
   const { question, setQuestion, status, result, history, submit, reset } = askState;
   const [focused, setFocused] = useState(false);
   const placeholder = useRotatingPlaceholder(examples, { focused });
@@ -192,7 +163,6 @@ function AskPanelBody({ askState, examples, insurers, lookup, glossary, onLocate
             glossary={glossary}
             onLocate={onLocate}
             onOpenFeature={onOpenFeature}
-            current
           />
         )}
 
@@ -217,11 +187,7 @@ function AskPanelBody({ askState, examples, insurers, lookup, glossary, onLocate
                   Good question — that&apos;s one for an adviser.
                 </div>
                 <div className="mt-2">
-                  <CTA
-                    compact
-                    label="Ask an adviser — free"
-                    data-testid="ask-panel-adviser-cta"
-                  />
+                  <CTA compact label="Ask an adviser — free" data-testid="ask-panel-adviser-cta" />
                 </div>
               </div>
             </div>
@@ -257,10 +223,7 @@ function AskPanelBody({ askState, examples, insurers, lookup, glossary, onLocate
             </div>
             {h.feature ? (
               <div className="mt-2 flex items-center justify-between gap-2 flex-wrap">
-                <div
-                  className="text-[12px]"
-                  style={{ color: "var(--gmc-body)" }}
-                >
+                <div className="text-[12px]" style={{ color: "var(--gmc-body)" }}>
                   Matched to <b>{h.feature.feature}</b>
                 </div>
                 <div className="flex gap-1.5">
@@ -281,10 +244,7 @@ function AskPanelBody({ askState, examples, insurers, lookup, glossary, onLocate
                 </div>
               </div>
             ) : (
-              <div
-                className="text-[12px] mt-1"
-                style={{ color: "var(--gmc-body)" }}
-              >
+              <div className="text-[12px] mt-1" style={{ color: "var(--gmc-body)" }}>
                 No direct match — logged for an adviser to review.
               </div>
             )}
@@ -299,10 +259,7 @@ function ResultCard({ feature, insurers, lookup, glossary, onLocate, onOpenFeatu
   return (
     <div
       className="rounded-[var(--gmc-r-ctl)] p-3 border gmc-fade-in"
-      style={{
-        borderColor: "var(--gmc-teal)",
-        background: "var(--gmc-teal-tint)",
-      }}
+      style={{ borderColor: "var(--gmc-teal)", background: "var(--gmc-teal-tint)" }}
       data-testid="ask-panel-match"
     >
       <div className="flex items-center gap-2 flex-wrap mb-2">
@@ -319,10 +276,7 @@ function ResultCard({ feature, insurers, lookup, glossary, onLocate, onOpenFeatu
           {feature.group}
         </span>
       </div>
-      <div
-        className="font-extrabold text-[15px]"
-        style={{ color: "var(--gmc-ink)" }}
-      >
+      <div className="font-extrabold text-[15px]" style={{ color: "var(--gmc-ink)" }}>
         {feature.feature}
       </div>
       <GlossaryText

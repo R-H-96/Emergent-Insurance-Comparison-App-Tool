@@ -15,7 +15,7 @@ import AskCompact from "@/components/AskCompact";
 import AskPanel from "@/components/AskPanel";
 import AskLaunchBubble from "@/components/AskLaunchBubble";
 import ControlDock from "@/components/ControlDock";
-import MobileBottomBar from "@/components/MobileBottomBar";
+import MobileFAB from "@/components/MobileFAB";
 import useAskEngine from "@/hooks/useAskEngine";
 import useMediaQuery from "@/hooks/useMediaQuery";
 import useCompareContextBridge from "@/hooks/useCompareContextBridge";
@@ -210,6 +210,7 @@ export default function ComparePage({ embed = false, initialGroups = [] }) {
       {!embed && <GmcNav />}
       {!embed && <Hero />}
 
+      {/* Mobile insurer picker: collapsed strip when already comparing, full picker for onboarding */}
       {!isDesktop && (
         <AnimatePresence mode="wait" initial={false}>
           {pickerCollapsed ? (
@@ -222,7 +223,6 @@ export default function ComparePage({ embed = false, initialGroups = [] }) {
               className="pb-3"
             >
               <div className="gmc-container">
-                {/* Entire strip is a single button — tap anywhere to change */}
                 <button
                   type="button"
                   className="gmc-tap w-full flex items-center justify-between gap-3 px-4 py-3 rounded-[var(--gmc-r-ctl)] transition-colors"
@@ -234,7 +234,6 @@ export default function ComparePage({ embed = false, initialGroups = [] }) {
                   data-testid="picker-collapsed-strip"
                 >
                   <div className="flex items-center gap-3 min-w-0 flex-1">
-                    {/* Overlapping insurer mark circles */}
                     <div className="flex flex-shrink-0">
                       {selectedInsurers.map((ins, i) => (
                         <div
@@ -308,11 +307,14 @@ export default function ComparePage({ embed = false, initialGroups = [] }) {
         </AnimatePresence>
       )}
 
-      <AskCompact
-        askState={askState}
-        examples={data.example_questions || []}
-        onResultScroll={() => setAskOpen(true)}
-      />
+      {/* Desktop-only ask bar above comparison surface */}
+      {isDesktop && (
+        <AskCompact
+          askState={askState}
+          examples={data.example_questions || []}
+          onResultScroll={() => setAskOpen(true)}
+        />
+      )}
 
       <ComparisonSurface
         density={density}
@@ -358,15 +360,30 @@ export default function ComparePage({ embed = false, initialGroups = [] }) {
         onPickerOpenChange={setPickerOpen}
       />
 
-      <AskLaunchBubble
-        open={askOpen}
-        onToggle={() => setAskOpen((o) => !o)}
-        hidden={!!openFeature}
-      />
+      {/* Desktop: floating ask bubble + panel */}
+      {isDesktop && (
+        <>
+          <AskLaunchBubble
+            open={askOpen}
+            onToggle={() => setAskOpen((o) => !o)}
+            hidden={!!openFeature}
+          />
+          <AskPanel
+            open={askOpen}
+            onClose={() => setAskOpen(false)}
+            askState={askState}
+            examples={data.example_questions || []}
+            insurers={selectedInsurers}
+            lookup={lookup}
+            glossary={data.glossary}
+            onLocate={locateFeature}
+            onOpenFeature={openFeatureAndTrack}
+          />
+        </>
+      )}
 
-      <AskPanel
-        open={askOpen}
-        onClose={() => setAskOpen(false)}
+      {/* Mobile: unified floating action button (Ask + Compare) */}
+      <MobileFAB
         askState={askState}
         examples={data.example_questions || []}
         insurers={selectedInsurers}
@@ -374,10 +391,6 @@ export default function ComparePage({ embed = false, initialGroups = [] }) {
         glossary={data.glossary}
         onLocate={locateFeature}
         onOpenFeature={openFeatureAndTrack}
-      />
-
-      <MobileBottomBar
-        insurers={selectedInsurers}
         allInsurers={data.insurers}
         onToggleInsurer={toggleInsurer}
         productType={productType}
@@ -389,8 +402,7 @@ export default function ComparePage({ embed = false, initialGroups = [] }) {
         diffOnly={diffOnly}
         onDiffOnlyChange={setDiffOnly}
         notableCount={notableCount}
-        onOpenAsk={() => setAskOpen(true)}
-        hidden={askOpen || !!openFeature}
+        hidden={!!openFeature}
         compareOpen={pickerOpen}
         onCompareOpenChange={setPickerOpen}
       />
@@ -411,7 +423,8 @@ export default function ComparePage({ embed = false, initialGroups = [] }) {
         <Disclaimer />
       )}
 
-      <div className="h-24 xl:hidden print:hidden" aria-hidden="true" />
+      {/* Bottom clearance so FAB doesn’t obscure last content on mobile */}
+      <div className="h-16 xl:hidden print:hidden" aria-hidden="true" />
 
       <DetailModal
         feature={currentFeature}
