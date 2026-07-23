@@ -15,8 +15,11 @@ export default function DiffReel({ features, insurers, lookup, glossary, onOpen 
 
   return (
     <div className="gmc-card overflow-hidden" data-testid="diff-reel">
-      <div className="px-5 sm:px-6 pt-5 pb-3 flex items-center gap-2.5 flex-wrap">
-        <div className="text-[13px] sm:text-[14px] font-extrabold" style={{ color: "var(--gmc-ink)" }}>
+      <div className="px-5 sm:px-6 pt-5 pb-4 flex items-baseline gap-2.5 flex-wrap">
+        <div
+          className="text-[18px] sm:text-[20px] font-extrabold tracking-tight"
+          style={{ color: "var(--gmc-ink)", fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+        >
           Where they differ
         </div>
         <span
@@ -32,25 +35,37 @@ export default function DiffReel({ features, insurers, lookup, glossary, onOpen 
           key={f.feature}
           type="button"
           onClick={() => onOpen(f.feature)}
-          className="w-full text-left px-5 sm:px-6 py-3.5 border-t transition-colors hover:bg-[color:var(--gmc-teal-tint)] focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[color:var(--gmc-teal)]"
+          className="w-full text-left px-5 sm:px-6 py-4 border-t transition-colors hover:bg-[color:var(--gmc-teal-tint)] focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[color:var(--gmc-teal)]"
           style={{ borderColor: "var(--gmc-line)" }}
           data-testid={`diff-row-${f.feature.replace(/\s+/g, "-").toLowerCase()}`}
         >
           <div
-            className="flex items-center gap-2 font-bold text-[15px] sm:text-[14px] leading-snug"
+            className="flex items-center gap-2 font-extrabold text-[15px] leading-snug"
             style={{ color: "var(--gmc-ink)" }}
           >
             <FeatureIcon name={f.feature} size={18} />
             <span className="flex-1">{f.feature}</span>
-            <ChevronRight className="w-4 h-4 flex-shrink-0" strokeWidth={2.2} style={{ color: "var(--gmc-faint)" }} />
+            <ChevronRight
+              className="w-4 h-4 flex-shrink-0 transition-colors"
+              strokeWidth={2.2}
+              style={{ color: "var(--gmc-faint)" }}
+            />
           </div>
-          <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1.5">
+          {f.definition && (
+            <div className="mt-1.5 text-[12px] leading-snug" style={{ color: "var(--gmc-muted)" }}>
+              <GlossaryText tag="span" text={f.definition} glossary={glossary} />
+            </div>
+          )}
+          <div className="mt-3 flex flex-wrap gap-x-5 gap-y-2">
             {insurers.map((ins) => {
               const entry = lookup[ins.id]?.[f.feature];
               return (
                 <span key={ins.id} className="flex items-center gap-1.5 min-w-0">
-                  <InsurerMark insurer={ins} size={16} />
-                  <span className="text-[13px] sm:text-[12.5px] font-semibold" style={{ color: "var(--gmc-ink-2)" }}>
+                  <InsurerMark insurer={ins} size={22} />
+                  <span
+                    className="text-[13px] font-semibold"
+                    style={{ color: "var(--gmc-ink-2)" }}
+                  >
                     {entry?.short ? (
                       <GlossaryText text={entry.short} glossary={glossary} />
                     ) : (

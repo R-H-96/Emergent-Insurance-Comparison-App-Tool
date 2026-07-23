@@ -14,7 +14,7 @@ const ICONS = { user: User, search: Search, scissors: Scissors, heart: HeartPuls
 export default function CareJourney({ insurers, lookup }) {
   return (
     <div className="gmc-card p-5 sm:p-6" data-testid="care-journey">
-      <div className="mb-4">
+      <div className="mb-5">
         <div className="text-[17px] sm:text-[19px] font-extrabold" style={{ color: "var(--gmc-ink)", fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
           Across your health journey
         </div>
@@ -24,9 +24,10 @@ export default function CareJourney({ insurers, lookup }) {
       </div>
 
       <div className="relative">
+        {/* Connecting line — top aligned to centre of 48px circles */}
         <div
           className="absolute hidden sm:block"
-          style={{ top: 18, left: "10%", right: "10%", height: 2, background: "var(--gmc-line)", zIndex: 0 }}
+          style={{ top: 24, left: "10%", right: "10%", height: 2, background: "var(--gmc-line)", zIndex: 0 }}
           aria-hidden="true"
         />
         <div className="relative grid grid-cols-5 gap-2" style={{ zIndex: 1 }}>
@@ -37,24 +38,37 @@ export default function CareJourney({ insurers, lookup }) {
             return (
               <div key={stage.id} className="text-center" data-testid={`journey-${stage.id}`}>
                 <div
-                  className="w-9 h-9 rounded-full flex items-center justify-center mx-auto mb-2"
-                  style={{ background: "var(--gmc-card)", border: "1.5px solid var(--gmc-line)" }}
+                  className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-2.5"
+                  style={{ background: "var(--gmc-card)", border: "2px solid var(--gmc-line)" }}
                 >
-                  <Icon className="w-4 h-4" strokeWidth={2.2} style={{ color: "var(--gmc-teal-deep)" }} />
+                  <Icon className="w-5 h-5" strokeWidth={2.2} style={{ color: "var(--gmc-teal-deep)" }} />
                 </div>
-                <div className="text-[12.5px] font-bold mb-1.5" style={{ color: "var(--gmc-ink)" }}>{stage.label}</div>
+                <div
+                  className="text-[14px] font-extrabold mb-2 tracking-tight"
+                  style={{ color: "var(--gmc-ink)" }}
+                >
+                  {stage.label}
+                </div>
                 {tied ? (
-                  <div className="text-[11px]" style={{ color: "var(--gmc-faint)" }}>Comparable</div>
+                  <span
+                    className="inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-semibold"
+                    style={{ background: "var(--gmc-bg-alt)", color: "var(--gmc-faint)" }}
+                  >
+                    Comparable
+                  </span>
                 ) : (
-                  <div className="flex flex-col items-center gap-1">
-                    <div className="flex flex-wrap items-center justify-center gap-0.5">
+                  <div className="flex flex-col items-center gap-1.5">
+                    <div className="flex flex-wrap items-center justify-center gap-1">
                       {leaders.map((ins) => (
-                        <InsurerMark key={ins.id} insurer={ins} size={18} />
+                        <InsurerMark key={ins.id} insurer={ins} size={24} />
                       ))}
                     </div>
-                    <TierBadge band={band} />
+                    <TierBadge band={band} className="text-[12.5px] px-3 py-1" />
                     {leadValue && (
-                      <div className="text-[10.5px] leading-tight mt-0.5" style={{ color: "var(--gmc-muted)" }}>
+                      <div
+                        className="text-[12px] leading-snug mt-0.5 px-1"
+                        style={{ color: "var(--gmc-body)" }}
+                      >
                         {leadValue}
                       </div>
                     )}
@@ -66,13 +80,22 @@ export default function CareJourney({ insurers, lookup }) {
         </div>
       </div>
 
-      <div className="flex items-center flex-wrap gap-x-4 gap-y-1 mt-5 pt-3 border-t" style={{ borderColor: "var(--gmc-line)" }}>
-        <span className="text-[10.5px] font-bold uppercase tracking-[0.08em]" style={{ color: "var(--gmc-muted)" }}>
+      <div
+        className="flex items-center flex-wrap gap-x-5 gap-y-1.5 mt-5 pt-3.5 border-t"
+        style={{ borderColor: "var(--gmc-line)" }}
+      >
+        <span
+          className="text-[11.5px] font-bold uppercase tracking-[0.08em]"
+          style={{ color: "var(--gmc-muted)" }}
+        >
           Limit size
         </span>
         {[1, 2, 3].map((b) => (
-          <span key={b} className="flex items-center gap-1.5 text-[11px]" style={{ color: "var(--gmc-body)" }}>
-            <span className="inline-block w-3 h-3 rounded" style={{ background: BAND_META[b].fill }} />
+          <span key={b} className="flex items-center gap-1.5 text-[12px]" style={{ color: "var(--gmc-body)" }}>
+            <span
+              className="inline-block w-3.5 h-3.5 rounded-sm flex-shrink-0"
+              style={{ background: BAND_META[b].fill }}
+            />
             {BAND_META[b].label}
           </span>
         ))}
