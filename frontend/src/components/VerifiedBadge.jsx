@@ -21,7 +21,7 @@ export function VerifiedIcon({ verified }) {
   return (
     <span
       className="inline-flex items-center justify-center w-[18px] h-[18px] rounded-full flex-shrink-0"
-      style={{ background: "var(--gmc-bg-alt)", color: "var(--gmc-body)" }}
+      style={{ background: "var(--gmc-bg-soft)", color: "var(--gmc-faint)" }}
       title="Pending verification"
       aria-label="Pending verification"
       data-testid="pending-icon"
@@ -40,12 +40,14 @@ export function VerifiedBadge({ verified }) {
     const date = verified.split(" ").slice(1).join(" ");
     return (
       <span className="gmc-badge-verified" data-testid="badge-verified">
-        ✓ Verified{date ? ` ${date}` : ""}
+        <Check className="w-[10px] h-[10px]" strokeWidth={3} />
+        Verified{date ? ` ${date}` : ""}
       </span>
     );
   }
   return (
     <span className="gmc-badge-pending" data-testid="badge-pending">
+      <Clock className="w-[10px] h-[10px]" strokeWidth={2.5} />
       Pending verification
     </span>
   );

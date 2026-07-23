@@ -15,12 +15,15 @@ export default function DiffReel({ features, insurers, lookup, glossary, onOpen 
 
   return (
     <div className="gmc-card overflow-hidden" data-testid="diff-reel">
-      <div className="px-5 sm:px-6 pt-5 pb-3 flex items-baseline gap-2 flex-wrap">
+      <div className="px-5 sm:px-6 pt-5 pb-3 flex items-center gap-2.5 flex-wrap">
         <div className="text-[13px] sm:text-[14px] font-extrabold" style={{ color: "var(--gmc-ink)" }}>
           Where they differ
         </div>
-        <span className="text-[12px]" style={{ color: "var(--gmc-muted)" }}>
-          — the {features.length} points that actually diverge
+        <span
+          className="gmc-badge-verified"
+          style={{ background: "var(--gmc-teal-tint-2)", color: "var(--gmc-teal-deep)" }}
+        >
+          {features.length} point{features.length === 1 ? "" : "s"}
         </span>
       </div>
 
@@ -51,9 +54,7 @@ export default function DiffReel({ features, insurers, lookup, glossary, onOpen 
                     {entry?.short ? (
                       <GlossaryText text={entry.short} glossary={glossary} />
                     ) : (
-                      <span className="italic font-normal" style={{ color: "var(--gmc-faint)" }}>
-                        Not extracted
-                      </span>
+                      <span style={{ color: "var(--gmc-faint)" }}>—</span>
                     )}
                   </span>
                 </span>

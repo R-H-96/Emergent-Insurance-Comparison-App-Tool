@@ -20,7 +20,52 @@ export default function InsurerPicker({ insurers, selected, onToggle }) {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+      {/* Mobile: horizontal scroll strip */}
+      <div className="flex gap-3 overflow-x-auto pb-2 sm:hidden snap-x snap-mandatory thin-scrollbar -mx-1 px-1">
+        {insurers.map((ins) => {
+          const isSelected = selected.includes(ins.id);
+          const disabled = !isSelected && selected.length >= 3;
+          const accent = ins.accent || "var(--gmc-teal)";
+          return (
+            <button
+              key={ins.id}
+              type="button"
+              onClick={() => onToggle(ins.id)}
+              aria-pressed={isSelected}
+              disabled={disabled}
+              className="snap-start flex-shrink-0 flex flex-col items-center gap-2 pt-3 pb-2.5 px-3 w-[96px] rounded-[var(--gmc-r-ctl)] border-[1.5px] transition-all"
+              style={{
+                borderColor: isSelected ? accent : "var(--gmc-line-soft)",
+                background: isSelected ? "var(--gmc-teal-tint-2)" : "white",
+                boxShadow: isSelected ? `0 0 0 2px ${accent}` : "none",
+                opacity: disabled ? 0.5 : 1,
+              }}
+              data-testid={`insurer-${ins.id}`}
+            >
+              <div className="relative">
+                <InsurerLogo insurer={ins} size={36} />
+                {isSelected && (
+                  <div
+                    className="absolute -top-1.5 -right-1.5 w-[18px] h-[18px] rounded-full flex items-center justify-center"
+                    style={{ background: accent }}
+                  >
+                    <Check className="w-2.5 h-2.5 text-white" strokeWidth={3} />
+                  </div>
+                )}
+              </div>
+              <div
+                className="text-[12px] font-bold text-center leading-tight w-full"
+                style={{ color: isSelected ? accent : "var(--gmc-ink)" }}
+              >
+                {ins.name}
+              </div>
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Tablet / desktop: card grid */}
+      <div className="hidden sm:grid sm:grid-cols-2 lg:grid-cols-5 gap-3">
         {insurers.map((ins) => {
           const isSelected = selected.includes(ins.id);
           const disabled = !isSelected && selected.length >= 3;

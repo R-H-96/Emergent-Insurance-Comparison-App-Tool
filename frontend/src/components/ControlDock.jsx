@@ -237,8 +237,10 @@ function RailPickerGrid({ insurers, selected, onToggle }) {
               }`}
               style={{
                 borderColor: isSel ? accent : "var(--gmc-line-soft)",
-                background: isSel ? "var(--gmc-teal-tint)" : "white",
-                boxShadow: isSel ? `0 6px 20px -12px ${accent}` : "none",
+                background: isSel ? "var(--gmc-teal-tint-2)" : "white",
+                boxShadow: isSel
+                  ? `0 0 0 2px ${accent}, 0 6px 20px -12px ${accent}`
+                  : "none",
               }}
               data-testid={`rail-insurer-${ins.id}`}
             >
