@@ -1,10 +1,13 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Pencil } from "lucide-react";
 import { toast } from "sonner";
 import data from "@/data/gmc_tool_data.json";
 import GmcNav from "@/components/GmcNav";
 import Hero from "@/components/Hero";
 import ProductTypeSelector from "@/components/ProductTypeSelector";
 import InsurerPicker from "@/components/InsurerPicker";
+import InsurerMark from "@/components/InsurerMark";
 import ComparisonSurface from "@/components/ComparisonSurface";
 import DetailModal from "@/components/DetailModal";
 import Disclaimer from "@/components/Disclaimer";
@@ -99,8 +102,6 @@ export default function ComparePage({ embed = false, initialGroups = [] }) {
     [selected],
   );
 
-  // Privacy-restricted context bridge: writes {product, insurers, timestamp}
-  // to localStorage.gmc_compare_context on any .gmc-quote-trigger click.
   useCompareContextBridge({ productType, selectedInsurers });
 
   const lookup = useMemo(() => {
@@ -203,26 +204,121 @@ export default function ComparePage({ embed = false, initialGroups = [] }) {
     }
   };
 
+  // Picker is collapsed once a valid selection (2-3 insurers) exists.
+  // Collapsed strip shows who's being compared + a Change button that
+  // opens the MobileBottomBar picker sheet.
+  const pickerCollapsed = selected.length >= 2;
+
   return (
     <div className={`min-h-screen ${embed ? "gmc-embed" : ""}`} data-testid="compare-page">
       {!embed && <GmcNav />}
       {!embed && <Hero />}
 
       {!isDesktop && (
-        <>
-          <section className={embed ? "pt-6 sm:pt-10 pb-4" : "pb-4"} data-testid="product-type-section">
-            <div className="gmc-container">
-              <ProductTypeSelector value={productType} onChange={setProductType} />
-            </div>
-          </section>
-          <section className="pb-6 sm:pb-8" data-testid="insurer-picker-section">
-            <div className="gmc-container">
-              <InsurerPicker insurers={data.insurers} selected={selected} onToggle={toggleInsurer} />
-            </div>
-          </section>
-        </>
+        <AnimatePresence mode="wait" initial={false}>
+          {pickerCollapsed ? (
+            <motion.div
+              key="picker-collapsed"
+              initial={{ opacity: 0, y: -6 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -6 }}
+              transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+              className="pb-3"
+              data-testid="picker-collapsed-strip"
+            >
+              <div className="gmc-container">
+                <div
+                  className="flex items-center justify-between gap-3 px-4 py-3 rounded-[var(--gmc-r-ctl)]"
+                  style={{
+                    background: "var(--gmc-teal-tint)",
+                    border: "1px solid var(--gmc-line)",
+                  }}
+                >
+                  <div className="flex items-center gap-3 min-w-0 flex-1">
+                    <div className="flex flex-shrink-0" style={{ marginRight: 4 }}>
+                      {selectedInsurers.map((ins, i) => (
+                        <div
+                          key={ins.id}
+                          className="rounded-full"
+                          style={{
+                            marginLeft: i > 0 ? -8 : 0,
+                            boxShadow: "0 0 0 2px white",
+                            zIndex: selectedInsurers.length - i,
+                            position: "relative",
+                          }}
+                        >
+                          <InsurerMark insurer={ins} size={28} />
+                        </div>
+                      ))}
+                    </div>
+                    <div className="min-w-0">
+                      <div
+                        className="text-[10px] font-bold uppercase tracking-[0.1em]"
+                        style={{ color: "var(--gmc-teal-mid)" }}
+                      >
+                        Comparing
+                      </div>
+                      <div
+                        className="text-[13px] font-extrabold leading-tight truncate"
+                        style={{ color: "var(--gmc-ink)" }}
+                      >
+                        {selectedInsurers.map((i) => i.name).join(" vs ")}
+                      </div>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    className="gmc-tap flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--gmc-r-ctl)] text-[12px] font-bold flex-shrink-0"
+                    style={{
+                      background: "white",
+                      border: "1.5px solid var(--gmc-teal)",
+                      color: "var(--gmc-teal-deep)",
+                      minHeight: 36,
+                    }}
+                    onClick={() => setPickerOpen(true)}
+                    data-testid="picker-collapsed-change"
+                  >
+                    <Pencil className="w-3 h-3" strokeWidth={2.2} />
+                    Change
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          ) : (
+            <motion.div
+              key="picker-expanded"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.15 }}
+            >
+              <section
+                className={embed ? "pt-6 sm:pt-10 pb-4" : "pb-4"}
+                data-testid="product-type-section"
+              >
+                <div className="gmc-container">
+                  <ProductTypeSelector value={productType} onChange={setProductType} />
+                </div>
+              </section>
+              <section className="pb-6 sm:pb-8" data-testid="insurer-picker-section">
+                <div className="gmc-container">
+                  <InsurerPicker
+                    insurers={data.insurers}
+                    selected={selected}
+                    onToggle={toggleInsurer}
+                  />
+                </div>
+              </section>
+            </motion.div>
+          )}
+        </AnimatePresence>
       )}
-      <AskCompact askState={askState} examples={data.example_questions || []} onResultScroll={() => setAskOpen(true)} />
+
+      <AskCompact
+        askState={askState}
+        examples={data.example_questions || []}
+        onResultScroll={() => setAskOpen(true)}
+      />
 
       <ComparisonSurface
         density={density}
@@ -321,8 +417,8 @@ export default function ComparePage({ embed = false, initialGroups = [] }) {
         <Disclaimer />
       )}
 
-      {/* Bottom spacer for mobile bottom bar — hidden at xl (1280px) which is
-          close to the 1200px threshold where MobileBottomBar unmounts. */}
+      {/* Spacer for fixed MobileBottomBar. xl matches the ~1200px threshold
+          at which the bar unmounts. */}
       <div className="h-24 xl:hidden print:hidden" aria-hidden="true" />
 
       <DetailModal
