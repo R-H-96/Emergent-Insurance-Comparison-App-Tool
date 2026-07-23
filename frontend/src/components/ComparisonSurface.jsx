@@ -73,7 +73,7 @@ export default function ComparisonSurface({
           style={{ top: "var(--gmc-sticky-offset, 0px)", background: "var(--gmc-bg)" }}
           data-testid="density-sticky"
         >
-          <div className="flex flex-wrap items-center gap-3 justify-between">
+          <div className="flex items-center gap-3 justify-between">
             <div
               role="tablist"
               aria-label="Comparison density"
@@ -86,6 +86,7 @@ export default function ComparisonSurface({
                 onClick={() => setDensity("glance")}
                 icon={Sparkles}
                 label="At a glance"
+                shortLabel="Glance"
                 testid="density-glance"
                 badge={notableCount}
               />
@@ -94,15 +95,17 @@ export default function ComparisonSurface({
                 onClick={() => setDensity("full")}
                 icon={Table2}
                 label="Full comparison"
+                shortLabel="Full"
                 testid="density-full"
               />
             </div>
 
             <div className="flex items-center gap-2">
+              {/* Notable toggle: hidden on mobile — available in MobileBottomBar sheet */}
               {density === "full" && (
                 <button
                   type="button"
-                  className="gmc-chip gmc-tap"
+                  className="gmc-chip gmc-tap hidden sm:inline-flex"
                   aria-pressed={diffOnly}
                   onClick={() => onDiffOnlyChange(!diffOnly)}
                   data-testid="differences-only-toggle"
@@ -116,6 +119,7 @@ export default function ComparisonSurface({
                   Notable only ({notableCount})
                 </button>
               )}
+              {/* Share: icon-only on mobile, full label on sm+ */}
               <button
                 type="button"
                 className="gmc-chip gmc-tap"
@@ -128,7 +132,9 @@ export default function ComparisonSurface({
                 ) : (
                   <Copy className="w-3.5 h-3.5" strokeWidth={2.2} />
                 )}
-                {linkCopied ? "Copied" : "Share"}
+                <span className="hidden sm:inline">
+                  {linkCopied ? "Copied" : "Share"}
+                </span>
               </button>
             </div>
           </div>
@@ -196,7 +202,7 @@ export default function ComparisonSurface({
   );
 }
 
-function SegBtn({ active, onClick, icon: Icon, label, testid, badge }) {
+function SegBtn({ active, onClick, icon: Icon, label, shortLabel, testid, badge }) {
   return (
     <button
       type="button"
@@ -216,7 +222,8 @@ function SegBtn({ active, onClick, icon: Icon, label, testid, badge }) {
       data-testid={testid}
     >
       <Icon className="w-4 h-4" strokeWidth={2.2} />
-      {label}
+      <span className="hidden sm:inline">{label}</span>
+      {shortLabel && <span className="sm:hidden">{shortLabel}</span>}
       {badge != null && (
         <span
           className="px-1.5 rounded-full text-[11px] font-extrabold"

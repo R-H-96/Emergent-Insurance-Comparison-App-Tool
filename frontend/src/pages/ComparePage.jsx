@@ -159,10 +159,7 @@ export default function ComparePage({ embed = false, initialGroups = [] }) {
   const locateFeature = (featureName) => {
     const feat = data.features.find((f) => f.feature === featureName);
     if (!feat) return;
-    // "Show me" comes from the ask panel — close it so the located row is
-    // visible (critical on mobile, where the panel is a full-height sheet).
     setAskOpen(false);
-    // Switch to Full comparison if we're in Glance mode
     if (density !== "full") setDensity("full");
     if (diffOnly) setDiffOnly(false);
     if (activeGroups.length > 0 && !activeGroups.includes(feat.group)) setActiveGroups([]);
@@ -211,10 +208,6 @@ export default function ComparePage({ embed = false, initialGroups = [] }) {
       {!embed && <GmcNav />}
       {!embed && <Hero />}
 
-      {/* Product type + Picker section — only visible on first visit if no
-          insurers picked, otherwise the InsurerStrip + ControlDock handles changes.
-          We keep an initial picker below for onboarding + non-desktop viewports
-          that haven't opened the mobile compare sheet yet. */}
       {!isDesktop && (
         <>
           <section className={embed ? "pt-6 sm:pt-10 pb-4" : "pb-4"} data-testid="product-type-section">
@@ -328,8 +321,9 @@ export default function ComparePage({ embed = false, initialGroups = [] }) {
         <Disclaimer />
       )}
 
-      {/* Bottom spacer for mobile action bar */}
-      <div className="h-20 md:hidden print:hidden" aria-hidden="true" />
+      {/* Bottom spacer for mobile bottom bar — hidden at xl (1280px) which is
+          close to the 1200px threshold where MobileBottomBar unmounts. */}
+      <div className="h-24 xl:hidden print:hidden" aria-hidden="true" />
 
       <DetailModal
         feature={currentFeature}

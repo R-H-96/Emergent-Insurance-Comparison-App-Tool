@@ -5,11 +5,14 @@ import InsurerMark from "@/components/InsurerMark";
  * Slim strip at the top of the comparison surface: shows the currently
  * selected insurers as circular-mark + name chips. Change button sits
  * inline right after the last chip (inline with what it changes).
+ *
+ * Hidden on mobile — the InsurerPicker scroll strip above the surface
+ * already shows the selection, and MobileBottomBar handles "change".
  */
 export default function InsurerStrip({ insurers, onChange }) {
   return (
     <div
-      className="flex flex-wrap items-center gap-3 py-3 mb-3"
+      className="hidden sm:flex flex-wrap items-center gap-3 py-3 mb-3"
       style={{ borderBottom: "1px solid var(--gmc-line)" }}
       data-testid="insurer-strip"
     >
