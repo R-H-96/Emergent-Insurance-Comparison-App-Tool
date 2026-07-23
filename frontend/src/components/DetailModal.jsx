@@ -40,7 +40,6 @@ export default function DetailModal({ feature, insurers, lookup, glossary, onClo
           >
             <div className="flex items-start justify-between gap-3 flex-wrap">
               <div className="flex items-center gap-3">
-                {/* Circular insurer mark — larger for visual presence */}
                 <InsurerMark insurer={ins} size={44} />
                 <div>
                   <div
@@ -146,6 +145,7 @@ export default function DetailModal({ feature, insurers, lookup, glossary, onClo
         titleIcon={<FeatureIcon name={feature.feature} size={20} />}
         testId="detail-sheet"
         footer={Footer}
+        scrollKey={feature.feature}
       >
         <div className="px-5 pt-4 pb-2 text-[13px]" style={{ color: "var(--gmc-body)" }}>
           <GlossaryText tag="span" text={feature.definition} glossary={glossary} />

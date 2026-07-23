@@ -12,8 +12,9 @@ import FilterChips from "@/components/FilterChips";
  * Combines Ask + Compare into a single bottom sheet with two tabs.
  * Replaces AskCompact and MobileBottomBar on mobile.
  *
- * The Compare tab is also opened programmatically when compareOpen=true,
- * so the collapsed picker strip’s pencil button can trigger it.
+ * Tab bar lives in MobileSheet's headerExtra slot (non-scrollable) so the
+ * drag handle above it always works for swipe-to-dismiss, and the body
+ * scroll is fully independent of the tabs.
  */
 export default function MobileFAB({
   // Ask
@@ -45,7 +46,6 @@ export default function MobileFAB({
   const [sheetOpen, setSheetOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("ask");
 
-  // Open on Compare tab when picker strip sets pickerOpen=true
   useEffect(() => {
     if (compareOpen) {
       setActiveTab("compare");
@@ -67,6 +67,41 @@ export default function MobileFAB({
     handleClose();
     onOpenFeature(featureName);
   };
+
+  // Tab bar rendered in MobileSheet's headerExtra slot (non-scrollable zone)
+  const TabBar = (
+    <div
+      role="tablist"
+      aria-label="Action tabs"
+      className="flex border-b"
+      style={{ borderColor: "var(--gmc-line)" }}
+    >
+      {[
+        { id: "ask", label: "Ask", Icon: MessageCircleQuestion },
+        { id: "compare", label: "Compare", Icon: Users },
+      ].map(({ id, label, Icon }) => (
+        <button
+          key={id}
+          type="button"
+          role="tab"
+          aria-selected={activeTab === id}
+          className="flex-1 flex items-center justify-center gap-2 py-3.5 text-[14px] font-bold transition-colors"
+          style={{
+            color: activeTab === id ? "var(--gmc-teal)" : "var(--gmc-muted)",
+            borderBottom:
+              activeTab === id
+                ? "2.5px solid var(--gmc-teal)"
+                : "2.5px solid transparent",
+          }}
+          onClick={() => setActiveTab(id)}
+          data-testid={`fab-tab-${id}`}
+        >
+          <Icon className="w-4 h-4" strokeWidth={2.2} />
+          {label}
+        </button>
+      ))}
+    </div>
+  );
 
   return (
     <>
@@ -104,7 +139,8 @@ export default function MobileFAB({
         open={sheetOpen}
         onClose={handleClose}
         testId="fab-sheet"
-        maxHeight="92dvh"
+        headerExtra={TabBar}
+        scrollKey={activeTab}
         footer={
           activeTab === "compare" ? (
             <div className="p-4">
@@ -120,39 +156,6 @@ export default function MobileFAB({
           ) : null
         }
       >
-        {/* Sticky tab bar inside the scrollable body */}
-        <div
-          className="sticky top-0 z-10 flex bg-white border-b"
-          style={{ borderColor: "var(--gmc-line)" }}
-          role="tablist"
-          aria-label="Action tabs"
-        >
-          {[
-            { id: "ask", label: "Ask", Icon: MessageCircleQuestion },
-            { id: "compare", label: "Compare", Icon: Users },
-          ].map(({ id, label, Icon }) => (
-            <button
-              key={id}
-              type="button"
-              role="tab"
-              aria-selected={activeTab === id}
-              className="flex-1 flex items-center justify-center gap-2 py-3.5 text-[14px] font-bold transition-colors"
-              style={{
-                color: activeTab === id ? "var(--gmc-teal)" : "var(--gmc-muted)",
-                borderBottom:
-                  activeTab === id
-                    ? "2.5px solid var(--gmc-teal)"
-                    : "2.5px solid transparent",
-              }}
-              onClick={() => setActiveTab(id)}
-              data-testid={`fab-tab-${id}`}
-            >
-              <Icon className="w-4 h-4" strokeWidth={2.2} />
-              {label}
-            </button>
-          ))}
-        </div>
-
         {/* Ask tab */}
         {activeTab === "ask" && (
           <AskPanelBody
@@ -168,7 +171,7 @@ export default function MobileFAB({
 
         {/* Compare tab */}
         {activeTab === "compare" && (
-          <div className="p-5 space-y-6 pb-2">
+          <div className="p-4 space-y-5 pb-4">
             <ProductTypeSelector value={productType} onChange={onProductType} />
             <InsurerPicker
               insurers={allInsurers}
