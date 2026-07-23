@@ -1,66 +1,110 @@
 /**
  * FilterChips — group filter selector.
  *
- * "All groups" and individual groups are mutually exclusive: clicking any
- * group activates its filter (and implicitly deactivates "All"); clicking
- * "All" clears all group filters.
+ * Two visual modes controlled by the `filled` prop:
+ *   Default (inline): compact chips in a horizontally scrollable row with
+ *     a right-edge fade gradient. Used on the comparison surface.
+ *   Filled: larger chips in a wrapped grid with teal active fill. Used
+ *     inside sheets (FAB Compare tab, ControlDock popover).
  *
- * `filled` prop switches to filled brand style (teal accent + white text
- * when active) — used inside popovers / mobile sheet. Default style uses
- * `.gmc-chip` (subtle teal tint) — used inline on the desktop surface.
+ * "All groups" and individual groups are mutually exclusive.
  */
 export default function FilterChips({ groups, activeGroups, onToggle, onClear, filled = false }) {
   const allActive = activeGroups.length === 0;
 
-  const chip = (active, key, label, onClick, testid) => {
-    if (filled) {
-      return (
-        <button
-          key={key}
-          type="button"
-          onClick={onClick}
-          aria-pressed={active}
-          className="gmc-tap inline-flex items-center px-3.5 py-2 text-[13px] font-bold rounded-[var(--gmc-r-ctl)] transition-all"
-          style={{
-            background: active ? "var(--gmc-teal)" : "white",
-            color: active ? "white" : "var(--gmc-ink-2)",
-            border: active
-              ? "1.5px solid var(--gmc-teal)"
-              : "1.5px solid var(--gmc-line-soft)",
-            boxShadow: active ? "0 4px 12px rgba(20,181,175,0.22)" : "none",
-          }}
-          data-testid={testid}
-        >
-          {label}
-        </button>
-      );
-    }
+  if (filled) {
     return (
-      <button
-        key={key}
-        type="button"
-        onClick={onClick}
-        aria-pressed={active}
-        className="gmc-chip"
-        data-testid={testid}
-      >
-        {label}
-      </button>
+      <div className="flex flex-wrap items-center gap-2" data-testid="filter-chips">
+        <FilledChip
+          active={allActive}
+          onClick={onClear}
+          label="All groups"
+          testid="filter-all"
+        />
+        {groups.map((g) => (
+          <FilledChip
+            key={g}
+            active={activeGroups.includes(g)}
+            onClick={() => onToggle(g)}
+            label={g}
+            testid={`filter-group-${g.replace(/\s+/g, "-").toLowerCase()}`}
+          />
+        ))}
+      </div>
     );
-  };
+  }
 
   return (
-    <div className="flex flex-wrap items-center gap-2" data-testid="filter-chips">
-      {chip(allActive, "__all", "All groups", onClear, "filter-all")}
-      {groups.map((g) =>
-        chip(
-          activeGroups.includes(g),
-          g,
-          g,
-          () => onToggle(g),
-          `filter-group-${g.replace(/\s+/g, "-").toLowerCase()}`,
-        ),
-      )}
+    <div className="relative" data-testid="filter-chips">
+      <div
+        className="flex items-center gap-1.5 overflow-x-auto pb-0.5"
+        style={{ scrollbarWidth: "none", WebkitOverflowScrolling: "touch" }}
+      >
+        <InlineChip
+          active={allActive}
+          onClick={onClear}
+          label="All groups"
+          testid="filter-all"
+        />
+        {groups.map((g) => (
+          <InlineChip
+            key={g}
+            active={activeGroups.includes(g)}
+            onClick={() => onToggle(g)}
+            label={g}
+            testid={`filter-group-${g.replace(/\s+/g, "-").toLowerCase()}`}
+          />
+        ))}
+        {/* Spacer so the last chip doesn’t sit behind the right-fade gradient */}
+        <div className="w-8 flex-shrink-0" aria-hidden="true" />
+      </div>
+      {/* Right-edge fade to hint at overflow */}
+      <div
+        className="pointer-events-none absolute right-0 inset-y-0 w-10"
+        style={{ background: "linear-gradient(to right, transparent, var(--gmc-bg))" }}
+        aria-hidden="true"
+      />
     </div>
+  );
+}
+
+function InlineChip({ active, onClick, label, testid }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-pressed={active}
+      className="gmc-tap inline-flex items-center px-3 py-1.5 text-[12px] font-bold rounded-full flex-shrink-0 whitespace-nowrap transition-all"
+      style={{
+        background: active ? "var(--gmc-teal-tint-2)" : "var(--gmc-bg-alt)",
+        color: active ? "var(--gmc-teal-deep)" : "var(--gmc-body)",
+        border: `1.5px solid ${active ? "var(--gmc-teal)" : "var(--gmc-line)"}`,
+      }}
+      data-testid={testid}
+    >
+      {label}
+    </button>
+  );
+}
+
+function FilledChip({ active, onClick, label, testid }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-pressed={active}
+      className="gmc-tap inline-flex items-center px-3.5 py-2 text-[13px] font-bold rounded-[var(--gmc-r-ctl)] transition-all"
+      style={{
+        background: active ? "var(--gmc-teal)" : "white",
+        color: active ? "white" : "var(--gmc-ink-2)",
+        border: active
+          ? "1.5px solid var(--gmc-teal)"
+          : "1.5px solid var(--gmc-line-soft)",
+        boxShadow: active ? "0 4px 12px rgba(20,181,175,0.22)" : "none",
+      }}
+      data-testid={testid}
+    >
+      {label}
+    </button>
   );
 }
