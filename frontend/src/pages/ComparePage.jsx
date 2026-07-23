@@ -75,7 +75,6 @@ export default function ComparePage({ embed = false, initialGroups = [] }) {
   const firstMount = useRef(true);
   const isDesktop = useMediaQuery("(min-width: 1200px)");
 
-  // Persist state to URL + localStorage
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     params.set("product", productType);
@@ -204,9 +203,6 @@ export default function ComparePage({ embed = false, initialGroups = [] }) {
     }
   };
 
-  // Picker is collapsed once a valid selection (2-3 insurers) exists.
-  // Collapsed strip shows who's being compared + a Change button that
-  // opens the MobileBottomBar picker sheet.
   const pickerCollapsed = selected.length >= 2;
 
   return (
@@ -224,30 +220,38 @@ export default function ComparePage({ embed = false, initialGroups = [] }) {
               exit={{ opacity: 0, y: -6 }}
               transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
               className="pb-3"
-              data-testid="picker-collapsed-strip"
             >
               <div className="gmc-container">
-                <div
-                  className="flex items-center justify-between gap-3 px-4 py-3 rounded-[var(--gmc-r-ctl)]"
+                {/* Entire strip is a single button — tap anywhere to change */}
+                <button
+                  type="button"
+                  className="gmc-tap w-full flex items-center justify-between gap-3 px-4 py-3 rounded-[var(--gmc-r-ctl)] transition-colors"
                   style={{
                     background: "var(--gmc-teal-tint)",
                     border: "1px solid var(--gmc-line)",
                   }}
+                  onClick={() => setPickerOpen(true)}
+                  data-testid="picker-collapsed-strip"
                 >
                   <div className="flex items-center gap-3 min-w-0 flex-1">
-                    <div className="flex flex-shrink-0" style={{ marginRight: 4 }}>
+                    {/* Overlapping insurer mark circles */}
+                    <div className="flex flex-shrink-0">
                       {selectedInsurers.map((ins, i) => (
                         <div
                           key={ins.id}
-                          className="rounded-full"
                           style={{
-                            marginLeft: i > 0 ? -8 : 0,
-                            boxShadow: "0 0 0 2px white",
-                            zIndex: selectedInsurers.length - i,
+                            width: 34,
+                            height: 34,
+                            marginLeft: i > 0 ? -10 : 0,
+                            boxShadow: "0 0 0 2.5px white",
+                            borderRadius: "50%",
                             position: "relative",
+                            zIndex: selectedInsurers.length - i,
+                            display: "flex",
+                            flexShrink: 0,
                           }}
                         >
-                          <InsurerMark insurer={ins} size={28} />
+                          <InsurerMark insurer={ins} size={34} />
                         </div>
                       ))}
                     </div>
@@ -266,22 +270,12 @@ export default function ComparePage({ embed = false, initialGroups = [] }) {
                       </div>
                     </div>
                   </div>
-                  <button
-                    type="button"
-                    className="gmc-tap flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--gmc-r-ctl)] text-[12px] font-bold flex-shrink-0"
-                    style={{
-                      background: "white",
-                      border: "1.5px solid var(--gmc-teal)",
-                      color: "var(--gmc-teal-deep)",
-                      minHeight: 36,
-                    }}
-                    onClick={() => setPickerOpen(true)}
-                    data-testid="picker-collapsed-change"
-                  >
-                    <Pencil className="w-3 h-3" strokeWidth={2.2} />
-                    Change
-                  </button>
-                </div>
+                  <Pencil
+                    className="w-4 h-4 flex-shrink-0"
+                    strokeWidth={2}
+                    style={{ color: "var(--gmc-teal-mid)" }}
+                  />
+                </button>
               </div>
             </motion.div>
           ) : (
@@ -417,8 +411,6 @@ export default function ComparePage({ embed = false, initialGroups = [] }) {
         <Disclaimer />
       )}
 
-      {/* Spacer for fixed MobileBottomBar. xl matches the ~1200px threshold
-          at which the bar unmounts. */}
       <div className="h-24 xl:hidden print:hidden" aria-hidden="true" />
 
       <DetailModal

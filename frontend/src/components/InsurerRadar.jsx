@@ -3,15 +3,6 @@ import { ShieldPlus, Ribbon, Stethoscope, DoorOpen, PlusCircle, Award } from "lu
 import InsurerMark from "@/components/InsurerMark";
 import { RADAR_THEMES, THEME_BANDS, BAND_META, bandToScore, standoutThemes } from "@/data/glanceModel";
 
-/**
- * "Coverage profile" — interactive radar hero.
- *  • Each selected insurer is a shape across the six RADAR_THEMES.
- *  • Hover an insurer (shape / legend / summary) to isolate it.
- *  • Hover a vertex for the per-insurer band tooltip.
- *  • Click a vertex/label to jump to that theme in the full comparison.
- *  • A side panel summarises each insurer's broadest areas (factual).
- */
-
 const THEME_ICONS = {
   core: ShieldPlus,
   cancer: Ribbon,
@@ -67,9 +58,12 @@ export default function InsurerRadar({ insurers, onOpenTheme }) {
   const tipAnchor = active ? axisPoint(themes.indexOf(active), N, R) : null;
 
   return (
-    <div className="gmc-card p-5 sm:p-6" data-testid="coverage-profile">
+    <div className="gmc-card p-3 sm:p-6" data-testid="coverage-profile">
       <div className="mb-1">
-        <div className="text-[17px] sm:text-[19px] font-extrabold" style={{ color: "var(--gmc-ink)", fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+        <div
+          className="text-[17px] sm:text-[19px] font-extrabold"
+          style={{ color: "var(--gmc-ink)", fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+        >
           Coverage profile
         </div>
         <div className="text-[12.5px] mt-0.5" style={{ color: "var(--gmc-muted)" }}>
@@ -82,7 +76,7 @@ export default function InsurerRadar({ insurers, onOpenTheme }) {
           <svg
             viewBox={`${VB.ox} ${VB.oy} ${VB.w} ${VB.h}`}
             className="w-full"
-            style={{ maxWidth: 460, margin: "0 auto", display: "block" }}
+            style={{ display: "block" }}
             role="img"
             aria-label={`Coverage radar comparing ${insurers.map((i) => i.name).join(", ")}`}
           >
@@ -120,15 +114,28 @@ export default function InsurerRadar({ insurers, onOpenTheme }) {
               const anchor = ux > 4 ? "start" : ux < -4 ? "end" : "middle";
               const [hx, hy] = axisPoint(i, N, R);
               return (
-                <g key={t.id} style={{ cursor: "pointer" }}
-                   onMouseEnter={() => setHoverTheme(t.id)}
-                   onMouseLeave={() => setHoverTheme(null)}
-                   onClick={() => onOpenTheme && onOpenTheme(t.group)}>
+                <g
+                  key={t.id}
+                  style={{ cursor: "pointer" }}
+                  onMouseEnter={() => setHoverTheme(t.id)}
+                  onMouseLeave={() => setHoverTheme(null)}
+                  onClick={() => onOpenTheme && onOpenTheme(t.group)}
+                >
                   <circle cx={hx} cy={hy} r="16" fill="transparent" />
-                  <g transform={`translate(${px},${py})`} style={{ color: "var(--gmc-teal-deep)" }}>
+                  <g
+                    transform={`translate(${px},${py})`}
+                    style={{ color: "var(--gmc-teal-deep)" }}
+                  >
                     {Icon && <Icon x={-10} y={-24} size={20} strokeWidth={2.0} />}
-                    <text x={0} y={6} textAnchor={anchor} fontSize="12" fontWeight="700" fill="var(--gmc-muted)"
-                          style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+                    <text
+                      x={0}
+                      y={6}
+                      textAnchor={anchor}
+                      fontSize="12"
+                      fontWeight="700"
+                      fill="var(--gmc-muted)"
+                      style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+                    >
                       {t.short}
                     </text>
                   </g>
@@ -149,7 +156,9 @@ export default function InsurerRadar({ insurers, onOpenTheme }) {
               }}
               data-testid="radar-tooltip"
             >
-              <div className="text-[11px] font-extrabold mb-1" style={{ color: "var(--gmc-ink)" }}>{active.label}</div>
+              <div className="text-[11px] font-extrabold mb-1" style={{ color: "var(--gmc-ink)" }}>
+                {active.label}
+              </div>
               {insurers.map((ins) => {
                 const band = THEME_BANDS[ins.id]?.[active.id];
                 const meta = BAND_META[band];
@@ -163,26 +172,37 @@ export default function InsurerRadar({ insurers, onOpenTheme }) {
             </div>
           )}
 
-          <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 mt-1">
+          <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 mt-2">
             {insurers.map((ins) => (
               <button
                 key={ins.id}
                 type="button"
-                className="flex items-center gap-1.5"
-                style={{ opacity: hoverInsurer && hoverInsurer !== ins.id ? 0.4 : 1, transition: "opacity .15s" }}
+                className="flex items-center gap-2"
+                style={{
+                  opacity: hoverInsurer && hoverInsurer !== ins.id ? 0.4 : 1,
+                  transition: "opacity .15s",
+                }}
                 onMouseEnter={() => setHoverInsurer(ins.id)}
                 onMouseLeave={() => setHoverInsurer(null)}
                 data-testid={`radar-legend-${ins.id}`}
               >
-                <InsurerMark insurer={ins} size={20} />
-                <span className="text-[12px] font-extrabold" style={{ color: ins.accent || "var(--gmc-ink)" }}>{ins.name}</span>
+                <InsurerMark insurer={ins} size={24} />
+                <span
+                  className="text-[13px] font-extrabold"
+                  style={{ color: ins.accent || "var(--gmc-ink)" }}
+                >
+                  {ins.name}
+                </span>
               </button>
             ))}
           </div>
         </div>
 
         <div className="space-y-2.5" data-testid="radar-summary">
-          <div className="text-[11px] font-bold uppercase tracking-[0.08em]" style={{ color: "var(--gmc-muted)" }}>
+          <div
+            className="text-[11px] font-bold uppercase tracking-[0.08em]"
+            style={{ color: "var(--gmc-muted)" }}
+          >
             Broadest stated limits
           </div>
           {insurers.map((ins) => {
@@ -202,17 +222,28 @@ export default function InsurerRadar({ insurers, onOpenTheme }) {
                 onMouseEnter={() => setHoverInsurer(ins.id)}
                 onMouseLeave={() => setHoverInsurer(null)}
               >
-                <InsurerMark insurer={ins} size={22} />
+                <InsurerMark insurer={ins} size={24} />
                 <div className="min-w-0">
-                  <div className="text-[12.5px] font-extrabold" style={{ color: ins.accent || "var(--gmc-ink)" }}>{ins.name}</div>
+                  <div
+                    className="text-[12.5px] font-extrabold"
+                    style={{ color: ins.accent || "var(--gmc-ink)" }}
+                  >
+                    {ins.name}
+                  </div>
                   <div className="text-[12px] leading-snug" style={{ color: "var(--gmc-body)" }}>
-                    <span className="font-semibold" style={{ color: meta?.text }}>{meta?.label} limits</span> in {so.labels.join(", ")}
+                    <span className="font-semibold" style={{ color: meta?.text }}>
+                      {meta?.label} limits
+                    </span>{" "}
+                    in {so.labels.join(", ")}
                   </div>
                 </div>
               </div>
             );
           })}
-          <div className="text-[10.5px] italic leading-snug pt-1" style={{ color: "var(--gmc-faint)" }}>
+          <div
+            className="text-[10.5px] italic leading-snug pt-1"
+            style={{ color: "var(--gmc-faint)" }}
+          >
             Tap an area on the chart to see those differences in full.
           </div>
         </div>

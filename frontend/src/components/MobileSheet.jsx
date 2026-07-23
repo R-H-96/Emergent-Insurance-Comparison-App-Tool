@@ -14,6 +14,7 @@ import { X } from "lucide-react";
  *   • Sticky, always-visible branded header with title + X close button
  *   • Safe-area-inset-bottom aware body padding
  *   • ESC key close
+ *   • paddingTop on outer container keeps header out of iOS status-bar / address-bar zone
  */
 export default function MobileSheet({
   open,
@@ -24,23 +25,19 @@ export default function MobileSheet({
   testId = "mobile-sheet",
   children,
   footer,
-  maxHeight = "92dvh",
+  maxHeight = "88dvh",
 }) {
-  // Normalise any legacy "vh" callers to dynamic viewport height so the
-  // sticky header (and its close X) never sits behind iOS Safari's chrome.
   const resolvedMaxHeight =
     typeof maxHeight === "string" ? maxHeight.replace(/vh$/, "dvh") : maxHeight;
   const reduce = useReducedMotion();
   const dragControls = useDragControls();
   const bodyRef = useRef(null);
   const historyPushedRef = useRef(false);
-  // Keep the latest onClose in a ref so effects don't re-fire on prop identity changes
   const onCloseRef = useRef(onClose);
   useEffect(() => {
     onCloseRef.current = onClose;
   }, [onClose]);
 
-  // Body scroll lock while sheet is open
   useEffect(() => {
     if (!open) return;
     const originalOverflow = document.body.style.overflow;
@@ -54,15 +51,12 @@ export default function MobileSheet({
     };
   }, [open]);
 
-  // History API back-button integration (StrictMode-safe via time guard).
   useEffect(() => {
     if (!open) return;
     const openedAt = Date.now();
     window.history.pushState({ __gmcSheet: true }, "");
     historyPushedRef.current = true;
     const onPop = () => {
-      // StrictMode's double-mount pattern can cause a spurious popstate to
-      // fire immediately after mount; ignore anything within the first 150ms.
       if (Date.now() - openedAt < 150) return;
       historyPushedRef.current = false;
       onCloseRef.current?.();
@@ -77,7 +71,6 @@ export default function MobileSheet({
     };
   }, [open]);
 
-  // ESC key close
   useEffect(() => {
     if (!open) return;
     const onKey = (e) => {
@@ -92,7 +85,14 @@ export default function MobileSheet({
       {open && (
         <motion.div
           key="gmc-sheet-root"
-          className="fixed inset-0 z-[90] flex items-end justify-center"
+          className="fixed inset-x-0 bottom-0 z-[90] flex items-end justify-center"
+          style={{
+            top: 0,
+            // Ensure the sheet never reaches into the iOS status-bar /
+            // Safari address-bar zone. max() picks the larger of the safe
+            // area inset and a hard minimum of 56px.
+            paddingTop: "max(env(safe-area-inset-top, 0px), 56px)",
+          }}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -112,7 +112,7 @@ export default function MobileSheet({
             data-testid={`${testId}-backdrop`}
           />
 
-          {/* Sheet body — draggable */}
+          {/* Sheet panel */}
           <motion.div
             role="dialog"
             aria-modal="true"
@@ -133,9 +133,7 @@ export default function MobileSheet({
             }}
             data-testid={`${testId}-panel`}
           >
-            {/* Drag handle + sticky header — ONLY this region initiates the
-                drag-to-dismiss, so the scrollable body below can scroll
-                freely without the sheet closing. */}
+            {/* Drag handle + sticky header */}
             <div
               className="sticky top-0 z-10 flex-shrink-0 bg-white border-b"
               style={{ borderColor: "var(--gmc-line)", touchAction: "none" }}
