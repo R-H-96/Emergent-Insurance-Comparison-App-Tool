@@ -87,8 +87,8 @@ export default function ComparisonTable({
   const cols = insurers.length;
   const gridTemplate = `minmax(0, 1.2fr) repeat(${cols}, minmax(0, 1fr))`;
 
-  // Per-insurer column background tints (~5%)
-  const columnTints = insurers.map((i) => hexToRgba(i.accent, 0.05));
+  // Per-insurer column background tints
+  const columnTints = insurers.map((i) => hexToRgba(i.accent, 0.08));
 
   const visibleGrouped = grouped
     .filter(([group]) =>
@@ -148,13 +148,13 @@ export default function ComparisonTable({
               className="p-4"
               style={{
                 borderLeft: "1px solid var(--gmc-line)",
-                borderTop: `3px solid ${ins.accent || "var(--gmc-teal)"}`,
+                borderTop: `4px solid ${ins.accent || "var(--gmc-teal)"}`,
                 background: columnTints[i],
               }}
               data-testid={`header-${ins.id}`}
             >
               <div className="flex items-center gap-2.5">
-                <InsurerLogo insurer={ins} size={30} />
+                <InsurerLogo insurer={ins} size={32} />
                 <div>
                   <div
                     className="font-extrabold text-[15px] leading-tight"

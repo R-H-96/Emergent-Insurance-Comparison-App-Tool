@@ -244,7 +244,7 @@ function AskPanelBody({ askState, examples, insurers, lookup, glossary, onLocate
             data-testid={`ask-panel-history-${i}`}
           >
             <div
-              className="text-[11px] font-semibold"
+              className="text-[11px] font-bold uppercase tracking-[0.08em]"
               style={{ color: "var(--gmc-muted)" }}
             >
               You asked
@@ -253,7 +253,7 @@ function AskPanelBody({ askState, examples, insurers, lookup, glossary, onLocate
               className="text-[13px] font-semibold mt-0.5"
               style={{ color: "var(--gmc-ink)" }}
             >
-              “{h.q}”
+              &ldquo;{h.q}&rdquo;
             </div>
             {h.feature ? (
               <div className="mt-2 flex items-center justify-between gap-2 flex-wrap">
@@ -305,14 +305,22 @@ function ResultCard({ feature, insurers, lookup, glossary, onLocate, onOpenFeatu
       }}
       data-testid="ask-panel-match"
     >
-      <div
-        className="text-[10px] font-bold uppercase tracking-[0.1em]"
-        style={{ color: "var(--gmc-teal-deep)" }}
-      >
-        Best match · {feature.group}
+      <div className="flex items-center gap-2 flex-wrap mb-2">
+        <span
+          className="text-[10px] font-bold uppercase tracking-[0.1em]"
+          style={{ color: "var(--gmc-teal-deep)" }}
+        >
+          Best match
+        </span>
+        <span
+          className="gmc-badge-verified"
+          style={{ background: "var(--gmc-teal-tint-2)", color: "var(--gmc-teal-deep)" }}
+        >
+          {feature.group}
+        </span>
       </div>
       <div
-        className="mt-1 font-extrabold text-[15px]"
+        className="font-extrabold text-[15px]"
         style={{ color: "var(--gmc-ink)" }}
       >
         {feature.feature}
@@ -323,7 +331,7 @@ function ResultCard({ feature, insurers, lookup, glossary, onLocate, onOpenFeatu
         glossary={glossary}
         className="text-[12px] mt-1 leading-relaxed"
       />
-      <div className="mt-2 space-y-1.5">
+      <div className="mt-2.5 space-y-1.5">
         {insurers.map((ins) => {
           const entry = lookup[ins.id]?.[feature.feature];
           return (
@@ -333,7 +341,7 @@ function ResultCard({ feature, insurers, lookup, glossary, onLocate, onOpenFeatu
               style={{ borderLeft: `3px solid ${ins.accent || "var(--gmc-teal)"}` }}
             >
               <InsurerLogo insurer={ins} size={20} />
-              <div className="flex-1">
+              <div className="flex-1 min-w-0">
                 <div
                   className="text-[10px] font-bold uppercase tracking-[0.05em]"
                   style={{ color: ins.accent || "var(--gmc-teal-mid)" }}
@@ -344,9 +352,7 @@ function ResultCard({ feature, insurers, lookup, glossary, onLocate, onOpenFeatu
                   {entry?.short ? (
                     <GlossaryText text={entry.short} glossary={glossary} />
                   ) : (
-                    <span className="italic font-normal" style={{ color: "var(--gmc-faint)" }}>
-                      Not extracted
-                    </span>
+                    <span style={{ color: "var(--gmc-faint)" }}>—</span>
                   )}
                 </div>
               </div>

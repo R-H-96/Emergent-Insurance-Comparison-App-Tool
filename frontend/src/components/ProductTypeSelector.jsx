@@ -24,8 +24,12 @@ export default function ProductTypeSelector({ value, onChange }) {
             {p.label}
             {!p.enabled && (
               <span
-                className="ml-1 text-[10px] font-semibold uppercase tracking-wider"
-                style={{ color: "var(--gmc-faint)" }}
+                className="inline-flex items-center rounded-full px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider"
+                style={{
+                  background: "var(--gmc-bg-soft)",
+                  color: "var(--gmc-faint)",
+                  border: "1px solid var(--gmc-line)",
+                }}
               >
                 Soon
               </span>

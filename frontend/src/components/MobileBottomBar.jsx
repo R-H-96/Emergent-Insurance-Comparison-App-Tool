@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Users, MessageCircleQuestion } from "lucide-react";
+import { Users, MessageCircleQuestion, ArrowRight } from "lucide-react";
 import MobileSheet from "@/components/MobileSheet";
 import useMediaQuery from "@/hooks/useMediaQuery";
 import ProductTypeSelector from "@/components/ProductTypeSelector";
@@ -64,16 +64,21 @@ export default function MobileBottomBar({
       >
         <button
           type="button"
-          className="flex-1 gmc-tap flex flex-col items-center justify-center gap-0.5 rounded-[var(--gmc-r-ctl)] bg-white border py-2"
+          className="flex-1 gmc-tap flex flex-col items-center justify-center gap-0.5 rounded-[var(--gmc-r-ctl)] bg-white border py-2 relative"
           style={{ borderColor: "var(--gmc-line-soft)" }}
           onClick={() => setCompareOpen(true)}
           data-testid="mbb-compare"
         >
-          <Users className="w-4 h-4" style={{ color: "var(--gmc-teal-deep)" }} strokeWidth={2.2} />
-          <span
-            className="text-[11px] font-bold"
-            style={{ color: "var(--gmc-ink)" }}
-          >
+          <div className="relative">
+            <Users className="w-5 h-5" style={{ color: "var(--gmc-teal-deep)" }} strokeWidth={2.2} />
+            <span
+              className="absolute -top-1.5 -right-2 w-4 h-4 rounded-full flex items-center justify-center text-[9px] font-extrabold text-white"
+              style={{ background: "var(--gmc-teal)" }}
+            >
+              {insurers.length}
+            </span>
+          </div>
+          <span className="text-[12px] font-bold" style={{ color: "var(--gmc-ink)" }}>
             Compare
           </span>
         </button>
@@ -84,21 +89,19 @@ export default function MobileBottomBar({
           onClick={onOpenAsk}
           data-testid="mbb-ask"
         >
-          <MessageCircleQuestion className="w-4 h-4" style={{ color: "var(--gmc-teal-deep)" }} strokeWidth={2.2} />
-          <span
-            className="text-[11px] font-bold"
-            style={{ color: "var(--gmc-ink)" }}
-          >
+          <MessageCircleQuestion className="w-5 h-5" style={{ color: "var(--gmc-teal-deep)" }} strokeWidth={2.2} />
+          <span className="text-[12px] font-bold" style={{ color: "var(--gmc-ink)" }}>
             Ask
           </span>
         </button>
         <button
           type="button"
-          className="flex-[1.4] gmc-tap flex items-center justify-center gap-1 rounded-[var(--gmc-r-ctl)] py-2 gmc-quote-trigger text-white font-bold text-[13px]"
+          className="flex-[1.4] gmc-tap flex items-center justify-center gap-1.5 rounded-[var(--gmc-r-ctl)] py-2 gmc-quote-trigger text-white font-bold text-[13px]"
           style={{ background: "var(--gmc-grad-button)" }}
           data-testid="mbb-adviser"
         >
           Adviser — free
+          <ArrowRight className="w-3.5 h-3.5" strokeWidth={2.5} />
         </button>
       </div>
 

@@ -64,7 +64,7 @@ export default function DetailModal({ feature, insurers, lookup, glossary, onClo
             {entry ? (
               <>
                 <div
-                  className="mt-3 rounded-[10px] px-3 py-2 inline-block text-[13px] font-semibold"
+                  className="mt-3 rounded-[10px] px-3 py-2.5 inline-block text-[14px] font-semibold"
                   style={{
                     background: "var(--gmc-teal-tint)",
                     color: "var(--gmc-teal-deep)",
@@ -137,11 +137,8 @@ export default function DetailModal({ feature, insurers, lookup, glossary, onClo
                 </div>
               </>
             ) : (
-              <p
-                className="mt-3 text-[13px] italic"
-                style={{ color: "var(--gmc-faint)" }}
-              >
-                Not extracted for this policy.
+              <p className="mt-4 text-[18px] font-light" style={{ color: "var(--gmc-faint)" }}>
+                —
               </p>
             )}
           </div>
