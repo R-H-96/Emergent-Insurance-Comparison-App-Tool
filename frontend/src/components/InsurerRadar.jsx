@@ -9,7 +9,6 @@ import { RADAR_THEMES, THEME_BANDS, BAND_META, bandToScore, standoutThemes } fro
  *  • Hover an insurer (shape / legend / summary) to isolate it.
  *  • Hover a vertex for the per-insurer band tooltip.
  *  • Click a vertex/label to jump to that theme in the full comparison.
- *  • Rings are labelled Standard / Higher / Highest.
  *  • A side panel summarises each insurer's broadest areas (factual).
  */
 
@@ -62,12 +61,6 @@ export default function InsurerRadar({ insurers, onOpenTheme }) {
     return { ins, pts, accent: ins.accent || "var(--gmc-teal)" };
   });
 
-  const ringLabels = [
-    { level: 1 / 3, label: "Standard" },
-    { level: 2 / 3, label: "Higher" },
-    { level: 1, label: "Highest" },
-  ];
-
   const active = hoverTheme
     ? themes.find((t) => t.id === hoverTheme)
     : null;
@@ -101,12 +94,6 @@ export default function InsurerRadar({ insurers, onOpenTheme }) {
               return <line key={i} x1={CX} y1={CY} x2={x} y2={y} stroke="var(--gmc-line)" strokeWidth="1" />;
             })}
 
-            {ringLabels.map((r, i) => (
-              <text key={i} x={CX + 5} y={CY - R * r.level + 3} textAnchor="start" fontSize="9" fill="var(--gmc-faint)">
-                {r.label}
-              </text>
-            ))}
-
             {shapes.map(({ ins, pts, accent }) => {
               const dim = hoverInsurer && hoverInsurer !== ins.id;
               return (
@@ -128,7 +115,7 @@ export default function InsurerRadar({ insurers, onOpenTheme }) {
 
             {themes.map((t, i) => {
               const Icon = THEME_ICONS[t.id];
-              const [px, py] = axisPoint(i, N, R + 24);
+              const [px, py] = axisPoint(i, N, R + 28);
               const ux = axisPoint(i, N, 1)[0] - CX;
               const anchor = ux > 4 ? "start" : ux < -4 ? "end" : "middle";
               const [hx, hy] = axisPoint(i, N, R);
@@ -139,8 +126,8 @@ export default function InsurerRadar({ insurers, onOpenTheme }) {
                    onClick={() => onOpenTheme && onOpenTheme(t.group)}>
                   <circle cx={hx} cy={hy} r="16" fill="transparent" />
                   <g transform={`translate(${px},${py})`} style={{ color: "var(--gmc-teal-deep)" }}>
-                    {Icon && <Icon x={-8} y={-17} size={16} strokeWidth={2.1} />}
-                    <text x={0} y={4} textAnchor={anchor} fontSize="12" fontWeight="700" fill="var(--gmc-muted)"
+                    {Icon && <Icon x={-10} y={-24} size={20} strokeWidth={2.0} />}
+                    <text x={0} y={6} textAnchor={anchor} fontSize="12" fontWeight="700" fill="var(--gmc-muted)"
                           style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
                       {t.short}
                     </text>
