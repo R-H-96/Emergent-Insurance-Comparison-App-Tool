@@ -9,6 +9,9 @@ import GlossaryText from "@/components/GlossaryText";
  * inline. Everything the policies agree on has already been filtered out
  * upstream, so this is purely "here's where they diverge". Tap a row for the
  * full, sourced detail.
+ *
+ * Row is a div[role=button] rather than <button> because GlossaryText renders
+ * glossary-term triggers as <button> elements — nested <button> is invalid HTML.
  */
 export default function DiffReel({ features, insurers, lookup, glossary, onOpen }) {
   if (!features.length) return null;
@@ -31,11 +34,13 @@ export default function DiffReel({ features, insurers, lookup, glossary, onOpen 
       </div>
 
       {features.map((f) => (
-        <button
+        <div
           key={f.feature}
-          type="button"
+          role="button"
+          tabIndex={0}
           onClick={() => onOpen(f.feature)}
-          className="w-full text-left px-5 sm:px-6 py-4 border-t transition-colors hover:bg-[color:var(--gmc-teal-tint)] focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[color:var(--gmc-teal)]"
+          onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onOpen(f.feature); } }}
+          className="w-full text-left px-5 sm:px-6 py-4 border-t transition-colors hover:bg-[color:var(--gmc-teal-tint)] focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[color:var(--gmc-teal)] cursor-pointer"
           style={{ borderColor: "var(--gmc-line)" }}
           data-testid={`diff-row-${f.feature.replace(/\s+/g, "-").toLowerCase()}`}
         >
@@ -67,7 +72,7 @@ export default function DiffReel({ features, insurers, lookup, glossary, onOpen 
                     style={{ color: "var(--gmc-ink-2)" }}
                   >
                     {entry?.short ? (
-                      <GlossaryText text={entry.short} glossary={glossary} />
+                      <GlossaryText tag="span" text={entry.short} glossary={glossary} />
                     ) : (
                       <span style={{ color: "var(--gmc-faint)" }}>—</span>
                     )}
@@ -76,7 +81,7 @@ export default function DiffReel({ features, insurers, lookup, glossary, onOpen 
               );
             })}
           </div>
-        </button>
+        </div>
       ))}
     </div>
   );

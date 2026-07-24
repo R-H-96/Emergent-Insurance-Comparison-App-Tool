@@ -77,7 +77,9 @@ export function leadersForTheme(themeId, insurers) {
 // own highest band (used by the radar side-summary). Describes limit size only.
 export function standoutThemes(insurerId) {
   const bands = THEME_BANDS[insurerId] || {};
-  const top = Math.max(...RADAR_THEMES.map((t) => bands[t.id] || 0));
+  const top = Math.max(0, ...RADAR_THEMES.map((t) => bands[t.id] || 0));
+  // Unknown insurer or all-zero bands — nothing meaningful to surface.
+  if (top === 0) return { band: 0, labels: [] };
   const labels = RADAR_THEMES.filter((t) => (bands[t.id] || 0) === top).map((t) => t.label);
   return { band: top, labels };
 }

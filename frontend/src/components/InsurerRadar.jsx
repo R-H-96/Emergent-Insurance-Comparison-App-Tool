@@ -100,8 +100,8 @@ export default function InsurerRadar({ insurers, onOpenTheme }) {
                   strokeOpacity={dim ? 0.35 : 1}
                   strokeLinejoin="round"
                   style={{ transition: "all .15s", cursor: "pointer" }}
-                  onMouseEnter={() => setHoverInsurer(ins.id)}
-                  onMouseLeave={() => setHoverInsurer(null)}
+                  onPointerEnter={() => setHoverInsurer(ins.id)}
+                  onPointerLeave={() => setHoverInsurer(null)}
                   data-testid={`radar-shape-${ins.id}`}
                 />
               );
@@ -117,8 +117,8 @@ export default function InsurerRadar({ insurers, onOpenTheme }) {
                 <g
                   key={t.id}
                   style={{ cursor: "pointer" }}
-                  onMouseEnter={() => setHoverTheme(t.id)}
-                  onMouseLeave={() => setHoverTheme(null)}
+                  onPointerEnter={() => setHoverTheme(t.id)}
+                  onPointerLeave={() => setHoverTheme(null)}
                   onClick={() => onOpenTheme && onOpenTheme(t.group)}
                 >
                   <circle cx={hx} cy={hy} r="16" fill="transparent" />
@@ -182,8 +182,8 @@ export default function InsurerRadar({ insurers, onOpenTheme }) {
                   opacity: hoverInsurer && hoverInsurer !== ins.id ? 0.4 : 1,
                   transition: "opacity .15s",
                 }}
-                onMouseEnter={() => setHoverInsurer(ins.id)}
-                onMouseLeave={() => setHoverInsurer(null)}
+                onPointerEnter={() => setHoverInsurer(ins.id)}
+                onPointerLeave={() => setHoverInsurer(null)}
                 data-testid={`radar-legend-${ins.id}`}
               >
                 <InsurerMark insurer={ins} size={24} />
@@ -219,8 +219,8 @@ export default function InsurerRadar({ insurers, onOpenTheme }) {
                   opacity: dim ? 0.4 : 1,
                   transition: "opacity .15s",
                 }}
-                onMouseEnter={() => setHoverInsurer(ins.id)}
-                onMouseLeave={() => setHoverInsurer(null)}
+                onPointerEnter={() => setHoverInsurer(ins.id)}
+                onPointerLeave={() => setHoverInsurer(null)}
               >
                 <InsurerMark insurer={ins} size={24} />
                 <div className="min-w-0">
