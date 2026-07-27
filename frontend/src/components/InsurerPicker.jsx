@@ -1,15 +1,16 @@
 import { Check } from "lucide-react";
 import InsurerLogo from "@/components/InsurerLogo";
+import SourceLink from "@/components/SourceLink";
 
-export default function InsurerPicker({ insurers, selected, onToggle }) {
+export default function InsurerPicker({ insurers, selected, onToggle, compact = false }) {
   return (
     <div data-testid="insurer-picker">
       <div className="flex items-baseline justify-between gap-4 flex-wrap mb-4">
         <div>
           <div className="gmc-eyebrow mb-2">Choose insurers</div>
-          <h2 className="gmc-h2 text-2xl sm:text-3xl">
-            Pick 2 or 3 to compare
-          </h2>
+          {!compact && (
+            <h2 className="gmc-h2 text-2xl sm:text-3xl">Pick 2 or 3 to compare</h2>
+          )}
         </div>
         <div
           className="text-xs font-semibold"
@@ -71,13 +72,18 @@ export default function InsurerPicker({ insurers, selected, onToggle }) {
           const disabled = !isSelected && selected.length >= 3;
           const accent = ins.accent || "var(--gmc-teal)";
           return (
-            <button
+            <div
               key={ins.id}
-              type="button"
-              onClick={() => onToggle(ins.id)}
+              role="button"
+              tabIndex={disabled ? -1 : 0}
+              onClick={() => !disabled && onToggle(ins.id)}
+              onKeyDown={(e) => {
+                if (disabled) return;
+                if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onToggle(ins.id); }
+              }}
               aria-pressed={isSelected}
-              disabled={disabled}
-              className={`text-left p-4 rounded-[var(--gmc-r-ctl)] border-[1.5px] transition-all bg-white hover:-translate-y-0.5 ${
+              aria-disabled={disabled}
+              className={`text-left p-4 rounded-[var(--gmc-r-ctl)] border-[1.5px] transition-all bg-white hover:-translate-y-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gmc-teal)] ${
                 disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"
               }`}
               style={{
@@ -112,13 +118,10 @@ export default function InsurerPicker({ insurers, selected, onToggle }) {
               >
                 {ins.product}
               </div>
-              <div
-                className="mt-2 text-[12px] leading-relaxed"
-                style={{ color: "var(--gmc-muted)" }}
-              >
-                {ins.version}
+              <div className="mt-2">
+                <SourceLink insurer={ins} />
               </div>
-            </button>
+            </div>
           );
         })}
       </div>

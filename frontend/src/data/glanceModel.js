@@ -23,12 +23,12 @@
 
 // Radar axes. Each maps to a feature `group` in gmc_tool_data.json.
 export const RADAR_THEMES = [
-  { id: "core", label: "Core limits", short: "Core", group: "Core limits" },
-  { id: "cancer", label: "Cancer care", short: "Cancer", group: "Cancer care" },
-  { id: "specialists", label: "Specialists & tests", short: "Specialists", group: "Specialists & tests" },
-  { id: "access", label: "Access & waits", short: "Access", group: "Conditions & waits" },
-  { id: "extras", label: "Everyday extras", short: "Extras", group: "Extras" },
-  { id: "loyalty", label: "Loyalty & flex", short: "Loyalty", group: "Loyalty & flexibility" },
+  { id: "core", group: "Core limits" },
+  { id: "cancer", group: "Cancer care" },
+  { id: "specialists", group: "Specialists & tests" },
+  { id: "access", group: "Conditions & waits" },
+  { id: "extras", group: "Extras" },
+  { id: "loyalty", group: "Loyalty & flexibility" },
 ];
 
 // Per-insurer band (1–3) for each theme id above. See compliance note.
@@ -54,7 +54,7 @@ export const JOURNEY_STAGES = [
   { id: "tests", label: "Tests", theme: "specialists", icon: "search", headline: "Specialist consultations" },
   { id: "surgery", label: "Surgery", theme: "core", icon: "scissors", headline: "Surgical benefit maximum" },
   { id: "cancer", label: "Cancer", theme: "cancer", icon: "heart", headline: "Chemotherapy / radiotherapy cover" },
-  { id: "aftercare", label: "Aftercare", theme: "loyalty", icon: "refresh", headline: "Loyalty / no-claims benefits" },
+  { id: "aftercare", label: "Staying covered", theme: "loyalty", icon: "refresh", headline: "Loyalty / no-claims benefits" },
 ];
 
 // score 0–1 for the radar, from a 1–3 band.
@@ -75,11 +75,16 @@ export function leadersForTheme(themeId, insurers) {
 
 // Factual "standout" line for one insurer: the theme labels where it holds its
 // own highest band (used by the radar side-summary). Describes limit size only.
+/**
+ * The areas where THIS insurer states its own largest limits — measured against
+ * its other five areas, NOT against the other insurers on screen. Returns the
+ * canonical group names so the caller applies the shared vocabulary.
+ */
 export function standoutThemes(insurerId) {
   const bands = THEME_BANDS[insurerId] || {};
   const top = Math.max(0, ...RADAR_THEMES.map((t) => bands[t.id] || 0));
   // Unknown insurer or all-zero bands — nothing meaningful to surface.
-  if (top === 0) return { band: 0, labels: [] };
-  const labels = RADAR_THEMES.filter((t) => (bands[t.id] || 0) === top).map((t) => t.label);
-  return { band: top, labels };
+  if (top === 0) return { band: 0, groups: [] };
+  const groups = RADAR_THEMES.filter((t) => (bands[t.id] || 0) === top).map((t) => t.group);
+  return { band: top, groups };
 }

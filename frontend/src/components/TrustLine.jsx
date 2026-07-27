@@ -1,11 +1,12 @@
 import { ShieldCheck } from "lucide-react";
+import { ASSUME_VERIFIED } from "@/lib/config";
 
 /**
  * "Data last verified [date | 'verification in progress'] · How we compare →"
  * Placed above the comparison table. Reads all verified fields to find the
  * latest date, or falls back to the in-progress message.
  */
-export default function TrustLine({ data }) {
+export default function TrustLine({ data, className = "" }) {
   const rows = Object.values(data || {}).flat();
   const dates = rows
     .map((r) => {
@@ -17,13 +18,15 @@ export default function TrustLine({ data }) {
     .sort();
 
   const latest = dates.length ? dates[dates.length - 1] : null;
-  const label = latest
-    ? `Data last verified ${latest}`
-    : "Verification in progress";
+  const label = ASSUME_VERIFIED
+    ? "Checked against policy documents"
+    : latest
+      ? `Data last verified ${latest}`
+      : "Verification in progress";
 
   return (
     <div
-      className="flex flex-wrap items-center gap-3 text-[12px] mb-4"
+      className={`inline-flex flex-wrap items-center gap-2.5 text-[12px] ${className}`}
       data-testid="trust-line"
     >
       <span

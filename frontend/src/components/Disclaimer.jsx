@@ -1,7 +1,7 @@
 export default function Disclaimer() {
   return (
     <footer
-      className="border-t"
+      className="border-t print:hidden"
       style={{
         borderColor: "var(--gmc-line)",
         background: "var(--gmc-bg-alt)",

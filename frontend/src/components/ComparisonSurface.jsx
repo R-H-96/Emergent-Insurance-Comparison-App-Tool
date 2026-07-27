@@ -1,125 +1,269 @@
 import { useEffect, useRef } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
-import { Sparkles, Table2 } from "lucide-react";
+import { Sparkles, Layers, Table2, Share2, SlidersHorizontal, Pencil, Printer } from "lucide-react";
 import AtAGlance from "@/components/AtAGlance";
 import ComparisonTable from "@/components/ComparisonTable";
+import PriorityCards from "@/components/PriorityCards";
 import FilterChips from "@/components/FilterChips";
 import TrustLine from "@/components/TrustLine";
-import InsurerStrip from "@/components/InsurerStrip";
+import ReceiptBar from "@/components/ReceiptBar";
+import InsurerMark from "@/components/InsurerMark";
+import { BookOpen } from "lucide-react";
+import { priorityGroups } from "@/lib/personalisation";
 import { pushEvent } from "@/lib/analytics";
 
+/**
+ * The comparison surface, organised around ONE control: a three-rung
+ * disclosure ladder.
+ *
+ *   0 · Your priorities  — PriorityCards. The differences inside the groups
+ *                          the user chose, each with plain-English context.
+ *   1 · All differences  — AtAGlance (radar / journey / diff reel), with the
+ *                          chart-heavy panels hidden for self-declared
+ *                          beginners.
+ *   2 · Everything       — the full 25-feature grouped table.
+ *
+ * This ladder replaces BOTH the old Quick/Full density segmented control and
+ * the separate "notable differences only" toggle — rungs 0 and 1 are
+ * inherently difference-only, so the toggle had nothing left to do. Group
+ * filters are only relevant at rung 2, so they only appear there.
+ */
+export const LADDER = [
+  { id: 0, label: "Your priorities", short: "Yours", icon: Sparkles, hint: "The things you told us matter most, in plain English." },
+  { id: 1, label: "All differences", short: "Differences", icon: Layers, hint: "Every point where these policies actually differ." },
+  { id: 2, label: "Everything", short: "All", icon: Table2, hint: "All 25 features, grouped. Nothing hidden." },
+];
+
 export default function ComparisonSurface({
-  density, onDensityChange,
-  insurers, allInsurers, onToggleInsurer,
-  features, data, glossary, lookup,
+  level, onLevelChange,
+  insurers, features, data, glossary, lookup,
   groupList, activeGroups, onToggleGroup, onClearGroups,
-  diffOnly, onDiffOnlyChange, notableCount,
+  notableCount, intake, explanation,
   preOpenGroups, flashFeature, onOpenFeature, onOpenGroup,
-  onShare, linkCopied, onOpenPicker,
+  onShare, linkCopied, onOpenPicker, onEditIntake, onOpenGlossary,
 }) {
   const reduce = useReducedMotion();
   const initialFire = useRef(true);
 
   useEffect(() => {
     if (initialFire.current) { initialFire.current = false; return; }
-    pushEvent("gmc_density_toggle", { density });
-  }, [density]);
+    pushEvent("gmc_level_change", { level });
+  }, [level]);
 
-  const setDensity = (d) => { if (d !== density) onDensityChange(d); };
   const transition = reduce ? { duration: 0 } : { duration: 0.28, ease: [0.16, 1, 0.3, 1] };
+  const current = LADDER.find((l) => l.id === level) || LADDER[0];
 
   return (
-    <section id="comparison-surface" className="pb-12 sm:pb-16" data-testid="comparison-surface">
+    <section id="comparison-surface" className="pb-12 sm:pb-16 print:hidden" data-testid="comparison-surface">
       <div className="gmc-container">
-        <InsurerStrip insurers={insurers} onChange={onOpenPicker} />
+        <ReceiptBar
+          intake={intake}
+          insurers={insurers}
+          onEditIntake={onEditIntake}
+          onEditInsurers={onOpenPicker}
+        />
 
-        {/* Sticky density bar */}
+        {/* Sticky ladder */}
         <div
           className="sticky z-[40] py-3 -mx-4 px-4 sm:mx-0 sm:px-0"
           style={{ top: "var(--gmc-sticky-offset, 0px)", background: "var(--gmc-bg)" }}
-          data-testid="density-sticky"
+          data-testid="ladder-sticky"
         >
-          <div className="flex items-center justify-between gap-3">
-            {/*
-             * Segmented control: full-width on mobile (flex) so the tabs own
-             * the entire row now that the notable toggle is gone from mobile.
-             * Reverts to inline-flex on sm+ where the notable toggle may appear.
-             */}
+          <div className="flex items-center gap-2">
             <div
               role="tablist"
-              aria-label="Comparison density"
-              className="flex sm:inline-flex p-1 rounded-full bg-white border shadow-[0_2px_10px_rgba(22,28,39,0.04)]"
+              aria-label="How much detail to show"
+              className="flex flex-1 p-1 rounded-full bg-white border shadow-[0_2px_10px_rgba(22,28,39,0.04)]"
               style={{ borderColor: "var(--gmc-line)" }}
-              data-testid="density-segmented"
+              data-testid="ladder"
             >
-              <SegBtn
-                active={density === "glance"}
-                onClick={() => setDensity("glance")}
-                icon={Sparkles}
-                label="Quick Comparison"
-                shortLabel="Quick"
-                testid="density-glance"
-                badge={notableCount}
-              />
-              <SegBtn
-                active={density === "full"}
-                onClick={() => setDensity("full")}
-                icon={Table2}
-                label="Full Comparison"
-                shortLabel="Full"
-                testid="density-full"
-              />
+              {LADDER.map((rung) => {
+                const active = level === rung.id;
+                const Icon = rung.icon;
+                return (
+                  <button
+                    key={rung.id}
+                    type="button"
+                    role="tab"
+                    aria-selected={active}
+                    onClick={() => level !== rung.id && onLevelChange(rung.id)}
+                    className={`gmc-tap flex flex-1 items-center justify-center gap-1.5 px-2 sm:px-4 py-2 rounded-full text-[12.5px] sm:text-[13px] transition-all ${
+                      active ? "font-bold" : "font-semibold"
+                    }`}
+                    style={{
+                      background: active ? "var(--gmc-teal)" : "transparent",
+                      color: active ? "white" : "var(--gmc-body)",
+                      boxShadow: active ? "0 4px 14px rgba(20,181,175,0.28)" : "none",
+                    }}
+                    data-testid={`ladder-${rung.id}`}
+                  >
+                    <Icon className="w-4 h-4 flex-shrink-0" strokeWidth={2.2} aria-hidden="true" />
+                    <span className="hidden sm:inline">{rung.label}</span>
+                    <span className="sm:hidden">{rung.short}</span>
+                    {rung.id === 1 && notableCount != null && (
+                      <span
+                        className="px-1.5 rounded-full text-[11px] font-extrabold"
+                        style={{
+                          background: active ? "rgba(255,255,255,0.22)" : "var(--gmc-teal-tint-2)",
+                          color: active ? "white" : "var(--gmc-teal-deep)",
+                        }}
+                      >
+                        {notableCount}
+                      </span>
+                    )}
+                  </button>
+                );
+              })}
             </div>
 
-            {/* Notable toggle — desktop only, full density only */}
-            {density === "full" && (
-              <button
-                type="button"
-                className="gmc-chip gmc-tap hidden sm:inline-flex"
-                aria-pressed={diffOnly}
-                onClick={() => onDiffOnlyChange(!diffOnly)}
-                data-testid="differences-only-toggle"
-              >
-                <span className="gmc-toggle" aria-pressed={diffOnly} aria-hidden="true" tabIndex={-1} />
-                Notable differences
-              </button>
-            )}
+            <button
+              type="button"
+              onClick={onOpenPicker}
+              className="gmc-tap hidden sm:flex items-center gap-1.5 rounded-full pl-1 pr-2.5 py-1 flex-shrink-0 transition-colors hover:bg-[color:var(--gmc-teal-tint)]"
+              style={{ border: "1px solid var(--gmc-line)", background: "white" }}
+              aria-label="Change which insurers you are comparing"
+              data-testid="sticky-insurers"
+            >
+              <span className="flex flex-shrink-0">
+                {insurers.map((ins, i) => (
+                  <span
+                    key={ins.id}
+                    style={{
+                      marginLeft: i > 0 ? -7 : 0,
+                      boxShadow: "0 0 0 2px white",
+                      borderRadius: "50%",
+                      display: "flex",
+                      zIndex: insurers.length - i,
+                      position: "relative",
+                    }}
+                  >
+                    <InsurerMark insurer={ins} size={22} />
+                  </span>
+                ))}
+              </span>
+              <Pencil
+                className="w-3.5 h-3.5 flex-shrink-0"
+                strokeWidth={2.2}
+                style={{ color: "var(--gmc-teal-mid)" }}
+                aria-hidden="true"
+              />
+            </button>
+
+            <button
+              type="button"
+              onClick={() => { pushEvent("gmc_print", { level }); window.print(); }}
+              className="gmc-tap hidden sm:flex items-center justify-center w-10 h-10 rounded-full flex-shrink-0 transition-colors hover:bg-[color:var(--gmc-teal-tint)]"
+              style={{ border: "1px solid var(--gmc-line)", background: "white" }}
+              aria-label="Print or save this comparison to take to an adviser"
+              title="Print / save as PDF"
+              data-testid="print-btn"
+            >
+              <Printer className="w-4 h-4" strokeWidth={2.2} style={{ color: "var(--gmc-body)" }} />
+            </button>
+
+            <button
+              type="button"
+              onClick={onShare}
+              className="gmc-tap flex items-center justify-center w-10 h-10 rounded-full flex-shrink-0 transition-colors hover:bg-[color:var(--gmc-teal-tint)]"
+              style={{ border: "1px solid var(--gmc-line)", background: "white" }}
+              aria-label="Share this comparison"
+              data-testid="share-btn"
+            >
+              <Share2
+                className="w-4 h-4"
+                strokeWidth={2.2}
+                style={{ color: linkCopied ? "var(--gmc-teal)" : "var(--gmc-body)" }}
+              />
+            </button>
           </div>
         </div>
 
-        {density === "full" && (
+        <div className="pt-2 flex items-baseline gap-3 flex-wrap">
+          <p className="text-[12px] leading-snug" style={{ color: "var(--gmc-muted)" }}>
+            {current.hint}
+          </p>
+          <button
+            type="button"
+            onClick={onOpenGlossary}
+            className="gmc-tap inline-flex items-center gap-1 text-[12px] font-semibold underline decoration-dotted underline-offset-2 hover:decoration-solid"
+            style={{ color: "var(--gmc-teal-deep)" }}
+            data-testid="open-glossary"
+          >
+            <BookOpen className="w-3.5 h-3.5 flex-shrink-0" strokeWidth={2.2} aria-hidden="true" />
+            What the words mean
+          </button>
+        </div>
+
+        {/* Group filters — only meaningful in the full table */}
+        {level === 2 && (
           <div className="mt-3">
-            <TrustLine data={data} />
+            <div className="flex items-center gap-2 mb-2">
+              <SlidersHorizontal
+                className="w-3.5 h-3.5 flex-shrink-0"
+                strokeWidth={2.2}
+                style={{ color: "var(--gmc-muted)" }}
+                aria-hidden="true"
+              />
+              <span className="gmc-eyebrow">Jump to a section</span>
+            </div>
             <FilterChips
               groups={groupList}
               activeGroups={activeGroups}
               onToggle={onToggleGroup}
               onClear={onClearGroups}
             />
+            <div className="flex justify-end mt-3">
+              <TrustLine data={data} />
+            </div>
           </div>
         )}
 
         <motion.div layout={!reduce} transition={transition} className="mt-4 sm:mt-6">
           <AnimatePresence mode="wait" initial={false}>
             <motion.div
-              key={density}
+              key={level}
               initial={reduce ? false : { opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               exit={reduce ? { opacity: 0 } : { opacity: 0, y: -8 }}
               transition={transition}
-              data-testid={`density-content-${density}`}
+              data-testid={`level-content-${level}`}
             >
-              {density === "glance" ? (
-                <AtAGlance
-                  features={features} insurers={insurers} lookup={lookup} glossary={glossary}
-                  notableCount={notableCount} onOpen={onOpenFeature} onOpenGroup={onOpenGroup}
+              {level === 0 && (
+                <PriorityCards
+                  features={features}
+                  insurers={insurers}
+                  lookup={lookup}
+                  glossary={glossary}
+                  intake={intake}
+                  onOpenFeature={onOpenFeature}
+                  onSeeAll={() => onLevelChange(2)}
                 />
-              ) : (
+              )}
+              {level === 1 && (
+                <AtAGlance
+                  features={features}
+                  insurers={insurers}
+                  lookup={lookup}
+                  glossary={glossary}
+                  notableCount={notableCount}
+                  explanation={explanation}
+                  highlightGroups={priorityGroups(intake)}
+                  onOpen={onOpenFeature}
+                  onOpenGroup={onOpenGroup}
+                />
+              )}
+              {level === 2 && (
                 <ComparisonTable
-                  insurers={insurers} features={features} data={data} glossary={glossary}
-                  diffOnly={diffOnly} activeGroups={activeGroups} openGroups={preOpenGroups}
-                  flashFeature={flashFeature} onOpenFeature={onOpenFeature}
-                  onClearFilters={() => { onClearGroups(); if (diffOnly) onDiffOnlyChange(false); }}
+                  insurers={insurers}
+                  features={features}
+                  data={data}
+                  glossary={glossary}
+                  activeGroups={activeGroups}
+                  openGroups={preOpenGroups}
+                  flashFeature={flashFeature}
+                  explanation={explanation}
+                  onOpenFeature={onOpenFeature}
+                  onClearFilters={onClearGroups}
                 />
               )}
             </motion.div>
@@ -127,40 +271,5 @@ export default function ComparisonSurface({
         </motion.div>
       </div>
     </section>
-  );
-}
-
-function SegBtn({ active, onClick, icon: Icon, label, shortLabel, testid, badge }) {
-  return (
-    <button
-      type="button"
-      role="tab"
-      aria-selected={active}
-      onClick={onClick}
-      className={`gmc-tap flex sm:inline-flex flex-1 sm:flex-none items-center justify-center gap-2 px-4 py-2 rounded-full text-[13px] transition-all ${
-        active ? "font-bold" : "font-semibold"
-      }`}
-      style={{
-        background: active ? "var(--gmc-teal)" : "transparent",
-        color: active ? "white" : "var(--gmc-body)",
-        boxShadow: active ? "0 4px 14px rgba(20,181,175,0.28)" : "none",
-      }}
-      data-testid={testid}
-    >
-      <Icon className="w-4 h-4" strokeWidth={2.2} />
-      <span className="hidden sm:inline">{label}</span>
-      {shortLabel && <span className="sm:hidden">{shortLabel}</span>}
-      {badge != null && (
-        <span
-          className="px-1.5 rounded-full text-[11px] font-extrabold"
-          style={{
-            background: active ? "rgba(255,255,255,0.22)" : "var(--gmc-teal-tint-2)",
-            color: active ? "white" : "var(--gmc-teal-deep)",
-          }}
-        >
-          {badge}
-        </span>
-      )}
-    </button>
   );
 }

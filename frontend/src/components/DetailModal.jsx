@@ -1,4 +1,3 @@
-import { ExternalLink } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -13,18 +12,41 @@ import GlossaryText from "@/components/GlossaryText";
 import InsurerMark from "@/components/InsurerMark";
 import FeatureIcon from "@/components/FeatureIcon";
 import CTA from "@/components/CTA";
+import WhyReveal from "@/components/WhyReveal";
+import SourceLink from "@/components/SourceLink";
+import { groupLabel, featureTitle } from "@/lib/personalisation";
 
-export default function DetailModal({ feature, insurers, lookup, glossary, onClose }) {
+/**
+ * Internal extraction notes ("VERIFY", "EXTERNAL VERIFICATION NEEDED") live in
+ * `internal_note`, which is never rendered — but they have also been written
+ * into `detail` strings, and this modal falls back to `detail` when a row has
+ * no `detail_points`. That leaked six of them to users once, so the fallback is
+ * filtered here as well as cleaned in the data. Belt and braces: the data can
+ * change, this guard can't be forgotten.
+ */
+const INTERNAL_FLAG = /VERIFY|NEEDS CARE|EXTERNAL VERIFICATION|before publishing/i;
+
+export default function DetailModal({ feature, insurers, lookup, glossary, explanation, onClose }) {
   const isMobile = !useMediaQuery("(min-width: 768px)");
   if (!feature) return null;
 
   const Body = (
     <div className="p-5 sm:p-8 space-y-4">
+      {feature.why && (
+        <WhyReveal
+          why={feature.why}
+          glossary={glossary}
+          inline
+          className="!mt-0"
+          testId="detail-why"
+        />
+      )}
       {insurers.map((ins) => {
         const entry = lookup[ins.id]?.[feature.feature];
-        const points = entry?.detail_points && entry.detail_points.length > 0
+        const rawPoints = entry?.detail_points && entry.detail_points.length > 0
           ? entry.detail_points
           : entry?.detail ? [entry.detail] : [];
+        const points = rawPoints.filter((p) => p && !INTERNAL_FLAG.test(p));
         const sources = Array.isArray(ins.sources) ? ins.sources : [];
         return (
           <div
@@ -78,40 +100,8 @@ export default function DetailModal({ feature, insurers, lookup, glossary, onClo
                   </ul>
                 )}
 
-                <div className="mt-4 pt-3 border-t" style={{ borderColor: "var(--gmc-line)" }}>
-                  <div
-                    className="text-[10px] font-bold uppercase tracking-[0.1em] mb-1.5"
-                    style={{ color: "var(--gmc-body)" }}
-                  >
-                    Sources
-                  </div>
-                  {sources.length > 0 ? (
-                    <ul className="space-y-1" data-testid={`sources-${ins.id}`}>
-                      {sources.map((s, i) => (
-                        <li key={i}>
-                          <a
-                            href={s.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center gap-1.5 text-[12px] underline decoration-dotted underline-offset-2 hover:decoration-solid"
-                            style={{ color: "var(--gmc-teal-deep)" }}
-                          >
-                            {s.label}
-                            <ExternalLink className="w-3 h-3" strokeWidth={2} />
-                          </a>
-                        </li>
-                      ))}
-                      {entry.source && (
-                        <li className="text-[11px] mt-1" style={{ color: "var(--gmc-muted)" }}>
-                          Cited passage: {entry.source}
-                        </li>
-                      )}
-                    </ul>
-                  ) : (
-                    <div className="text-[12px]" style={{ color: "var(--gmc-muted)" }}>
-                      {entry.source}
-                    </div>
-                  )}
+                <div className="mt-3.5 pt-3 border-t" style={{ borderColor: "var(--gmc-line)" }}>
+                  <SourceLink insurer={ins} citation={entry.source} />
                 </div>
               </>
             ) : (
@@ -140,8 +130,8 @@ export default function DetailModal({ feature, insurers, lookup, glossary, onClo
       <MobileSheet
         open={true}
         onClose={onClose}
-        eyebrow={feature.group}
-        title={feature.feature}
+        eyebrow={groupLabel(feature.group)}
+        title={featureTitle(feature, explanation).primary}
         titleIcon={<FeatureIcon name={feature.feature} size={20} />}
         testId="detail-sheet"
         footer={Footer}
@@ -166,15 +156,20 @@ export default function DetailModal({ feature, insurers, lookup, glossary, onClo
             className="text-[11px] font-bold uppercase tracking-[0.1em] mb-2"
             style={{ color: "var(--gmc-teal-mid)" }}
           >
-            {feature.group}
+            {groupLabel(feature.group)}
           </div>
           <DialogTitle
             className="text-2xl font-extrabold tracking-tight text-left flex items-center gap-2.5"
             style={{ color: "var(--gmc-ink)", fontFamily: "'Plus Jakarta Sans', sans-serif" }}
           >
             <FeatureIcon name={feature.feature} size={22} strokeWidth={2.2} />
-            <span>{feature.feature}</span>
+            <span>{featureTitle(feature, explanation).primary}</span>
           </DialogTitle>
+          {featureTitle(feature, explanation).secondary && (
+            <div className="text-[12.5px] font-semibold mt-1 text-left" style={{ color: "var(--gmc-muted)" }}>
+              Also called: {featureTitle(feature, explanation).secondary}
+            </div>
+          )}
           <DialogDescription className="text-sm mt-2 text-left" style={{ color: "var(--gmc-body)" }}>
             <GlossaryText tag="span" text={feature.definition} glossary={glossary} />
           </DialogDescription>

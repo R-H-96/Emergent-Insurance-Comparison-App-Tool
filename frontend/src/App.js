@@ -2,6 +2,7 @@ import "@/App.css";
 import { useEffect, useMemo, useState } from "react";
 import { toast, Toaster } from "sonner";
 import ComparePage from "@/pages/ComparePage";
+import ErrorBoundary from "@/components/ErrorBoundary";
 import data from "@/data/gmc_tool_data.json";
 import { pushEvent } from "@/lib/analytics";
 
@@ -53,7 +54,9 @@ function App() {
       data-embed={urlState.embed ? "1" : "0"}
       data-groups={urlState.groups.join(",") || undefined}
     >
-      <ComparePage embed={urlState.embed} initialGroups={initialGroups} />
+      <ErrorBoundary>
+        <ComparePage embed={urlState.embed} initialGroups={initialGroups} />
+      </ErrorBoundary>
       <Toaster position="top-center" richColors />
     </div>
   );

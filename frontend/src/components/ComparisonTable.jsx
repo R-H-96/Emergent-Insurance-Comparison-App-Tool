@@ -4,8 +4,12 @@ import { VerifiedIcon } from "@/components/VerifiedBadge";
 import GlossaryText from "@/components/GlossaryText";
 import InsurerMark from "@/components/InsurerMark";
 import InsurerLogo from "@/components/InsurerLogo";
+import SourceLink from "@/components/SourceLink";
 import FeatureIcon from "@/components/FeatureIcon";
+import WhyReveal from "@/components/WhyReveal";
+import MarkerInfo from "@/components/MarkerInfo";
 import { isNotableForSelection } from "@/lib/notable";
+import { groupLabel, featureTitle } from "@/lib/personalisation";
 import { pushEvent } from "@/lib/analytics";
 
 function hexToRgba(hex, alpha) {
@@ -18,8 +22,8 @@ function hexToRgba(hex, alpha) {
 const rowId = (name) => `row-${name.replace(/\s+/g, "-").toLowerCase()}`;
 
 export default function ComparisonTable({
-  insurers, features, data, glossary, diffOnly, activeGroups,
-  openGroups, flashFeature, onOpenFeature, onClearFilters,
+  insurers, features, data, glossary, activeGroups,
+  openGroups, flashFeature, explanation, onOpenFeature, onClearFilters,
 }) {
   const grouped = useMemo(() => {
     const g = new Map();
@@ -74,20 +78,15 @@ export default function ComparisonTable({
 
   const visibleGrouped = grouped
     .filter(([group]) => activeGroups.length === 0 ? true : activeGroups.includes(group))
-    .map(([group, feats]) => {
-      const visible = diffOnly
-        ? feats.filter((f) => isNotableForSelection(f, insurers, lookup))
-        : feats;
-      return [group, feats, visible];
-    })
+    .map(([group, feats]) => [group, feats, feats])
     .filter(([, , visible]) => visible.length > 0);
 
   if (!visibleGrouped.length) {
-    const hasFilters = diffOnly || activeGroups.length > 0;
+    const hasFilters = activeGroups.length > 0;
     return (
       <div className="gmc-card p-10 text-center" data-testid="comparison-empty">
         <p className="text-[14px] font-semibold" style={{ color: "var(--gmc-ink)" }}>
-          {hasFilters ? "No rows in this group for this pair." : "No features match your current filters."}
+          {hasFilters ? "Nothing in this section for this comparison." : "No features match your current filters."}
         </p>
         {hasFilters && (
           <button type="button" className="gmc-btn-outline gmc-tap mt-4" onClick={onClearFilters} data-testid="comparison-empty-clear">
@@ -130,8 +129,8 @@ export default function ComparisonTable({
                   </div>
                 </div>
               </div>
-              <div className="text-[11px] mt-1.5 leading-snug" style={{ color: "var(--gmc-muted)" }}>
-                {ins.version}
+              <div className="mt-1.5">
+                <SourceLink insurer={ins} />
               </div>
             </div>
           ))}
@@ -165,7 +164,7 @@ export default function ComparisonTable({
                       : <ChevronDown className="w-3.5 h-3.5" strokeWidth={2.5} />}
                   </div>
                   <span className="text-[13px] font-bold" style={{ color: "var(--gmc-ink)" }}>
-                    {group}
+                    {groupLabel(group)}
                   </span>
                   <span
                     className="inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-bold"
@@ -199,18 +198,42 @@ export default function ComparisonTable({
                     <div className="p-4">
                       <div className="flex items-center gap-2 font-bold text-[14px] leading-snug" style={{ color: "var(--gmc-ink)" }}>
                         <FeatureIcon name={f.feature} size={18} />
-                        <span>{f.feature}</span>
+                        <span>
+                          {featureTitle(f, explanation).primary}
+                          {featureTitle(f, explanation).secondary && (
+                            <span
+                              className="block text-[11px] font-semibold mt-0.5"
+                              style={{ color: "var(--gmc-muted)" }}
+                            >
+                              {featureTitle(f, explanation).secondary}
+                            </span>
+                          )}
+                        </span>
                         {isNotablePair && (
-                          <span
-                            className="inline-flex items-center justify-center w-5 h-5 rounded-full flex-shrink-0"
-                            style={{ background: "var(--gmc-teal)", color: "white" }}
-                            title="Notable difference"
+                          <MarkerInfo
+                            title="These policies differ here"
+                            label="The insurers you're comparing say meaningfully different things on this line. Rows without this marker are broadly in agreement."
                           >
-                            <Sparkles className="w-2.5 h-2.5" strokeWidth={2.5} />
-                          </span>
+                            <span
+                              className="inline-flex items-center justify-center w-5 h-5 rounded-full flex-shrink-0"
+                              style={{ background: "var(--gmc-teal)", color: "white" }}
+                            >
+                              <Sparkles className="w-2.5 h-2.5" strokeWidth={2.5} />
+                            </span>
+                          </MarkerInfo>
                         )}
                       </div>
                       <GlossaryText tag="div" text={f.definition} glossary={glossary} className="text-[12px] mt-1 leading-relaxed" />
+                      {f.why && (
+                        <div onClick={(e) => e.stopPropagation()}>
+                          <WhyReveal
+                            why={f.why}
+                            glossary={glossary}
+                            inline={false}
+                            testId={`why-desktop-${f.feature.replace(/\s+/g, "-").toLowerCase()}`}
+                          />
+                        </div>
+                      )}
                     </div>
                     {insurers.map((ins, i) => {
                       const entry = lookup[ins.id]?.[f.feature];
@@ -266,7 +289,7 @@ export default function ComparisonTable({
                     : <ChevronDown className="w-3.5 h-3.5" strokeWidth={2.5} />}
                 </div>
                 <span className="text-[14px] font-bold" style={{ color: "var(--gmc-ink)" }}>
-                  {group}
+                  {groupLabel(group)}
                 </span>
                 <span
                   className="ml-auto inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-bold"
@@ -295,18 +318,42 @@ export default function ComparisonTable({
                   >
                     <div className="flex items-center gap-2 font-bold text-[16px]" style={{ color: "var(--gmc-ink)" }}>
                       <FeatureIcon name={f.feature} size={18} />
-                      <span>{f.feature}</span>
+                      <span>
+                        {featureTitle(f, explanation).primary}
+                        {featureTitle(f, explanation).secondary && (
+                          <span
+                            className="block text-[12px] font-semibold mt-0.5"
+                            style={{ color: "var(--gmc-muted)" }}
+                          >
+                            {featureTitle(f, explanation).secondary}
+                          </span>
+                        )}
+                      </span>
                       {isNotablePair && (
-                        <span
-                          className="inline-flex items-center justify-center w-5 h-5 rounded-full flex-shrink-0"
-                          style={{ background: "var(--gmc-teal)", color: "white" }}
-                          title="Notable difference"
+                        <MarkerInfo
+                          title="These policies differ here"
+                          label="The insurers you're comparing say meaningfully different things on this line. Rows without this marker are broadly in agreement."
                         >
-                          <Sparkles className="w-2.5 h-2.5" strokeWidth={2.5} />
-                        </span>
+                          <span
+                            className="inline-flex items-center justify-center w-5 h-5 rounded-full flex-shrink-0"
+                            style={{ background: "var(--gmc-teal)", color: "white" }}
+                          >
+                            <Sparkles className="w-2.5 h-2.5" strokeWidth={2.5} />
+                          </span>
+                        </MarkerInfo>
                       )}
                     </div>
                     <GlossaryText tag="div" text={f.definition} glossary={glossary} className="text-[13.5px] mt-1 leading-relaxed" />
+                    {f.why && (
+                      <div onClick={(e) => e.stopPropagation()}>
+                        <WhyReveal
+                          why={f.why}
+                          glossary={glossary}
+                          inline={!!explanation?.whyInline}
+                          testId={`why-mobile-${f.feature.replace(/\s+/g, "-").toLowerCase()}`}
+                        />
+                      </div>
+                    )}
                     <div className="mt-3 space-y-2">
                       {insurers.map((ins) => {
                         const entry = lookup[ins.id]?.[f.feature];

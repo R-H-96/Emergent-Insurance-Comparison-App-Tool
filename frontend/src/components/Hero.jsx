@@ -1,7 +1,43 @@
 import CTA from "@/components/CTA";
 import TrustStrip from "@/components/TrustStrip";
 
-export default function Hero() {
+/**
+ * Two states.
+ *
+ * Full: the marketing hero, for anyone arriving cold.
+ *
+ * Compact: shown once someone has been through the intake. The full hero tells
+ * the reader to "pick two or three insurers" — which they just did, four
+ * questions ago — and then costs them a full screen of scrolling before they
+ * reach their own answer. After the intake the page's job is to show the
+ * comparison, not to re-pitch the tool.
+ */
+export default function Hero({ compact = false }) {
+  if (compact) {
+    return (
+      <section className="pt-6 pb-2" id="compare" data-testid="hero-compact">
+        <div className="gmc-container">
+          <div className="flex items-center justify-between gap-4 flex-wrap">
+            <div>
+              <div className="gmc-eyebrow" style={{ color: "var(--gmc-teal)" }}>
+                NZ health insurance · side-by-side
+              </div>
+              <h1
+                className="gmc-h1 text-2xl sm:text-3xl mt-1"
+                style={{ color: "var(--gmc-ink)" }}
+              >
+                Your comparison
+              </h1>
+            </div>
+            <div className="hidden sm:block">
+              <CTA compact data-testid="hero-cta" />
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section
       className="pt-10 sm:pt-16 pb-8 sm:pb-12"

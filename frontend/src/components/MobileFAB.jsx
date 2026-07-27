@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
-import { MessageCircleQuestion, Users, ArrowRight } from "lucide-react";
+import { MessageCircleQuestion, Users } from "lucide-react";
 import MobileSheet from "@/components/MobileSheet";
 import { AskPanelBody } from "@/components/AskPanel";
 import ProductTypeSelector from "@/components/ProductTypeSelector";
@@ -10,7 +10,7 @@ import FilterChips from "@/components/FilterChips";
 /**
  * Mobile-only floating action button (below xl breakpoint).
  * Combines Ask + Compare into a single bottom sheet with two tabs.
- * Replaces AskCompact and MobileBottomBar on mobile.
+ * Replaces the old compact ask bar and bottom bar on mobile.
  *
  * Tab bar lives in MobileSheet's headerExtra slot (non-scrollable) so the
  * drag handle above it always works for swipe-to-dismiss, and the body
@@ -34,8 +34,6 @@ export default function MobileFAB({
   activeGroups,
   onToggleGroup,
   onClearGroups,
-  diffOnly,
-  onDiffOnlyChange,
   notableCount,
   // Control
   hidden = false,
@@ -110,7 +108,7 @@ export default function MobileFAB({
         {!hidden && !sheetOpen && (
           <motion.button
             type="button"
-            className="fixed z-[60] xl:hidden flex items-center justify-center w-14 h-14 rounded-full"
+            className="fixed z-[60] xl:hidden print:hidden flex items-center justify-center w-14 h-14 rounded-full"
             style={{
               right: 16,
               bottom: "calc(env(safe-area-inset-bottom, 0px) + 20px)",
@@ -141,6 +139,7 @@ export default function MobileFAB({
         testId="fab-sheet"
         headerExtra={TabBar}
         scrollKey={activeTab}
+        maxHeight={activeTab === "compare" ? "min(74dvh, 620px)" : undefined}
         footer={
           activeTab === "compare" ? (
             <div className="p-4">
@@ -171,15 +170,16 @@ export default function MobileFAB({
 
         {/* Compare tab */}
         {activeTab === "compare" && (
-          <div className="p-4 space-y-5 pb-4">
+          <div className="p-4 space-y-4 pb-2">
             <ProductTypeSelector value={productType} onChange={onProductType} />
             <InsurerPicker
               insurers={allInsurers}
               selected={insurers.map((i) => i.id)}
               onToggle={onToggleInsurer}
+              compact
             />
             <div>
-              <div className="gmc-eyebrow mb-2">Filter by group</div>
+              <div className="gmc-eyebrow mb-2">Jump to a section</div>
               <FilterChips
                 groups={groups}
                 activeGroups={activeGroups}
@@ -187,53 +187,6 @@ export default function MobileFAB({
                 onClear={onClearGroups}
                 filled
               />
-            </div>
-            <div
-              className="flex items-center justify-between p-3.5 rounded-[var(--gmc-r-ctl)]"
-              style={{ background: "var(--gmc-bg-alt)" }}
-            >
-              <div>
-                <div
-                  className="text-[14px] font-bold"
-                  style={{ color: "var(--gmc-ink)" }}
-                >
-                  Notable differences only
-                </div>
-                <div className="text-[12px]" style={{ color: "var(--gmc-muted)" }}>
-                  {notableCount} for this selection
-                </div>
-              </div>
-              <button
-                type="button"
-                className="gmc-toggle gmc-tap"
-                aria-pressed={diffOnly}
-                onClick={() => onDiffOnlyChange(!diffOnly)}
-                data-testid="fab-diff-toggle"
-                aria-label="Toggle notable differences only"
-              />
-            </div>
-            <div
-              className="rounded-[var(--gmc-r-ctl)] p-4 text-center"
-              style={{
-                background: "var(--gmc-teal-tint)",
-                border: "1px solid var(--gmc-line)",
-              }}
-            >
-              <div
-                className="text-[13px] font-bold mb-3"
-                style={{ color: "var(--gmc-ink)" }}
-              >
-                Not sure what you need?
-              </div>
-              <button
-                type="button"
-                className="gmc-tap w-full flex items-center justify-center gap-2 rounded-[var(--gmc-r-ctl)] py-3 font-bold text-[14px] text-white gmc-quote-trigger"
-                style={{ background: "var(--gmc-grad-button)" }}
-                data-testid="fab-adviser-cta"
-              >
-                Talk to an adviser — free
-                <ArrowRight className="w-4 h-4" strokeWidth={2.5} />
-              </button>
             </div>
           </div>
         )}

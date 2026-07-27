@@ -1,32 +1,34 @@
 import { useState } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
-import { Sparkles, Target, Activity, Layers } from "lucide-react";
+import { Sparkles, Target, Activity, Layers, ChevronDown, ChevronRight } from "lucide-react";
 import InsurerRadar from "@/components/InsurerRadar";
 import CareJourney from "@/components/CareJourney";
-import DiffReel from "@/components/DiffReel";
+import DifferencesPanel from "@/components/DifferencesPanel";
 import { isNotableForSelection } from "@/lib/notable";
 
-const SLIDES = [
-  { key: "radar", label: "Overview", Icon: Target },
-  { key: "journey", label: "Journey", Icon: Activity },
-  { key: "diff", label: "Differences", Icon: Layers },
-];
-
 /**
- * At-a-glance surface.
+ * Rung 1 of the disclosure ladder — "All differences".
  *
- * Mobile: tabbed carousel — three pill tabs (Overview / Journey / Differences)
- * using the same visual language as the density segmented control. Content
- * crossfades with a directional x-slide matching navigation direction.
+ * Which panels appear depends on how much insurance knowledge the reader told
+ * us they have (see explanationMode in lib/personalisation):
+ *   new      — the prose diff reel only. A six-axis radar is an abstraction on
+ *              top of an abstraction for someone still learning the words.
+ *   some     — journey timeline + diff reel.
+ *   informed — everything, including the radar.
  *
- * Desktop (sm+): original vertical stack unchanged.
+ * Mobile shows whichever panels are enabled as a tabbed carousel; desktop
+ * stacks them.
  */
+const DEFAULT_EXPLANATION = { showRadar: true, showJourney: true };
+
 export default function AtAGlance({
   features,
   insurers,
   lookup,
   glossary,
   notableCount,
+  explanation = DEFAULT_EXPLANATION,
+  highlightGroups = [],
   onOpen,
   onOpenGroup,
 }) {
@@ -37,77 +39,109 @@ export default function AtAGlance({
 
   if (!insurers.length) return null;
 
+  // Hiding the chart outright from beginners was too blunt — it's offered,
+  // just folded away so it can't be the first thing that greets them.
+  const radarOpenByDefault = explanation?.showRadar !== false;
+  const showRadar = true;
+  const showJourney = explanation?.showJourney !== false;
+
+  const panels = [];
+  if (showRadar) {
+    panels.push({
+      key: "radar",
+      label: "Overview",
+      Icon: Target,
+      collapsible: !radarOpenByDefault,
+      node: (
+        <InsurerRadar
+          insurers={insurers}
+          features={features}
+          lookup={lookup}
+          glossary={glossary}
+          highlightGroups={highlightGroups}
+          onOpenTheme={onOpenGroup}
+          onOpenFeature={onOpen}
+        />
+      ),
+    });
+  }
+  if (showJourney) {
+    panels.push({
+      key: "journey",
+      label: "Journey",
+      Icon: Activity,
+      node: <CareJourney insurers={insurers} lookup={lookup} onOpen={onOpen} />,
+    });
+  }
+  panels.push({
+    key: "diff",
+    label: "Differences",
+    Icon: Layers,
+    node: (
+      <DifferencesPanel
+        features={features}
+        insurers={insurers}
+        lookup={lookup}
+        glossary={glossary}
+        explanation={explanation}
+        onOpen={onOpen}
+      />
+    ),
+  });
+
   const goToSlide = (i) => {
     setDirection(i > activeSlide ? 1 : -1);
     setActiveSlide(i);
   };
-
-  const slideComponents = [
-    <InsurerRadar key="radar" insurers={insurers} onOpenTheme={onOpenGroup} />,
-    <CareJourney key="journey" insurers={insurers} lookup={lookup} />,
-    <DiffReel
-      key="diff"
-      features={notable}
-      insurers={insurers}
-      lookup={lookup}
-      glossary={glossary}
-      onOpen={onOpen}
-    />,
-  ];
+  const safeSlide = Math.min(activeSlide, panels.length - 1);
 
   return (
     <section className="pb-4 sm:pb-14" id="at-a-glance" data-testid="at-a-glance">
-      <div className="gmc-container">
-        <div className="flex items-baseline gap-3 mb-1 flex-wrap">
-          <Sparkles
-            className="w-4 h-4"
-            strokeWidth={2.2}
-            style={{ color: "var(--gmc-teal)" }}
-          />
-          <div className="gmc-eyebrow">At a glance</div>
-          <span
-            className="gmc-badge-verified"
-            style={{ background: "var(--gmc-teal-tint-2)", color: "var(--gmc-teal-deep)" }}
-            data-testid="notable-count-chip"
-          >
-            {notableCount} notable difference{notableCount === 1 ? "" : "s"} found
-          </span>
-        </div>
-        <h2 className="gmc-h2 text-2xl sm:text-3xl mb-4 sm:mb-6">
-          How these policies really compare
-        </h2>
+      <div className="flex items-baseline gap-3 mb-1 flex-wrap">
+        <Sparkles className="w-4 h-4" strokeWidth={2.2} style={{ color: "var(--gmc-teal)" }} />
+        <div className="gmc-eyebrow">Where these policies differ</div>
+        <span
+          className="gmc-badge-verified"
+          style={{ background: "var(--gmc-teal-tint-2)", color: "var(--gmc-teal-deep)" }}
+          data-testid="notable-count-chip"
+        >
+          {notableCount} notable difference{notableCount === 1 ? "" : "s"} found
+        </span>
+      </div>
+      <h2 className="gmc-h2 text-2xl sm:text-3xl mb-4 sm:mb-6">
+        How these policies really compare
+      </h2>
 
-        {notable.length === 0 ? (
-          <div className="gmc-card p-6 sm:p-8 text-center" data-testid="at-a-glance-empty">
-            <p className="text-[14px]" style={{ color: "var(--gmc-body)" }}>
-              These policies agree on the notable points for this selection — switch an insurer to
-              surface the interesting differences.
-            </p>
-          </div>
-        ) : (
-          <>
-            {/* ── Mobile: tabbed carousel ───────────────────────── */}
-            <div className="sm:hidden">
+      {notable.length === 0 ? (
+        <div className="gmc-card p-6 sm:p-8 text-center" data-testid="at-a-glance-empty">
+          <p className="text-[14px]" style={{ color: "var(--gmc-body)" }}>
+            These policies agree on the notable points for this selection — switch an
+            insurer to surface the interesting differences.
+          </p>
+        </div>
+      ) : (
+        <>
+          {/* Mobile: tabbed carousel (only if there's more than one panel) */}
+          <div className="sm:hidden">
+            {panels.length > 1 && (
               <div
                 role="tablist"
-                aria-label="At a glance sections"
+                aria-label="Difference views"
                 className="flex p-1 rounded-full bg-white border shadow-[0_2px_10px_rgba(22,28,39,0.04)] mb-4"
                 style={{ borderColor: "var(--gmc-line)" }}
               >
-                {SLIDES.map((s, i) => (
+                {panels.map((s, i) => (
                   <button
                     key={s.key}
                     type="button"
                     role="tab"
-                    aria-selected={activeSlide === i}
+                    aria-selected={safeSlide === i}
                     onClick={() => goToSlide(i)}
                     className="gmc-tap flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-full text-[12px] font-bold transition-all"
                     style={{
-                      background: activeSlide === i ? "var(--gmc-teal)" : "transparent",
-                      color: activeSlide === i ? "white" : "var(--gmc-body)",
-                      boxShadow: activeSlide === i
-                        ? "0 4px 14px rgba(20,181,175,0.28)"
-                        : "none",
+                      background: safeSlide === i ? "var(--gmc-teal)" : "transparent",
+                      color: safeSlide === i ? "white" : "var(--gmc-body)",
+                      boxShadow: safeSlide === i ? "0 4px 14px rgba(20,181,175,0.28)" : "none",
                     }}
                     data-testid={`glance-tab-${s.key}`}
                   >
@@ -118,10 +152,8 @@ export default function AtAGlance({
                         className="ml-0.5 px-1.5 rounded-full text-[10px] font-extrabold"
                         style={{
                           background:
-                            activeSlide === i
-                              ? "rgba(255,255,255,0.22)"
-                              : "var(--gmc-teal-tint-2)",
-                          color: activeSlide === i ? "white" : "var(--gmc-teal-deep)",
+                            safeSlide === i ? "rgba(255,255,255,0.22)" : "var(--gmc-teal-tint-2)",
+                          color: safeSlide === i ? "white" : "var(--gmc-teal-deep)",
                         }}
                       >
                         {notableCount}
@@ -130,37 +162,64 @@ export default function AtAGlance({
                   </button>
                 ))}
               </div>
+            )}
 
-              <div style={{ overflow: "hidden" }}>
-                <AnimatePresence mode="wait" initial={false}>
-                  <motion.div
-                    key={activeSlide}
-                    initial={reduce ? false : { opacity: 0, x: direction * 24 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={reduce ? { opacity: 0 } : { opacity: 0, x: direction * -24 }}
-                    transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
-                  >
-                    {slideComponents[activeSlide]}
-                  </motion.div>
-                </AnimatePresence>
-              </div>
+            <div style={{ overflow: "hidden" }}>
+              <AnimatePresence mode="wait" initial={false}>
+                <motion.div
+                  key={safeSlide}
+                  initial={reduce ? false : { opacity: 0, x: direction * 24 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={reduce ? { opacity: 0 } : { opacity: 0, x: direction * -24 }}
+                  transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+                >
+                  {panels[safeSlide]?.node}
+                </motion.div>
+              </AnimatePresence>
             </div>
+          </div>
 
-            {/* ── Desktop: vertical stack (unchanged) ─────────── */}
-            <div className="hidden sm:block space-y-5">
-              <InsurerRadar insurers={insurers} onOpenTheme={onOpenGroup} />
-              <CareJourney insurers={insurers} lookup={lookup} />
-              <DiffReel
-                features={notable}
-                insurers={insurers}
-                lookup={lookup}
-                glossary={glossary}
-                onOpen={onOpen}
-              />
-            </div>
-          </>
-        )}
-      </div>
+          {/* Desktop: vertical stack */}
+          <div className="hidden sm:block space-y-5">
+            {panels.map((p) =>
+              p.collapsible ? (
+                <CollapsedPanel key={p.key} label="Coverage profile chart">
+                  {p.node}
+                </CollapsedPanel>
+              ) : (
+                <div key={p.key}>{p.node}</div>
+              ),
+            )}
+          </div>
+        </>
+      )}
     </section>
+  );
+}
+
+function CollapsedPanel({ label, children }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div>
+      <button
+        type="button"
+        onClick={() => setOpen((o) => !o)}
+        aria-expanded={open}
+        className="gmc-tap w-full flex items-center gap-2 px-4 py-3 rounded-[var(--gmc-r-ctl)] text-left transition-colors hover:bg-[color:var(--gmc-teal-tint)]"
+        style={{ background: "var(--gmc-bg-alt)", border: "1px solid var(--gmc-line)" }}
+        data-testid="collapsed-panel-toggle"
+      >
+        {open
+          ? <ChevronDown className="w-4 h-4 flex-shrink-0" strokeWidth={2.5} style={{ color: "var(--gmc-teal-deep)" }} />
+          : <ChevronRight className="w-4 h-4 flex-shrink-0" strokeWidth={2.5} style={{ color: "var(--gmc-teal-deep)" }} />}
+        <span className="text-[13px] font-bold" style={{ color: "var(--gmc-ink)" }}>
+          {open ? "Hide" : "Show"} the {label.toLowerCase()}
+        </span>
+        <span className="text-[12px] ml-auto" style={{ color: "var(--gmc-muted)" }}>
+          A visual summary — more detail than most people need
+        </span>
+      </button>
+      {open && <div className="mt-4">{children}</div>}
+    </div>
   );
 }

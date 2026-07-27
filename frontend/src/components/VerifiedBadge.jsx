@@ -1,42 +1,48 @@
 import { Check, Clock } from "lucide-react";
+import MarkerInfo from "@/components/MarkerInfo";
+import { isVerified, ASSUME_VERIFIED } from "@/lib/config";
 
 /** Small icon-only verified/pending indicator for table cells. */
 export function VerifiedIcon({ verified }) {
-  const isVerified =
-    typeof verified === "string" &&
-    (verified === "verified" || verified.startsWith("verified"));
-  if (isVerified) {
+  if (isVerified(verified)) {
+    const when =
+      !ASSUME_VERIFIED && typeof verified === "string"
+        ? verified.split(" ").slice(1).join(" ")
+        : "";
     return (
-      <span
-        className="inline-flex items-center justify-center w-[18px] h-[18px] rounded-full flex-shrink-0"
-        style={{ background: "var(--gmc-teal-tint-2)", color: "var(--gmc-teal-deep)" }}
-        title="Verified"
-        aria-label="Verified"
-        data-testid="verified-icon"
+      <MarkerInfo
+        title="Checked against the policy"
+        label={`Someone has read this value in the insurer's own policy document and confirmed it${when ? ` (${when})` : ""}. Open the row to see the exact wording and a link to the source.`}
       >
-        <Check className="w-[11px] h-[11px]" strokeWidth={3} />
-      </span>
+        <span
+          className="inline-flex items-center justify-center w-[18px] h-[18px] rounded-full flex-shrink-0"
+          style={{ background: "var(--gmc-teal-tint-2)", color: "var(--gmc-teal-deep)" }}
+          data-testid="verified-icon"
+        >
+          <Check className="w-[11px] h-[11px]" strokeWidth={3} />
+        </span>
+      </MarkerInfo>
     );
   }
   return (
-    <span
-      className="inline-flex items-center justify-center w-[18px] h-[18px] rounded-full flex-shrink-0"
-      style={{ background: "var(--gmc-bg-soft)", color: "var(--gmc-faint)" }}
-      title="Pending verification"
-      aria-label="Pending verification"
-      data-testid="pending-icon"
+    <MarkerInfo
+      title="Still being checked"
+      label="We've taken this from the insurer's policy document but haven't finished double-checking it. Confirm anything important against the source document before you rely on it."
     >
-      <Clock className="w-[10px] h-[10px]" strokeWidth={2.5} />
-    </span>
+      <span
+        className="inline-flex items-center justify-center w-[18px] h-[18px] rounded-full flex-shrink-0"
+        style={{ background: "var(--gmc-bg-soft)", color: "var(--gmc-faint)" }}
+        data-testid="pending-icon"
+      >
+        <Clock className="w-[10px] h-[10px]" strokeWidth={2.5} />
+      </span>
+    </MarkerInfo>
   );
 }
 
 /** Full pill badge used in the detail modal. */
 export function VerifiedBadge({ verified }) {
-  const isVerified =
-    typeof verified === "string" &&
-    (verified === "verified" || verified.startsWith("verified"));
-  if (isVerified) {
+  if (isVerified(verified)) {
     const date = verified.split(" ").slice(1).join(" ");
     return (
       <span className="gmc-badge-verified" data-testid="badge-verified">

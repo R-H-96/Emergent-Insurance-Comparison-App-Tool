@@ -1,4 +1,5 @@
 import { BAND_META } from "@/data/glanceModel";
+import MarkerInfo from "@/components/MarkerInfo";
 
 /**
  * Shared factual band pill. Describes the size of a stated limit
@@ -8,12 +9,18 @@ export default function TierBadge({ band, className = "" }) {
   const meta = BAND_META[band];
   if (!meta) return null;
   return (
-    <span
-      className={`inline-block rounded-full px-2 py-0.5 text-[10.5px] font-bold ${className}`}
-      style={{ background: meta.fill, color: meta.text }}
-      data-testid={`tier-badge-${band}`}
+    <MarkerInfo
+      title={`${meta.label} stated limits`}
+      label="Describes how large this policy's stated limits are in this area, measured against its own other areas — not against the other insurers, and not a judgement of which policy is better for you."
+      className={className}
     >
-      {meta.label}
-    </span>
+      <span
+        className="inline-block rounded-full px-2 py-0.5 text-[10.5px] font-bold"
+        style={{ background: meta.fill, color: meta.text }}
+        data-testid={`tier-badge-${band}`}
+      >
+        {meta.label}
+      </span>
+    </MarkerInfo>
   );
 }

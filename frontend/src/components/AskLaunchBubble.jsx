@@ -4,7 +4,7 @@ import useMediaQuery from "@/hooks/useMediaQuery";
 /**
  * Classic bottom-right chat bubble launcher for the Ask panel.
  * Desktop-only (>=1200px) — mobile users get the Ask button on the
- * MobileBottomBar and the compact ask bar above the comparison surface.
+ * the mobile floating action button instead.
  *
  * Uses the brand accent gradient. Sits above z-index of sheets/popovers.
  */
@@ -17,7 +17,7 @@ export default function AskLaunchBubble({ open, onToggle, hidden = false }) {
       onClick={onToggle}
       aria-label={open ? "Close ask panel" : "Ask a question"}
       aria-expanded={open}
-      className="fixed bottom-6 right-6 z-[70] gmc-tap flex items-center justify-center rounded-full transition-all duration-200 ease-out hover:scale-105 focus:scale-105 active:scale-95"
+      className="fixed bottom-6 right-6 z-[70] print:hidden gmc-tap flex items-center justify-center rounded-full transition-all duration-200 ease-out hover:scale-105 focus:scale-105 active:scale-95"
       style={{
         width: 56,
         height: 56,
