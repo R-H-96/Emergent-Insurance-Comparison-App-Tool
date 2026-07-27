@@ -25,7 +25,7 @@ export default function CareJourney({ insurers, lookup, onOpen }) {
         >
           Across your health journey
         </div>
-        <div className="text-[12.5px] mt-0.5" style={{ color: "var(--gmc-muted)" }}>
+        <div className="text-[13.5px] sm:text-[12.5px] mt-0.5" style={{ color: "var(--gmc-muted)" }}>
           Who holds the largest stated limit at each step, from everyday care to staying
           covered. Tap any step to see what all three policies say.
         </div>
@@ -77,7 +77,7 @@ export default function CareJourney({ insurers, lookup, onOpen }) {
               {/* Content column */}
               <div className={`flex-1 pt-1.5 ${isLast ? "" : "pb-4"}`}>
                 <div
-                  className="flex items-center gap-1 text-[14px] font-extrabold mb-1.5"
+                  className="flex items-center gap-1 text-[15px] sm:text-[14px] font-extrabold mb-1.5"
                   style={{ color: "var(--gmc-ink)" }}
                 >
                   <span>{stage.label}</span>
@@ -92,7 +92,7 @@ export default function CareJourney({ insurers, lookup, onOpen }) {
                 </div>
                 {tied ? (
                   <span
-                    className="inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-semibold"
+                    className="inline-flex items-center rounded-full px-2 py-0.5 text-[12px] sm:text-[11px] font-semibold"
                     style={{ background: "var(--gmc-bg-alt)", color: "var(--gmc-faint)" }}
                   >
                     Comparable
@@ -104,10 +104,10 @@ export default function CareJourney({ insurers, lookup, onOpen }) {
                         <InsurerMark key={ins.id} insurer={ins} size={22} />
                       ))}
                     </div>
-                    <TierBadge band={band} className="text-[12px] px-2.5 py-0.5" />
+                    <TierBadge band={band} className="text-[13px] sm:text-[12px] px-2.5 py-0.5" />
                     {leadValue && (
                       <span
-                        className="text-[12px] leading-snug"
+                        className="text-[13px] sm:text-[12px] leading-snug"
                         style={{ color: "var(--gmc-body)" }}
                       >
                         {leadValue}
@@ -155,7 +155,7 @@ export default function CareJourney({ insurers, lookup, onOpen }) {
                   <Icon className="w-5 h-5" strokeWidth={2.2} style={{ color: "var(--gmc-teal-deep)" }} />
                 </div>
                 <div
-                  className="flex items-center justify-center gap-1 text-[14px] font-extrabold mb-2 tracking-tight"
+                  className="flex items-center justify-center gap-1 text-[15px] sm:text-[14px] font-extrabold mb-2 tracking-tight"
                   style={{ color: "var(--gmc-ink)" }}
                 >
                   <span>{stage.label}</span>
@@ -170,7 +170,7 @@ export default function CareJourney({ insurers, lookup, onOpen }) {
                 </div>
                 {tied ? (
                   <span
-                    className="inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-semibold"
+                    className="inline-flex items-center rounded-full px-2 py-0.5 text-[12px] sm:text-[11px] font-semibold"
                     style={{ background: "var(--gmc-bg-alt)", color: "var(--gmc-faint)" }}
                   >
                     Comparable
@@ -182,10 +182,10 @@ export default function CareJourney({ insurers, lookup, onOpen }) {
                         <InsurerMark key={ins.id} insurer={ins} size={24} />
                       ))}
                     </div>
-                    <TierBadge band={band} className="text-[12.5px] px-3 py-1" />
+                    <TierBadge band={band} className="text-[13.5px] sm:text-[12.5px] px-3 py-1" />
                     {leadValue && (
                       <div
-                        className="text-[12px] leading-snug mt-0.5 px-1"
+                        className="text-[13px] sm:text-[12px] leading-snug mt-0.5 px-1"
                         style={{ color: "var(--gmc-body)" }}
                       >
                         {leadValue}
@@ -204,13 +204,13 @@ export default function CareJourney({ insurers, lookup, onOpen }) {
         style={{ borderColor: "var(--gmc-line)" }}
       >
         <span
-          className="text-[11.5px] font-bold uppercase tracking-[0.08em]"
+          className="text-[12.5px] sm:text-[11.5px] font-bold uppercase tracking-[0.08em]"
           style={{ color: "var(--gmc-muted)" }}
         >
           Limit size
         </span>
         {[1, 2, 3].map((b) => (
-          <span key={b} className="flex items-center gap-1.5 text-[12px]" style={{ color: "var(--gmc-body)" }}>
+          <span key={b} className="flex items-center gap-1.5 text-[13px] sm:text-[12px]" style={{ color: "var(--gmc-body)" }}>
             <span
               className="inline-block w-3.5 h-3.5 rounded-sm flex-shrink-0"
               style={{ background: BAND_META[b].fill }}
@@ -220,7 +220,7 @@ export default function CareJourney({ insurers, lookup, onOpen }) {
         ))}
       </div>
 
-      <p className="mt-3 text-[11px] leading-relaxed italic" style={{ color: "var(--gmc-faint)" }}>
+      <p className="mt-3 text-[12px] sm:text-[11px] leading-relaxed italic" style={{ color: "var(--gmc-faint)" }}>
 &ldquo;Largest limit&rdquo; reflects the stated wording for that area only, it doesn&apos;t account for excess,
         price, or your own health needs.
       </p>

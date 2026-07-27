@@ -45,7 +45,7 @@ export default function WhyReveal({
         tag="div"
         text={why}
         glossary={glossary}
-        className="text-[12.5px] leading-relaxed"
+        className="text-[13.5px] sm:text-[12.5px] leading-relaxed"
       />
     </div>
   );
@@ -63,7 +63,7 @@ export default function WhyReveal({
           setOpen((o) => !o);
         }}
         aria-expanded={open}
-        className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11.5px] font-bold transition-colors"
+        className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[12.5px] sm:text-[11.5px] font-bold transition-colors"
         style={{
           border: "1px solid var(--gmc-line)",
           background: open ? "var(--gmc-teal-tint)" : "white",

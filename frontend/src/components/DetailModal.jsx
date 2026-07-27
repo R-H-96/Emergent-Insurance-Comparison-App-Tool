@@ -71,7 +71,7 @@ export default function DetailModal({ feature, insurers, lookup, glossary, expla
                     {ins.name}
                   </div>
                   <div
-                    className="text-[12px] font-semibold mt-0.5"
+                    className="text-[13px] sm:text-[12px] font-semibold mt-0.5"
                     style={{ color: "var(--gmc-muted)" }}
                   >
                     {ins.product}
@@ -84,7 +84,7 @@ export default function DetailModal({ feature, insurers, lookup, glossary, expla
             {entry ? (
               <>
                 <div
-                  className="mt-3 rounded-[10px] px-3 py-2.5 inline-block text-[14px] font-semibold"
+                  className="mt-3 rounded-[10px] px-3 py-2.5 inline-block text-[15px] sm:text-[14px] font-semibold"
                   style={{ background: "var(--gmc-teal-tint)", color: "var(--gmc-teal-deep)" }}
                 >
                   <GlossaryText text={entry.short} glossary={glossary} />
@@ -93,7 +93,7 @@ export default function DetailModal({ feature, insurers, lookup, glossary, expla
                 {points.length > 0 && (
                   <ul className="mt-3 space-y-1.5 list-disc pl-5" data-testid={`detail-points-${ins.id}`}>
                     {points.map((p, i) => (
-                      <li key={i} className="text-[14px] leading-relaxed" style={{ color: "var(--gmc-ink-2)" }}>
+                      <li key={i} className="text-[15px] sm:text-[14px] leading-relaxed" style={{ color: "var(--gmc-ink-2)" }}>
                         <GlossaryText text={p} glossary={glossary} />
                       </li>
                     ))}
@@ -105,7 +105,7 @@ export default function DetailModal({ feature, insurers, lookup, glossary, expla
                 </div>
               </>
             ) : (
-<p className="mt-4 text-[14px]" style={{ color: "var(--gmc-faint)" }}>Not recorded</p>
+<p className="mt-4 text-[15px] sm:text-[14px]" style={{ color: "var(--gmc-faint)" }}>Not recorded</p>
             )}
           </div>
         );
@@ -118,7 +118,7 @@ export default function DetailModal({ feature, insurers, lookup, glossary, expla
       className="p-5 sm:p-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3"
       style={{ background: "var(--gmc-bg-alt)" }}
     >
-      <p className="text-[13px] leading-relaxed max-w-md" style={{ color: "var(--gmc-body)" }}>
+      <p className="text-[14px] sm:text-[13px] leading-relaxed max-w-md" style={{ color: "var(--gmc-body)" }}>
 Not sure how this applies to you? Ask an adviser, free.
       </p>
 <CTA label="Ask an adviser, free" data-testid="detail-modal-cta" />
@@ -137,7 +137,7 @@ Not sure how this applies to you? Ask an adviser, free.
         footer={Footer}
         scrollKey={feature.feature}
       >
-        <div className="px-5 pt-4 pb-2 text-[13px]" style={{ color: "var(--gmc-body)" }}>
+        <div className="px-5 pt-4 pb-2 text-[14px] sm:text-[13px]" style={{ color: "var(--gmc-body)" }}>
           <GlossaryText tag="span" text={feature.definition} glossary={glossary} />
         </div>
         {Body}
@@ -153,7 +153,7 @@ Not sure how this applies to you? Ask an adviser, free.
       >
         <DialogHeader className="p-6 sm:p-8 pb-4 border-b" style={{ borderColor: "var(--gmc-line)" }}>
           <div
-            className="text-[11px] font-bold uppercase tracking-[0.1em] mb-2"
+            className="text-[12px] sm:text-[11px] font-bold uppercase tracking-[0.1em] mb-2"
             style={{ color: "var(--gmc-teal-mid)" }}
           >
             {groupLabel(feature.group)}
@@ -166,7 +166,7 @@ Not sure how this applies to you? Ask an adviser, free.
             <span>{featureTitle(feature, explanation).primary}</span>
           </DialogTitle>
           {featureTitle(feature, explanation).secondary && (
-            <div className="text-[12.5px] font-semibold mt-1 text-left" style={{ color: "var(--gmc-muted)" }}>
+            <div className="text-[13.5px] sm:text-[12.5px] font-semibold mt-1 text-left" style={{ color: "var(--gmc-muted)" }}>
               Also called: {featureTitle(feature, explanation).secondary}
             </div>
           )}
@@ -179,7 +179,7 @@ Not sure how this applies to you? Ask an adviser, free.
           className="p-6 sm:p-8 pt-2 border-t flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
           style={{ borderColor: "var(--gmc-line)", background: "var(--gmc-bg-alt)" }}
         >
-          <p className="text-[13px] leading-relaxed max-w-md" style={{ color: "var(--gmc-body)" }}>
+          <p className="text-[14px] sm:text-[13px] leading-relaxed max-w-md" style={{ color: "var(--gmc-body)" }}>
 Not sure how this applies to you? Ask an adviser, free.
           </p>
 <CTA label="Ask an adviser, free" data-testid="detail-modal-cta" />

@@ -31,10 +31,10 @@ export default function MarkerInfo({ title, children, label, className = "" }) {
         onClick={(e) => e.stopPropagation()}
         data-testid="marker-popover"
       >
-        <div className="font-extrabold text-[13px] mb-1" style={{ color: "var(--gmc-ink)" }}>
+        <div className="font-extrabold text-[14px] sm:text-[13px] mb-1" style={{ color: "var(--gmc-ink)" }}>
           {title}
         </div>
-        <div className="text-[12.5px] leading-relaxed" style={{ color: "var(--gmc-body)" }}>
+        <div className="text-[13.5px] sm:text-[12.5px] leading-relaxed" style={{ color: "var(--gmc-body)" }}>
           {label}
         </div>
       </PopoverContent>

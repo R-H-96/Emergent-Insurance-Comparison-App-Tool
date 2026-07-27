@@ -61,8 +61,6 @@ export default function ComparisonSurface({
           insurers={insurers}
           onEditIntake={onEditIntake}
           onEditInsurers={onOpenPicker}
-          onShare={onShare}
-          onPrint={() => { pushEvent("gmc_print", { level }); window.print(); }}
         />
 
         {/* Sticky ladder */}
@@ -104,7 +102,7 @@ export default function ComparisonSurface({
                     <span className="sm:hidden">{rung.short}</span>
                     {rung.id === 1 && notableCount != null && (
                       <span
-                        className="px-1.5 rounded-full text-[11px] font-extrabold"
+                        className="px-1.5 rounded-full text-[12px] sm:text-[11px] font-extrabold"
                         style={{
                           background: active ? "rgba(255,255,255,0.22)" : "var(--gmc-teal-tint-2)",
                           color: active ? "white" : "var(--gmc-teal-deep)",
@@ -143,13 +141,13 @@ export default function ComparisonSurface({
         </div>
 
         <div className="pt-2 flex items-baseline gap-3 flex-wrap">
-          <p className="text-[12px] leading-snug" style={{ color: "var(--gmc-muted)" }}>
+          <p className="text-[13px] sm:text-[12px] leading-snug" style={{ color: "var(--gmc-muted)" }}>
             {current.hint}
           </p>
           <button
             type="button"
             onClick={onOpenGlossary}
-            className="gmc-tap inline-flex items-center gap-1 text-[12px] font-semibold underline decoration-dotted underline-offset-2 hover:decoration-solid"
+            className="gmc-tap inline-flex items-center gap-1 text-[13px] sm:text-[12px] font-semibold underline decoration-dotted underline-offset-2 hover:decoration-solid"
             style={{ color: "var(--gmc-teal-deep)" }}
             data-testid="open-glossary"
           >

@@ -68,7 +68,7 @@ export default function DifferencesPanel({
         type="button"
         onClick={() => setLens(id)}
         aria-pressed={active}
-        className="gmc-tap inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[12px] font-bold transition-all"
+        className="gmc-tap inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[13px] sm:text-[12px] font-bold transition-all"
         style={{
           background: active ? "var(--gmc-teal)" : "var(--gmc-bg-alt)",
           color: active ? "white" : "var(--gmc-body)",
@@ -78,7 +78,7 @@ export default function DifferencesPanel({
       >
         {label}
         <span
-          className="px-1.5 rounded-full text-[11px] font-extrabold"
+          className="px-1.5 rounded-full text-[12px] sm:text-[11px] font-extrabold"
           style={{
             background: active ? "rgba(255,255,255,0.22)" : "var(--gmc-teal-tint-2)",
             color: active ? "white" : "var(--gmc-teal-deep)",
@@ -104,7 +104,7 @@ export default function DifferencesPanel({
           <Lens id="gaps" label="Where cover stops" count={gapCount} />
         </div>
         {lens === "gaps" && (
-          <p className="text-[12px] mt-2.5 leading-relaxed" style={{ color: "var(--gmc-muted)" }}>
+          <p className="text-[13px] sm:text-[12px] mt-2.5 leading-relaxed" style={{ color: "var(--gmc-muted)" }}>
             Lines where at least one of these policies doesn&apos;t simply cover you. Fewer
 exclusions doesn&apos;t make a policy better for you, limits, excess and price all
             matter too.
@@ -140,7 +140,7 @@ exclusions doesn&apos;t make a policy better for you, limits, excess and price a
               {featureTitle(f, explanation).primary}
               {featureTitle(f, explanation).secondary && (
                 <span
-                  className="block text-[11.5px] font-semibold mt-0.5"
+                  className="block text-[12.5px] sm:text-[11.5px] font-semibold mt-0.5"
                   style={{ color: "var(--gmc-muted)" }}
                 >
                   {featureTitle(f, explanation).secondary}
@@ -160,7 +160,7 @@ exclusions doesn&apos;t make a policy better for you, limits, excess and price a
               tag="div"
               text={f.definition}
               glossary={glossary}
-              className="mt-1 text-[12px] leading-snug"
+              className="mt-1 text-[13px] sm:text-[12px] leading-snug"
             />
           )}
 
@@ -195,7 +195,7 @@ exclusions doesn&apos;t make a policy better for you, limits, excess and price a
                     </MarkerInfo>
                   )}
                   <span
-                    className="text-[13px] font-semibold leading-snug min-w-0"
+                    className="text-[14px] sm:text-[13px] font-semibold leading-snug min-w-0"
                     style={{ color: "var(--gmc-ink-2)" }}
                   >
                     {entry?.short ? (
@@ -213,7 +213,7 @@ exclusions doesn&apos;t make a policy better for you, limits, excess and price a
 
       {rows.length === 0 && (
         <p
-          className="px-5 sm:px-6 py-6 text-[13px] text-center border-t"
+          className="px-5 sm:px-6 py-6 text-[14px] sm:text-[13px] text-center border-t"
           style={{ borderColor: "var(--gmc-line)", color: "var(--gmc-body)" }}
         >
           None of these policies has a stated gap on the lines we&apos;ve checked.
@@ -232,14 +232,14 @@ exclusions doesn&apos;t make a policy better for you, limits, excess and price a
             {showUnconfirmed
               ? <ChevronDown className="w-4 h-4 flex-shrink-0" strokeWidth={2.5} style={{ color: "var(--gmc-muted)" }} />
               : <ChevronRight className="w-4 h-4 flex-shrink-0" strokeWidth={2.5} style={{ color: "var(--gmc-muted)" }} />}
-            <span className="text-[12.5px] font-bold" style={{ color: "var(--gmc-body)" }}>
+            <span className="text-[13.5px] sm:text-[12.5px] font-bold" style={{ color: "var(--gmc-body)" }}>
               {unconfirmed.length} line{unconfirmed.length === 1 ? "" : "s"} we haven&apos;t
               confirmed for any of these policies
             </span>
           </button>
           {showUnconfirmed && (
             <div className="px-5 sm:px-6 pb-4">
-              <p className="text-[12px] leading-relaxed mb-2.5" style={{ color: "var(--gmc-muted)" }}>
+              <p className="text-[13px] sm:text-[12px] leading-relaxed mb-2.5" style={{ color: "var(--gmc-muted)" }}>
                 We haven&apos;t found these stated in the policy documents yet. That says nothing
 about whether the policies cover them. Only that nobody has checked. Ask an
                 adviser if any of these matter to you.
@@ -250,12 +250,12 @@ about whether the policies cover them. Only that nobody has checked. Ask an
                     <button
                       type="button"
                       onClick={() => onOpen(f.feature)}
-                      className="text-left text-[13px] font-semibold underline decoration-dotted underline-offset-2 hover:decoration-solid"
+                      className="text-left text-[14px] sm:text-[13px] font-semibold underline decoration-dotted underline-offset-2 hover:decoration-solid"
                       style={{ color: "var(--gmc-teal-deep)" }}
                     >
                       {f.feature}
                     </button>
-                    <span className="text-[12px] ml-1.5" style={{ color: "var(--gmc-faint)" }}>
+                    <span className="text-[13px] sm:text-[12px] ml-1.5" style={{ color: "var(--gmc-faint)" }}>
                       {groupLabel(f.group)}
                     </span>
                   </li>

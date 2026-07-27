@@ -114,7 +114,7 @@ export default function AtAGlance({
 
       {notable.length === 0 ? (
         <div className="gmc-card p-6 sm:p-8 text-center" data-testid="at-a-glance-empty">
-          <p className="text-[14px]" style={{ color: "var(--gmc-body)" }}>
+          <p className="text-[15px] sm:text-[14px]" style={{ color: "var(--gmc-body)" }}>
 These policies agree on the notable points for this selection, switch an
             insurer to surface the interesting differences.
           </p>
@@ -137,7 +137,7 @@ These policies agree on the notable points for this selection, switch an
                     role="tab"
                     aria-selected={safeSlide === i}
                     onClick={() => goToSlide(i)}
-                    className="gmc-tap flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-full text-[12px] font-bold transition-all"
+                    className="gmc-tap flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-full text-[13px] sm:text-[12px] font-bold transition-all"
                     style={{
                       background: safeSlide === i ? "var(--gmc-teal)" : "transparent",
                       color: safeSlide === i ? "white" : "var(--gmc-body)",
@@ -212,10 +212,10 @@ function CollapsedPanel({ label, children }) {
         {open
           ? <ChevronDown className="w-4 h-4 flex-shrink-0" strokeWidth={2.5} style={{ color: "var(--gmc-teal-deep)" }} />
           : <ChevronRight className="w-4 h-4 flex-shrink-0" strokeWidth={2.5} style={{ color: "var(--gmc-teal-deep)" }} />}
-        <span className="text-[13px] font-bold" style={{ color: "var(--gmc-ink)" }}>
+        <span className="text-[14px] sm:text-[13px] font-bold" style={{ color: "var(--gmc-ink)" }}>
           {open ? "Hide" : "Show"} the {label.toLowerCase()}
         </span>
-        <span className="text-[12px] ml-auto" style={{ color: "var(--gmc-muted)" }}>
+        <span className="text-[13px] sm:text-[12px] ml-auto" style={{ color: "var(--gmc-muted)" }}>
 A visual summary. More detail than most people need
         </span>
       </button>

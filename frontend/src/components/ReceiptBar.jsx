@@ -1,8 +1,7 @@
-import { Pencil, Sparkles, Info, User, Users, UsersRound, Share2, Printer } from "lucide-react";
+import { Pencil, Sparkles, User, Users, UsersRound } from "lucide-react";
 import InsurerMark from "@/components/InsurerMark";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import {
-  HOUSEHOLD_OPTIONS, PRIORITY_OPTIONS, KNOWLEDGE_OPTIONS, intakeSummary,
+  HOUSEHOLD_OPTIONS, PRIORITY_OPTIONS, intakeSummary,
 } from "@/lib/personalisation";
 import {
   Ribbon, Scissors, Stethoscope, Home, Hourglass, Award,
@@ -26,12 +25,11 @@ const PRI_ICONS = {
  *
  * Every chip stays tappable and still reopens the step it came from.
  */
-export default function ReceiptBar({ intake, insurers, onEditIntake, onEditInsurers, onShare, onPrint }) {
+export default function ReceiptBar({ intake, insurers, onEditIntake, onEditInsurers }) {
   const bits = intakeSummary(intake);
   const personalised = bits.length > 0;
   const HouseholdIcon = HH_ICONS[intake?.household];
   const household = HOUSEHOLD_OPTIONS.find((h) => h.id === intake?.household);
-  const knowledge = KNOWLEDGE_OPTIONS.find((k) => k.id === intake?.knowledge);
   const priorities = (intake?.priorities || [])
     .map((id) => PRIORITY_OPTIONS.find((o) => o.id === id))
     .filter(Boolean);
@@ -45,7 +43,7 @@ export default function ReceiptBar({ intake, insurers, onEditIntake, onEditInsur
 
   return (
     <div
-      className="flex flex-wrap items-center gap-1.5 sm:gap-2 px-2.5 py-2 mb-3 rounded-[var(--gmc-r-ctl)]"
+      className="flex flex-wrap items-center gap-2 px-3 py-2.5 mb-3 rounded-[var(--gmc-r-ctl)]"
       style={{
         background: personalised ? "var(--gmc-teal-tint)" : "var(--gmc-bg-alt)",
         border: "1px solid var(--gmc-line)",
@@ -53,7 +51,7 @@ export default function ReceiptBar({ intake, insurers, onEditIntake, onEditInsur
       data-testid="receipt-bar"
     >
       <span
-        className="hidden sm:inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.08em] flex-shrink-0"
+        className="hidden sm:inline-flex items-center gap-1.5 text-[12px] sm:text-[11px] font-bold uppercase tracking-[0.08em] flex-shrink-0"
         style={{ color: "var(--gmc-muted)" }}
       >
         {personalised && (
@@ -102,7 +100,7 @@ export default function ReceiptBar({ intake, insurers, onEditIntake, onEditInsur
           data-testid="receipt-chip-household"
         >
           <HouseholdIcon className="w-4 h-4" strokeWidth={2.2} aria-hidden="true" />
-          <span className="hidden sm:inline text-[12px] font-bold">{household?.label}</span>
+          <span className="hidden sm:inline text-[13px] sm:text-[12px] font-bold">{household?.label}</span>
         </button>
       )}
 
@@ -120,16 +118,16 @@ export default function ReceiptBar({ intake, insurers, onEditIntake, onEditInsur
             const Icon = PRI_ICONS[p.icon];
             return Icon ? <Icon key={p.id} className="w-4 h-4" strokeWidth={2.2} aria-hidden="true" /> : null;
           })}
-          <span className="hidden lg:inline text-[12px] font-bold">first</span>
+          <span className="hidden lg:inline text-[13px] sm:text-[12px] font-bold">first</span>
         </button>
       )}
 
       {/* Reading level stays as words: no icon reads as "explained simply" */}
-      {knowledge && (
+      {intake?.knowledge && (
         <button
           type="button"
           onClick={onEditIntake}
-          className={`${chip} px-2.5 py-1.5 text-[12px] font-bold`}
+          className={`${chip} px-2.5 py-1.5 text-[13px] sm:text-[12px] font-bold`}
           style={chipStyle}
           data-testid="receipt-chip-knowledge"
         >
@@ -141,7 +139,7 @@ export default function ReceiptBar({ intake, insurers, onEditIntake, onEditInsur
         <button
           type="button"
           onClick={onEditIntake}
-          className={`${chip} px-2.5 py-1.5 text-[12px] font-bold`}
+          className={`${chip} px-2.5 py-1.5 text-[13px] sm:text-[12px] font-bold`}
           style={chipStyle}
           data-testid="receipt-personalise"
         >
@@ -150,83 +148,6 @@ export default function ReceiptBar({ intake, insurers, onEditIntake, onEditInsur
         </button>
       )}
 
-      {/* The full sentence, on demand */}
-      <Popover>
-        <PopoverTrigger asChild>
-          <button
-            type="button"
-            className="gmc-tap ml-auto flex items-center justify-center w-7 h-7 rounded-full flex-shrink-0"
-            style={{ background: "white", border: "1px solid var(--gmc-line)" }}
-            aria-label="What am I looking at?"
-            data-testid="receipt-info"
-          >
-            <Info className="w-3.5 h-3.5" strokeWidth={2.2} style={{ color: "var(--gmc-teal-mid)" }} />
-          </button>
-        </PopoverTrigger>
-        <PopoverContent
-          className="w-72 bg-white border rounded-[14px] p-4 shadow-[0_12px_40px_rgba(22,28,39,0.12)]"
-          style={{ borderColor: "var(--gmc-line)" }}
-          side="bottom"
-          align="end"
-          data-testid="receipt-info-popover"
-        >
-          <div className="text-[11px] font-bold uppercase tracking-[0.1em] mb-1.5" style={{ color: "var(--gmc-teal-mid)" }}>
-            What you're looking at
-          </div>
-          <dl className="space-y-2 text-[12.5px]" style={{ color: "var(--gmc-body)" }}>
-            <div>
-              <dt className="font-extrabold" style={{ color: "var(--gmc-ink)" }}>Comparing</dt>
-              <dd>{insurers.map((i) => `${i.name} (${i.product})`).join(", ")}</dd>
-            </div>
-            {household && (
-              <div>
-                <dt className="font-extrabold" style={{ color: "var(--gmc-ink)" }}>Cover for</dt>
-                <dd>{household.label}. {household.blurb}</dd>
-              </div>
-            )}
-            {priorities.length > 0 && (
-              <div>
-                <dt className="font-extrabold" style={{ color: "var(--gmc-ink)" }}>Shown first</dt>
-                <dd>{priorities.map((p) => p.label).join(", ")}</dd>
-              </div>
-            )}
-            {knowledge && (
-              <div>
-                <dt className="font-extrabold" style={{ color: "var(--gmc-ink)" }}>Reading level</dt>
-                <dd>{knowledge.label}. {knowledge.blurb}</dd>
-              </div>
-            )}
-          </dl>
-          <button
-            type="button"
-            onClick={onEditIntake}
-            className="gmc-btn-outline gmc-tap w-full mt-3"
-            data-testid="receipt-info-edit"
-          >
-            Change any of this
-          </button>
-          <div className="flex gap-2 mt-2 lg:hidden">
-            <button
-              type="button"
-              onClick={onShare}
-              className="gmc-btn-outline gmc-tap flex-1"
-              data-testid="receipt-share"
-            >
-              <Share2 className="w-3.5 h-3.5" strokeWidth={2.2} aria-hidden="true" />
-              Share
-            </button>
-            <button
-              type="button"
-              onClick={onPrint}
-              className="gmc-btn-outline gmc-tap flex-1"
-              data-testid="receipt-print"
-            >
-              <Printer className="w-3.5 h-3.5" strokeWidth={2.2} aria-hidden="true" />
-              Save
-            </button>
-          </div>
-        </PopoverContent>
-      </Popover>
     </div>
   );
 }

@@ -11,6 +11,7 @@ import AskPanel from "@/components/AskPanel";
 import AskLaunchBubble from "@/components/AskLaunchBubble";
 import MobileFAB from "@/components/MobileFAB";
 import PrintSummary from "@/components/PrintSummary";
+import ComparisonInfo from "@/components/ComparisonInfo";
 import GlossaryPanel from "@/components/GlossaryPanel";
 import InsurerPickerDialog from "@/components/InsurerPickerDialog";
 import useAskEngine from "@/hooks/useAskEngine";
@@ -301,7 +302,20 @@ toast.error("Could not share, long-press the address bar instead.");
       {!embed && <div className="print:hidden"><GmcNav /></div>}
       {!embed && (
         <div className="print:hidden">
-          <Hero compact={intake.completed || intake.skipped} />
+          <Hero
+            compact={intake.completed || intake.skipped}
+            action={
+              (intake.completed || intake.skipped) && selectedInsurers.length > 0 ? (
+                <ComparisonInfo
+                  intake={intake}
+                  insurers={selectedInsurers}
+                  onEditIntake={reopenIntake}
+                  onShare={share}
+                  onPrint={() => { pushEvent("gmc_print", { level }); window.print(); }}
+                />
+              ) : null
+            }
+          />
         </div>
       )}
 
@@ -414,7 +428,11 @@ toast.error("Could not share, long-press the address bar instead.");
         <Disclaimer />
       )}
 
-      <div className="h-16 xl:hidden print:hidden" aria-hidden="true" />
+      <div
+        className="xl:hidden print:hidden"
+        style={{ height: "calc(env(safe-area-inset-bottom, 0px) + 104px)" }}
+        aria-hidden="true"
+      />
 
       <GlossaryPanel
         glossary={data.glossary}

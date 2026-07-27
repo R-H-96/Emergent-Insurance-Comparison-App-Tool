@@ -20,7 +20,7 @@ export default function SourceLink({ insurer, citation, className = "", align = 
           type="button"
           onClick={(e) => e.stopPropagation()}
           onMouseDown={(e) => e.stopPropagation()}
-          className={`gmc-tap inline-flex items-center gap-1 text-[11px] font-semibold underline decoration-dotted underline-offset-2 hover:decoration-solid focus:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gmc-teal)] rounded-sm ${className}`}
+          className={`gmc-tap inline-flex items-center gap-1 text-[12px] sm:text-[11px] font-semibold underline decoration-dotted underline-offset-2 hover:decoration-solid focus:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gmc-teal)] rounded-sm ${className}`}
           style={{ color: "var(--gmc-muted)" }}
           aria-label={`Source for ${insurer.name}`}
           data-testid={`source-link-${insurer.id}`}
@@ -38,20 +38,20 @@ export default function SourceLink({ insurer, citation, className = "", align = 
         data-testid="source-popover"
       >
         <div
-          className="text-[11px] font-bold uppercase tracking-[0.1em] mb-1"
+          className="text-[12px] sm:text-[11px] font-bold uppercase tracking-[0.1em] mb-1"
           style={{ color: "var(--gmc-teal-mid)" }}
         >
           Where this comes from
         </div>
-        <div className="font-extrabold text-[14px]" style={{ color: "var(--gmc-ink)" }}>
+        <div className="font-extrabold text-[15px] sm:text-[14px]" style={{ color: "var(--gmc-ink)" }}>
 {insurer.name}, {insurer.product}
         </div>
-        <p className="text-[12.5px] leading-relaxed mt-1" style={{ color: "var(--gmc-body)" }}>
+        <p className="text-[13.5px] sm:text-[12.5px] leading-relaxed mt-1" style={{ color: "var(--gmc-body)" }}>
           {insurer.version}
         </p>
         {citation && (
           <p
-            className="text-[11.5px] leading-relaxed mt-2 pt-2"
+            className="text-[12.5px] sm:text-[11.5px] leading-relaxed mt-2 pt-2"
             style={{ color: "var(--gmc-muted)", borderTop: "1px solid var(--gmc-line)" }}
           >
             Cited passage: {citation}
@@ -65,7 +65,7 @@ export default function SourceLink({ insurer, citation, className = "", align = 
                   href={s.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-start gap-1.5 text-[12px] underline decoration-dotted underline-offset-2 hover:decoration-solid"
+                  className="inline-flex items-start gap-1.5 text-[13px] sm:text-[12px] underline decoration-dotted underline-offset-2 hover:decoration-solid"
                   style={{ color: "var(--gmc-teal-deep)" }}
                 >
                   {s.label}

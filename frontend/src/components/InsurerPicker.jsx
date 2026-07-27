@@ -55,7 +55,7 @@ export default function InsurerPicker({ insurers, selected, onToggle, compact = 
                 )}
               </div>
               <div
-                className="text-[12px] font-bold text-center leading-tight w-full"
+                className="text-[13px] sm:text-[12px] font-bold text-center leading-tight w-full"
                 style={{ color: isSelected ? accent : "var(--gmc-ink)" }}
               >
                 {ins.name}

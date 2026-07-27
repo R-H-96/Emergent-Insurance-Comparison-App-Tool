@@ -85,7 +85,7 @@ export default function ComparisonTable({
     const hasFilters = activeGroups.length > 0;
     return (
       <div className="gmc-card p-10 text-center" data-testid="comparison-empty">
-        <p className="text-[14px] font-semibold" style={{ color: "var(--gmc-ink)" }}>
+        <p className="text-[15px] sm:text-[14px] font-semibold" style={{ color: "var(--gmc-ink)" }}>
           {hasFilters ? "Nothing in this section for this comparison." : "No features match your current filters."}
         </p>
         {hasFilters && (
@@ -124,7 +124,7 @@ export default function ComparisonTable({
                   <div className="font-extrabold text-[15px] leading-tight" style={{ color: ins.accent || "var(--gmc-ink)" }}>
                     {ins.name}
                   </div>
-                  <div className="text-[12px] font-semibold mt-0.5" style={{ color: "var(--gmc-muted)" }}>
+                  <div className="text-[13px] sm:text-[12px] font-semibold mt-0.5" style={{ color: "var(--gmc-muted)" }}>
                     {ins.product}
                   </div>
                 </div>
@@ -163,11 +163,11 @@ export default function ComparisonTable({
                       ? <ChevronRight className="w-3.5 h-3.5" strokeWidth={2.5} />
                       : <ChevronDown className="w-3.5 h-3.5" strokeWidth={2.5} />}
                   </div>
-                  <span className="text-[13px] font-bold" style={{ color: "var(--gmc-ink)" }}>
+                  <span className="text-[14px] sm:text-[13px] font-bold" style={{ color: "var(--gmc-ink)" }}>
                     {groupLabel(group)}
                   </span>
                   <span
-                    className="inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-bold"
+                    className="inline-flex items-center rounded-full px-2 py-0.5 text-[12px] sm:text-[11px] font-bold"
                     style={{ background: "var(--gmc-teal-tint-2)", color: "var(--gmc-teal-deep)" }}
                   >
                     {visibleFeats.length}
@@ -196,13 +196,13 @@ export default function ComparisonTable({
                     data-testid={`row-${f.feature.replace(/\s+/g, "-").toLowerCase()}`}
                   >
                     <div className="p-4">
-                      <div className="flex items-center gap-2 font-bold text-[14px] leading-snug" style={{ color: "var(--gmc-ink)" }}>
+                      <div className="flex items-center gap-2 font-bold text-[15px] sm:text-[14px] leading-snug" style={{ color: "var(--gmc-ink)" }}>
                         <FeatureIcon name={f.feature} size={18} />
                         <span>
                           {featureTitle(f, explanation).primary}
                           {featureTitle(f, explanation).secondary && (
                             <span
-                              className="block text-[11px] font-semibold mt-0.5"
+                              className="block text-[12px] sm:text-[11px] font-semibold mt-0.5"
                               style={{ color: "var(--gmc-muted)" }}
                             >
                               {featureTitle(f, explanation).secondary}
@@ -223,7 +223,7 @@ export default function ComparisonTable({
                           </MarkerInfo>
                         )}
                       </div>
-                      <GlossaryText tag="div" text={f.definition} glossary={glossary} className="text-[12px] mt-1 leading-relaxed" />
+                      <GlossaryText tag="div" text={f.definition} glossary={glossary} className="text-[13px] sm:text-[12px] mt-1 leading-relaxed" />
                       {f.why && (
                         <div onClick={(e) => e.stopPropagation()}>
                           <WhyReveal
@@ -247,7 +247,7 @@ export default function ComparisonTable({
                           }}
                           data-testid={`cell-${ins.id}-${f.feature.replace(/\s+/g, "-").toLowerCase()}`}
                         >
-                          <div className="text-[13px] font-semibold leading-snug flex-1" style={{ color: "var(--gmc-ink-2)" }}>
+                          <div className="text-[14px] sm:text-[13px] font-semibold leading-snug flex-1" style={{ color: "var(--gmc-ink-2)" }}>
 {entry?.short ? <GlossaryText text={entry.short} glossary={glossary} />: <span style={{ color: "var(--gmc-faint)" }}>Not recorded</span>}
                           </div>
                           <VerifiedIcon verified={entry?.verified} />
@@ -288,11 +288,11 @@ export default function ComparisonTable({
                     ? <ChevronRight className="w-3.5 h-3.5" strokeWidth={2.5} />
                     : <ChevronDown className="w-3.5 h-3.5" strokeWidth={2.5} />}
                 </div>
-                <span className="text-[14px] font-bold" style={{ color: "var(--gmc-ink)" }}>
+                <span className="text-[15px] sm:text-[14px] font-bold" style={{ color: "var(--gmc-ink)" }}>
                   {groupLabel(group)}
                 </span>
                 <span
-                  className="ml-auto inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-bold"
+                  className="ml-auto inline-flex items-center rounded-full px-2 py-0.5 text-[12px] sm:text-[11px] font-bold"
                   style={{ background: "var(--gmc-teal-tint-2)", color: "var(--gmc-teal-deep)" }}
                 >
                   {visibleFeats.length}
@@ -322,7 +322,7 @@ export default function ComparisonTable({
                         {featureTitle(f, explanation).primary}
                         {featureTitle(f, explanation).secondary && (
                           <span
-                            className="block text-[12px] font-semibold mt-0.5"
+                            className="block text-[13px] sm:text-[12px] font-semibold mt-0.5"
                             style={{ color: "var(--gmc-muted)" }}
                           >
                             {featureTitle(f, explanation).secondary}
@@ -343,7 +343,7 @@ export default function ComparisonTable({
                         </MarkerInfo>
                       )}
                     </div>
-                    <GlossaryText tag="div" text={f.definition} glossary={glossary} className="text-[13.5px] mt-1 leading-relaxed" />
+                    <GlossaryText tag="div" text={f.definition} glossary={glossary} className="text-[14.5px] sm:text-[13.5px] mt-1 leading-relaxed" />
                     {f.why && (
                       <div onClick={(e) => e.stopPropagation()}>
                         <WhyReveal
@@ -373,7 +373,7 @@ export default function ComparisonTable({
 {/* Circular mark, replaces rectangular InsurerLogo */}
                                 <InsurerMark insurer={ins} size={28} />
                                 <div
-                                  className="text-[12px] font-bold"
+                                  className="text-[13px] sm:text-[12px] font-bold"
                                   style={{ color: ins.accent || "var(--gmc-teal-mid)" }}
                                 >
                                   {ins.name}
@@ -381,7 +381,7 @@ export default function ComparisonTable({
                               </div>
                               <VerifiedIcon verified={entry?.verified} />
                             </div>
-                            <div className="text-[14px] font-semibold leading-snug" style={{ color: "var(--gmc-ink-2)" }}>
+                            <div className="text-[15px] sm:text-[14px] font-semibold leading-snug" style={{ color: "var(--gmc-ink-2)" }}>
 {entry?.short ? <GlossaryText text={entry.short} glossary={glossary} />: <span style={{ color: "var(--gmc-faint)" }}>Not recorded</span>}
                             </div>
                           </div>
@@ -389,7 +389,7 @@ export default function ComparisonTable({
                       })}
                     </div>
                     <div className="mt-3 flex items-center gap-1" style={{ color: "var(--gmc-teal-mid)" }}>
-                      <span className="text-[12px] font-bold">View full detail</span>
+                      <span className="text-[13px] sm:text-[12px] font-bold">View full detail</span>
                       <ChevronRight className="w-3.5 h-3.5" strokeWidth={2.5} />
                     </div>
                   </div>

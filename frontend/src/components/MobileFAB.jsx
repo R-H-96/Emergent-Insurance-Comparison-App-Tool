@@ -83,7 +83,7 @@ export default function MobileFAB({
           type="button"
           role="tab"
           aria-selected={activeTab === id}
-          className="flex-1 flex items-center justify-center gap-2 py-3.5 text-[14px] font-bold transition-colors"
+          className="flex-1 flex items-center justify-center gap-2 py-3.5 text-[15px] sm:text-[14px] font-bold transition-colors"
           style={{
             color: activeTab === id ? "var(--gmc-teal)" : "var(--gmc-muted)",
             borderBottom:

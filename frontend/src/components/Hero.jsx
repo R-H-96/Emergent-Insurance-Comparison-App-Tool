@@ -12,7 +12,7 @@ import TrustStrip from "@/components/TrustStrip";
  * reach their own answer. After the intake the page's job is to show the
  * comparison, not to re-pitch the tool.
  */
-export default function Hero({ compact = false }) {
+export default function Hero({ compact = false, action = null }) {
   if (compact) {
     return (
       <section className="pt-6 pb-2" id="compare" data-testid="hero-compact">
@@ -29,8 +29,11 @@ export default function Hero({ compact = false }) {
                 Your comparison
               </h1>
             </div>
-            <div className="hidden sm:block">
-              <CTA compact data-testid="hero-cta" />
+            <div className="flex items-center gap-2 flex-shrink-0">
+              <div className="hidden sm:block">
+                <CTA compact data-testid="hero-cta" />
+              </div>
+              {action}
             </div>
           </div>
         </div>

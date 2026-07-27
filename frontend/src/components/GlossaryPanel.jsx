@@ -57,7 +57,7 @@ placeholder="Search a word, try 'excess'"
       </div>
 
       {terms.length === 0 ? (
-        <p className="text-[13.5px] py-4 text-center" style={{ color: "var(--gmc-body)" }}>
+        <p className="text-[14.5px] sm:text-[13.5px] py-4 text-center" style={{ color: "var(--gmc-body)" }}>
 Nothing matches &ldquo;{q}&rdquo;. Try a shorter word, or ask an adviser, some terms
           only appear in an insurer&apos;s own wording.
         </p>
@@ -73,7 +73,7 @@ Nothing matches &ldquo;{q}&rdquo;. Try a shorter word, or ask an adviser, some t
               <dt className="font-extrabold text-[14.5px]" style={{ color: "var(--gmc-ink)" }}>
                 {term}
               </dt>
-              <dd className="text-[13.5px] leading-relaxed mt-0.5" style={{ color: "var(--gmc-body)" }}>
+              <dd className="text-[14.5px] sm:text-[13.5px] leading-relaxed mt-0.5" style={{ color: "var(--gmc-body)" }}>
                 {def}
               </dd>
             </div>
@@ -81,7 +81,7 @@ Nothing matches &ldquo;{q}&rdquo;. Try a shorter word, or ask an adviser, some t
         </dl>
       )}
 
-      <p className="text-[11.5px] leading-relaxed mt-4" style={{ color: "var(--gmc-faint)" }}>
+      <p className="text-[12.5px] sm:text-[11.5px] leading-relaxed mt-4" style={{ color: "var(--gmc-faint)" }}>
         Plain-English explanations written by Get My Cover, not definitions from any insurer&apos;s
         policy. Where a policy defines a term differently, the policy wording is what counts.
       </p>
