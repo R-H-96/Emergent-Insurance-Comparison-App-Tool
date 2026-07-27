@@ -1,5 +1,5 @@
 import { Check } from "lucide-react";
-import InsurerLogo from "@/components/InsurerLogo";
+import InsurerMark from "@/components/InsurerMark";
 import SourceLink from "@/components/SourceLink";
 
 export default function InsurerPicker({ insurers, selected, onToggle, compact = false }) {
@@ -38,13 +38,13 @@ export default function InsurerPicker({ insurers, selected, onToggle, compact = 
               style={{
                 borderColor: isSelected ? accent : "var(--gmc-line-soft)",
                 background: isSelected ? "var(--gmc-teal-tint-2)" : "white",
-                boxShadow: isSelected ? `0 0 0 2px ${accent}` : "none",
+                boxShadow: isSelected ? `inset 0 0 0 2px ${accent}` : "none",
                 opacity: disabled ? 0.5 : 1,
               }}
               data-testid={`insurer-${ins.id}`}
             >
               <div className="relative">
-                <InsurerLogo insurer={ins} size={36} />
+                <InsurerMark insurer={ins} size={40} />
                 {isSelected && (
                   <div
                     className="absolute -top-1.5 -right-1.5 w-[18px] h-[18px] rounded-full flex items-center justify-center"
@@ -66,7 +66,7 @@ export default function InsurerPicker({ insurers, selected, onToggle, compact = 
       </div>
 
       {/* Tablet / desktop: card grid */}
-      <div className="hidden sm:grid sm:grid-cols-2 lg:grid-cols-5 gap-3">
+      <div className="hidden sm:grid sm:grid-cols-2 lg:grid-cols-5 gap-3 items-stretch">
         {insurers.map((ins) => {
           const isSelected = selected.includes(ins.id);
           const disabled = !isSelected && selected.length >= 3;
@@ -83,20 +83,20 @@ export default function InsurerPicker({ insurers, selected, onToggle, compact = 
               }}
               aria-pressed={isSelected}
               aria-disabled={disabled}
-              className={`text-left p-4 rounded-[var(--gmc-r-ctl)] border-[1.5px] transition-all bg-white hover:-translate-y-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gmc-teal)] ${
+              className={`flex flex-col text-left p-4 rounded-[var(--gmc-r-ctl)] border-[1.5px] transition-all bg-white hover:-translate-y-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gmc-teal)] ${
                 disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"
               }`}
               style={{
                 borderColor: isSelected ? accent : "var(--gmc-line-soft)",
                 background: isSelected ? "var(--gmc-teal-tint-2)" : "white",
                 boxShadow: isSelected
-                  ? `0 0 0 2px ${accent}, 0 6px 20px -12px ${accent}`
+                  ? `inset 0 0 0 2px ${accent}, 0 6px 20px -12px ${accent}`
                   : "none",
               }}
               data-testid={`insurer-${ins.id}`}
             >
               <div className="flex items-start justify-between gap-2">
-                <InsurerLogo insurer={ins} size={32} />
+                <InsurerMark insurer={ins} size={40} />
                 {isSelected && (
                   <div
                     className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0"
@@ -118,7 +118,7 @@ export default function InsurerPicker({ insurers, selected, onToggle, compact = 
               >
                 {ins.product}
               </div>
-              <div className="mt-2">
+              <div className="mt-auto pt-2">
                 <SourceLink insurer={ins} />
               </div>
             </div>

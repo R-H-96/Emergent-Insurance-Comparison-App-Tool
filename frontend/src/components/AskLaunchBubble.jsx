@@ -3,7 +3,7 @@ import useMediaQuery from "@/hooks/useMediaQuery";
 
 /**
  * Classic bottom-right chat bubble launcher for the Ask panel.
- * Desktop-only (>=1200px) — mobile users get the Ask button on the
+* Desktop-only (>=1200px). Mobile users get the Ask button on the
  * the mobile floating action button instead.
  *
  * Uses the brand accent gradient. Sits above z-index of sheets/popovers.

@@ -13,8 +13,8 @@ import { coverState, gapFeatures, STATE_META, COVER_STATE } from "@/lib/gaps";
  * One list, two lenses.
  *
  * This replaces what were two stacked panels ("Where they differ" and "Where
- * cover stops"). They overlapped on roughly two thirds of their rows — the same
- * feature, the same values, printed twice — because "one insurer doesn't cover
+* cover stops"). They overlapped on roughly two thirds of their rows, the same
+* feature, the same values, printed twice, because "one insurer doesn't cover
  * this" is simply a common KIND of difference, not a separate subject.
  *
  * So the rows are unioned and the distinction becomes a filter. Cover state is
@@ -106,7 +106,7 @@ export default function DifferencesPanel({
         {lens === "gaps" && (
           <p className="text-[12px] mt-2.5 leading-relaxed" style={{ color: "var(--gmc-muted)" }}>
             Lines where at least one of these policies doesn&apos;t simply cover you. Fewer
-            exclusions doesn&apos;t make a policy better for you — limits, excess and price all
+exclusions doesn&apos;t make a policy better for you, limits, excess and price all
             matter too.
           </p>
         )}
@@ -201,7 +201,7 @@ export default function DifferencesPanel({
                     {entry?.short ? (
                       <GlossaryText text={entry.short} glossary={glossary} />
                     ) : (
-                      <span style={{ color: "var(--gmc-faint)" }}>—</span>
+<span style={{ color: "var(--gmc-faint)" }}>Not recorded</span>
                     )}
                   </span>
                 </div>
@@ -241,7 +241,7 @@ export default function DifferencesPanel({
             <div className="px-5 sm:px-6 pb-4">
               <p className="text-[12px] leading-relaxed mb-2.5" style={{ color: "var(--gmc-muted)" }}>
                 We haven&apos;t found these stated in the policy documents yet. That says nothing
-                about whether the policies cover them — only that nobody has checked. Ask an
+about whether the policies cover them. Only that nobody has checked. Ask an
                 adviser if any of these matter to you.
               </p>
               <ul className="space-y-1.5">

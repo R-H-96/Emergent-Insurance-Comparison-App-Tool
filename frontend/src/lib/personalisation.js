@@ -1,5 +1,5 @@
 /**
- * Personalisation model — the single source of truth for the intake flow.
+* Personalisation model. The single source of truth for the intake flow.
  *
  * The intake asks a small number of questions and stores the answers here.
  * Everything downstream (which features surface first, how much explanation
@@ -30,7 +30,7 @@ export const GROUP_LABELS = {
 export const groupLabel = (g) => GROUP_LABELS[g] || g;
 
 /* Abbreviated forms for tight spaces (radar axes, journey stages). Same
- * vocabulary, fewer characters — never a different word for the same thing. */
+* vocabulary, fewer characters. Never a different word for the same thing. */
 export const GROUP_SHORT_LABELS = {
   "Core limits": "Surgery",
   "Cancer care": "Cancer",
@@ -65,7 +65,7 @@ export const HOUSEHOLD_OPTIONS = [
 /**
  * One question carrying two signals: how much explanation to give, and whether
  * this person already holds cover. Asked as a single "where are you at" rather
- * than two separate screens — the flow stays at four steps, and in practice the
+* than two separate screens. The flow stays at four steps, and in practice the
  * two answers correlate closely enough that splitting them cost more attention
  * than it bought precision.
  */
@@ -85,17 +85,17 @@ export const KNOWLEDGE_OPTIONS = [
   {
     id: "informed",
     label: "I know the market",
-    blurb: "I understand the basics — give me the detail",
+blurb: "I understand the basics, give me the detail",
     switching: false,
   },
 ];
 
-/* Switching has its own consequences — waiting periods restart, loyalty
- * benefits reset — so switchers get that group surfaced, attributed. */
+/* Switching has its own consequences, waiting periods restart, loyalty
+* benefits reset so switchers get that group surfaced, attributed. */
 export const SWITCHER_GROUP = "Loyalty & flexibility";
 export const SWITCHER_LABEL = "Worth checking before you switch";
 
-/* A household answer can suggest a group the user didn't pick — a family is
+/* A household answer can suggest a group the user didn't pick, a family is
  * likely to care about everyday/maternity cover even if they didn't think to
  * choose it. These are surfaced SEPARATELY and labelled honestly; they are
  * never mixed in with what the user actually chose. */
@@ -146,7 +146,7 @@ export function saveIntake(intake) {
 
 /**
  * Canonical data-group names the user actually chose, in the order they chose
- * them. Nothing is added here — a group in this list means the user picked it,
+* them. Nothing is added here. A group in this list means the user picked it,
  * which is what lets the UI say "you picked this" truthfully.
  */
 export function priorityGroups(intake) {
@@ -179,10 +179,10 @@ export function suggestedGroups(intake) {
 
 /**
  * How much explanation to show.
- *   whyInline   — render the "why this matters" text expanded by default
- *   showRadar   — the coverage radar is chart-literate; hide it for beginners
- *   showJourney — the care-journey timeline
- *   defaultLevel— which rung of the disclosure ladder to land on
+* whyInline. Render the "why this matters" text expanded by default
+* showRadar. The coverage radar is chart-literate; hide it for beginners
+* showJourney, the care-journey timeline
+* defaultLevel. Which rung of the disclosure ladder to land on
  */
 export function explanationMode(knowledge) {
   switch (knowledge) {
@@ -211,7 +211,7 @@ export function explanationMode(knowledge) {
  * A beginner stalls at "Non-Pharmac medicines cap" before they ever reach the
  * explanation underneath it, so for self-declared beginners the plain title
  * leads and the technical name becomes a subtitle. The technical name is never
- * dropped — it's the term they'd need when talking to an insurer or adviser.
+* dropped. It's the term they'd need when talking to an insurer or adviser.
  */
 export function featureTitle(feature, explanation) {
   const plain = feature?.plain;

@@ -7,20 +7,20 @@ import { X } from "lucide-react";
  * Reusable full-featured mobile bottom sheet.
  *
  * Architecture:
- *   Backdrop  — fixed inset-0 z-[89], separate AnimatePresence
- *   Sheet panel — fixed inset-x-0 bottom-0 z-[90], no outer wrapper.
+* Backdrop, fixed inset-0 z-[89], separate AnimatePresence
+* Sheet panel. Fixed inset-x-0 bottom-0 z-[90], no outer wrapper.
  *     maxHeight: calc(100dvh - max(env(safe-area-inset-top), 56px)) ensures the
  *     panel can never extend above the status bar regardless of dvh support.
  *
  * Drag-to-dismiss:
  *   Always available from the drag handle / sticky header (touchAction:none).
  *   Also available from the top 80px of the scrollable body when body is at
- *   scrollTop=0 — natural pull-to-dismiss without needing the handle.
+* scrollTop=0. Natural pull-to-dismiss without needing the handle.
  *
  * Props:
- *   scrollKey   — when this changes while open, body resets to scrollTop=0.
+* scrollKey. When this changes while open, body resets to scrollTop=0.
  *                 Pass feature.feature in DetailModal to prevent stale scroll.
- *   headerExtra — optional node rendered between title row and body as a
+* headerExtra. Optional node rendered between title row and body as a
  *                 flex-shrink-0 slot (e.g. tab bars in MobileFAB).
  */
 export default function MobileSheet({
@@ -58,7 +58,7 @@ export default function MobileSheet({
     };
   }, [open]);
 
-  // History API (browser-back to close) — StrictMode-safe 150ms guard
+// History API (browser-back to close), StrictMode-safe 150ms guard
   useEffect(() => {
     if (!open) return;
     const openedAt = Date.now();
@@ -87,7 +87,7 @@ export default function MobileSheet({
     return () => window.removeEventListener("keydown", onKey);
   }, [open]);
 
-  // Scroll reset — runs when sheet opens OR content key changes
+// Scroll reset. Runs when sheet opens OR content key changes
   useEffect(() => {
     if (open && bodyRef.current) {
       bodyRef.current.scrollTop = 0;
@@ -135,7 +135,7 @@ export default function MobileSheet({
         )}
       </AnimatePresence>
 
-      {/* Sheet panel — fixed directly to the viewport bottom */}
+{/* Sheet panel. Fixed directly to the viewport bottom */}
       <AnimatePresence>
         {open && (
           <motion.div
@@ -159,7 +159,7 @@ export default function MobileSheet({
             }}
             data-testid={testId}
           >
-            {/* Drag handle + sticky header — entire zone is a drag target */}
+{/* Drag handle + sticky header. Entire zone is a drag target */}
             <div
               className="flex-shrink-0 bg-white border-b"
               style={{ borderColor: "var(--gmc-line)", touchAction: "none" }}

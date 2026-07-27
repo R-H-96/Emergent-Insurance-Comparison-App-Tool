@@ -7,8 +7,8 @@ import TrustStrip from "@/components/TrustStrip";
  * Full: the marketing hero, for anyone arriving cold.
  *
  * Compact: shown once someone has been through the intake. The full hero tells
- * the reader to "pick two or three insurers" — which they just did, four
- * questions ago — and then costs them a full screen of scrolling before they
+* the reader to "pick two or three insurers", which they just did, four
+* questions ago and then costs them a full screen of scrolling before they
  * reach their own answer. After the intake the page's job is to show the
  * comparison, not to re-pitch the tool.
  */
@@ -61,7 +61,7 @@ export default function Hero({ compact = false }) {
             style={{ color: "var(--gmc-body)" }}
           >
             Pick two or three insurers. See what each one actually covers,
-            straight from the policy document — every value cited, every gap
+straight from the policy document, every value cited, every gap
             visible. We describe the differences; a licensed adviser gives the
             advice.
           </p>

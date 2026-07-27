@@ -6,7 +6,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
  * This replaces the separate legend row. A legend asks the reader to hold a
  * mapping in their head and carry it back to the thing they were looking at;
  * making the marker itself tappable removes that step, removes a row of chrome,
- * and — unlike a `title` tooltip — actually works on a touchscreen.
+* and. Unlike a `title` tooltip, actually works on a touchscreen.
  */
 export default function MarkerInfo({ title, children, label, className = "" }) {
   return (

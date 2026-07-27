@@ -3,7 +3,7 @@ import { Info, ChevronDown } from "lucide-react";
 import GlossaryText from "@/components/GlossaryText";
 
 /**
- * "Why this matters" affordance — the single, consistent tap-to-reveal
+* "Why this matters" affordance, the single, consistent tap-to-reveal
  * pattern used across the tool (priority cards, table rows, detail modal).
  *
  * Renders the `why` field from gmc_tool_data.json, which is plain-English
@@ -11,9 +11,9 @@ import GlossaryText from "@/components/GlossaryText";
  * {glossary} markers, so the body goes through GlossaryText.
  *
  * Two modes:
- *   inline    — always expanded, teal-tinted panel with a left rule.
+* inline. Always expanded, teal-tinted panel with a left rule.
  *               Used for readers who told us they're new to this.
- *   collapsed — a small pill button that expands on tap.
+* collapsed. A small pill button that expands on tap.
  *               Used for confident readers and in dense views.
  */
 export default function WhyReveal({

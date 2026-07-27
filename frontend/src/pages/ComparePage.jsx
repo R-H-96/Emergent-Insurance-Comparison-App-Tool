@@ -39,7 +39,7 @@ function readInitialState() {
 
   const activeGroups = parseCsv(params.get("groups"), VALID_GROUPS);
 
-  // ?feature=<slug> opens that comparison directly — shareable, and the hook
+// ?feature=<slug> opens that comparison directly, shareable, and the hook
   // the head-to-head pages need.
   const featureSlug = params.get("feature");
 
@@ -136,7 +136,7 @@ export default function ComparePage({ embed = false, initialGroups = [] }) {
       .filter((i) => selected.includes(i.id))
       .map((i) => i.name)
       .join(" vs ");
-    const feat = openFeature ? `${openFeature} — ` : "";
+const feat = openFeature ? `${openFeature}, `: "";
     document.title = names
       ? `${feat}${names} | Compare NZ health insurance | Get My Cover`
       : "Compare NZ health insurance | Get My Cover";
@@ -276,7 +276,7 @@ export default function ComparePage({ embed = false, initialGroups = [] }) {
       pushEvent("gmc_share", { method: "clipboard" });
       setTimeout(() => setLinkCopied(false), 1600);
     } catch (_err) {
-      toast.error("Could not share — long-press the address bar instead.");
+toast.error("Could not share, long-press the address bar instead.");
     }
   };
 

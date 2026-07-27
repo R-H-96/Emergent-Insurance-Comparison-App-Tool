@@ -3,7 +3,7 @@ import MarkerInfo from "@/components/MarkerInfo";
 
 /**
  * Shared factual band pill. Describes the size of a stated limit
- * (Standard / Higher / Highest) — never a quality judgement.
+* (Standard / Higher / Highest), never a quality judgement.
  */
 export default function TierBadge({ band, className = "" }) {
   const meta = BAND_META[band];
@@ -11,7 +11,7 @@ export default function TierBadge({ band, className = "" }) {
   return (
     <MarkerInfo
       title={`${meta.label} stated limits`}
-      label="Describes how large this policy's stated limits are in this area, measured against its own other areas — not against the other insurers, and not a judgement of which policy is better for you."
+label="Describes how large this policy's stated limits are in this area, measured against its own other areas. Not against the other insurers, and not a judgement of which policy is better for you."
       className={className}
     >
       <span

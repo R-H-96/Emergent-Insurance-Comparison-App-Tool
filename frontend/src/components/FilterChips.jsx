@@ -1,9 +1,9 @@
 import { groupLabel } from "@/lib/personalisation";
 /**
- * FilterChips — group filter selector.
+* FilterChips, group filter selector.
  *
  * Two visual modes controlled by the `filled` prop:
- *   Default (inline): compact chips. They WRAP from sm upwards — the labels are
+* Default (inline): compact chips. They WRAP from sm upwards, the labels are
  *     long enough now that a single scrolling row hid the last few sections
  *     behind a fade with no way to reach them on a mouse. Below sm they scroll
  *     horizontally (with a visible scrollbar) so they don't eat the screen.

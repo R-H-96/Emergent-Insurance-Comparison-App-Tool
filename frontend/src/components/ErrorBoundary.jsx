@@ -7,8 +7,8 @@ import { pushEvent } from "@/lib/analytics";
  * Last line of defence.
  *
  * This tool is embedded inside someone else's page. Without a boundary, a
- * single unexpected null — a missing insurer, a malformed row after a data
- * update — unmounts the whole React tree and leaves a blank rectangle on a live
+* single unexpected null. A missing insurer, a malformed row after a data
+* update. Unmounts the whole React tree and leaves a blank rectangle on a live
  * site, with nothing telling the visitor what happened or what to do instead.
  *
  * So a failure degrades to the thing the tool exists to produce anyway: a route

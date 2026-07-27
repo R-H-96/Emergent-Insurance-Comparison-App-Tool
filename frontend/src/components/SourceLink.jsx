@@ -5,7 +5,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
  * Compact provenance affordance.
  *
  * Version strings ("Policy document, effective 1 Apr 2026") are long, repeat on
- * every card and column, and matter to almost nobody on first read — but they
+* every card and column, and matter to almost nobody on first read but they
  * have to remain one click away, because "every value is cited" is the whole
  * premise of the tool. So the citation collapses to the word "Source" and opens
  * the document name, its effective date and a link to the PDF.
@@ -44,7 +44,7 @@ export default function SourceLink({ insurer, citation, className = "", align = 
           Where this comes from
         </div>
         <div className="font-extrabold text-[14px]" style={{ color: "var(--gmc-ink)" }}>
-          {insurer.name} — {insurer.product}
+{insurer.name}, {insurer.product}
         </div>
         <p className="text-[12.5px] leading-relaxed mt-1" style={{ color: "var(--gmc-body)" }}>
           {insurer.version}

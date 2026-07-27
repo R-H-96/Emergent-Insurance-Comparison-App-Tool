@@ -140,7 +140,7 @@ export default function ComparisonTable({
           const isCollapsed = collapsed.has(group);
           return (
             <div key={group} data-testid={`group-${group}`}>
-              {/* Group header — redesigned: gradient + left accent + pill count */}
+{/* Group header. Redesigned: gradient + left accent + pill count */}
               <button
                 type="button"
                 onClick={() => toggleGroup(group)}
@@ -248,7 +248,7 @@ export default function ComparisonTable({
                           data-testid={`cell-${ins.id}-${f.feature.replace(/\s+/g, "-").toLowerCase()}`}
                         >
                           <div className="text-[13px] font-semibold leading-snug flex-1" style={{ color: "var(--gmc-ink-2)" }}>
-                            {entry?.short ? <GlossaryText text={entry.short} glossary={glossary} /> : <span style={{ color: "var(--gmc-faint)" }}>—</span>}
+{entry?.short ? <GlossaryText text={entry.short} glossary={glossary} />: <span style={{ color: "var(--gmc-faint)" }}>Not recorded</span>}
                           </div>
                           <VerifiedIcon verified={entry?.verified} />
                         </div>
@@ -370,7 +370,7 @@ export default function ComparisonTable({
                           >
                             <div className="flex items-center justify-between gap-2 mb-1">
                               <div className="flex items-center gap-2">
-                                {/* Circular mark — replaces rectangular InsurerLogo */}
+{/* Circular mark, replaces rectangular InsurerLogo */}
                                 <InsurerMark insurer={ins} size={28} />
                                 <div
                                   className="text-[12px] font-bold"
@@ -382,7 +382,7 @@ export default function ComparisonTable({
                               <VerifiedIcon verified={entry?.verified} />
                             </div>
                             <div className="text-[14px] font-semibold leading-snug" style={{ color: "var(--gmc-ink-2)" }}>
-                              {entry?.short ? <GlossaryText text={entry.short} glossary={glossary} /> : <span style={{ color: "var(--gmc-faint)" }}>—</span>}
+{entry?.short ? <GlossaryText text={entry.short} glossary={glossary} />: <span style={{ color: "var(--gmc-faint)" }}>Not recorded</span>}
                             </div>
                           </div>
                         );

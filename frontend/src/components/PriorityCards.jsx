@@ -12,18 +12,18 @@ import {
 import { THEME_BANDS, RADAR_THEMES } from "@/data/glanceModel";
 
 /**
- * Rung 0 of the disclosure ladder — "Your priorities".
+* Rung 0 of the disclosure ladder, "Your priorities".
  *
  * Two clearly separated sections:
- *   "What you told us matters"  — differences inside groups the user chose,
+* "What you told us matters". Differences inside groups the user chose,
  *                                 in the order they chose them.
- *   "Also worth knowing"        — a top-up so a narrow pick doesn't produce a
+* "Also worth knowing". A top-up so a narrow pick doesn't produce a
  *                                 one-card answer after four questions, plus
  *                                 anything suggested by the household answer,
  *                                 attributed rather than passed off as theirs.
  *
  * The section heading carries the "these are yours" meaning, so individual
- * cards don't need a per-card badge — every card in the first section is by
+* cards don't need a per-card badge. Every card in the first section is by
  * definition one they picked, which made the old badge pure decoration.
  */
 const MIN_CARDS = 3;
@@ -172,7 +172,7 @@ export default function PriorityCards({
                   {entry?.short ? (
                     <GlossaryText text={entry.short} glossary={glossary} />
                   ) : (
-                    <span style={{ color: "var(--gmc-faint)" }}>—</span>
+<span style={{ color: "var(--gmc-faint)" }}>Not recorded</span>
                   )}
                 </div>
               </div>

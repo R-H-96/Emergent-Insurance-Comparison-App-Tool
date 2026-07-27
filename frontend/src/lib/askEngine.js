@@ -1,5 +1,5 @@
 /**
- * Deterministic client-side ask engine (v2 — synonyms + typo tolerance).
+* Deterministic client-side ask engine (v2, synonyms + typo tolerance).
  *
  * Ranking signals per feature:
  *   +5 exact phrase match of any synonym phrase in the question
@@ -8,8 +8,8 @@
  *   +1 token in feature corpus (definition, why, cells, glossary mentions)
  *
  * All tokenisation is case-insensitive. Words of ≥5 letters use Levenshtein
- * distance ≤2 for fuzzy match ("surgey" → "surgery"). Never generates text —
- * only returns the best feature match (or null when below the threshold).
+* distance ≤2 for fuzzy match ("surgey" → "surgery"). Never generates text.
+ * Only returns the best feature match (or null when below the threshold).
  */
 
 const STOP_WORDS = new Set([
@@ -23,18 +23,11 @@ const STOP_WORDS = new Set([
 ]);
 
 function normalise(s) {
-  return String(s || "")
-    .toLowerCase()
-    .replace(/[^\p{L}\p{N}\s-]/gu, " ")
-    .replace(/\s+/g, " ")
-    .trim();
+  return String(s || "").toLowerCase().replace(/[^\p{L}\p{N}\s-]/gu, " ").replace(/\s+/g, " ").trim();
 }
 
 function tokenize(text) {
-  return normalise(text)
-    .split(/\s+/)
-    .filter(Boolean)
-    .filter((t) => !STOP_WORDS.has(t));
+  return normalise(text).split(/\s+/).filter(Boolean).filter((t) => !STOP_WORDS.has(t));
 }
 
 // Damerau-lite Levenshtein (transpositions ignored). Good enough for typos.
@@ -61,7 +54,7 @@ function editDistance(a, b) {
   return prev[bl];
 }
 
-// Return true if `qToken` matches any token in the corpus set — either exact
+// Return true if `qToken` matches any token in the corpus set, either exact
 // or (for tokens of length >= 5) within edit-distance 2.
 function fuzzyHas(corpusSet, qToken) {
   if (corpusSet.has(qToken)) return true;

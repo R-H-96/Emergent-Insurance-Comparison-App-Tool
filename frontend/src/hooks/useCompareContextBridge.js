@@ -15,7 +15,7 @@ const LS_KEY = "gmc_compare_context";
  *       timestamp:  "2026-02-21T09:12:41.123Z"
  *     }
  *
- * Rules — do NOT include anything else. No Ask questions, no filters, no
+* Rules. Do NOT include anything else. No Ask questions, no filters, no
  * scroll/route/browsing state. The host site is responsible for all consent
  * UI; this component performs no consent gating itself.
  *
@@ -49,7 +49,7 @@ export default function useCompareContextBridge({ productType, selectedInsurers 
         };
         window.localStorage.setItem(LS_KEY, JSON.stringify(payload));
       } catch (_err) {
-        /* localStorage disabled / quota — ignore silently */
+/* localStorage disabled / quota, ignore silently */
       }
     };
 

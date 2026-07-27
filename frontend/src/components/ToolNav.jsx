@@ -252,7 +252,7 @@ function RailChip({ insurer, onClick }) {
         className="absolute right-full mr-3 whitespace-nowrap px-3 py-1.5 rounded-full text-[12px] font-semibold opacity-0 -translate-x-1 pointer-events-none group-hover:opacity-100 group-hover:translate-x-0 transition-all"
         style={{ background: "var(--gmc-ink)", color: "white" }}
       >
-        {insurer.name} — change
+{insurer.name}, change
       </span>
     </button>
   );

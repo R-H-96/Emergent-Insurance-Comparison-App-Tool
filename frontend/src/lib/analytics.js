@@ -3,7 +3,7 @@
  * normalised event payload.
  *
  * NOTE: these land in `window.dataLayer` for GTM to pick up. If GTM isn't on the
- * page this embeds into, every event below is collected and never read — worth
+* page this embeds into, every event below is collected and never read, worth
  * confirming as part of the embed test.
  *
  * Events currently fired:

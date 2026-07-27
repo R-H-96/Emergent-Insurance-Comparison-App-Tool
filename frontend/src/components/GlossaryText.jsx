@@ -9,7 +9,7 @@ import {
  * Renders text with {term} markers replaced by dotted-underline spans that
  * open a small popover with the glossary definition.
  *
- * Marker syntax: `{term}` — the term inside is the glossary key AND the
+* Marker syntax: `{term}`. The term inside is the glossary key AND the
  * visible text. Matching is case-insensitive on the key.
  *
  * Example: "Includes chemo drugs {Pharmac} doesn't fund."

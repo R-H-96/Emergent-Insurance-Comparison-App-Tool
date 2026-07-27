@@ -259,7 +259,7 @@ function NoMatch({ onAskAnother }) {
             className="font-extrabold text-[15px]"
             style={{ color: "var(--gmc-ink)" }}
           >
-            Good question — that&apos;s one for an adviser.
+Good question, that&apos;s one for an adviser.
           </div>
           <p
             className="text-[13px] mt-0.5"
@@ -280,7 +280,7 @@ function NoMatch({ onAskAnother }) {
         </div>
       </div>
       <CTA
-        label="Talk to an adviser — free"
+label="Talk to an adviser, free"
         data-testid="ask-adviser-cta"
       />
     </div>

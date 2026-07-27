@@ -27,7 +27,7 @@ function App() {
     setUrlState({ embed: isEmbed, groups });
   }, []);
 
-  // Global delegated handler for `.gmc-quote-trigger` — production site binds
+// Global delegated handler for `.gmc-quote-trigger`, production site binds
   // its own modal here. Preview shows a toast so devs/reviewers see the fire.
   useEffect(() => {
     const handler = (e) => {
@@ -39,7 +39,7 @@ function App() {
       });
       toast.message("Adviser booking modal", {
         description:
-          "On the live GMC site the global modal opens here — this preview intentionally has no per-button handler.",
+"On the live GMC site the global modal opens here. This preview intentionally has no per-button handler.",
       });
     };
     document.addEventListener("click", handler);

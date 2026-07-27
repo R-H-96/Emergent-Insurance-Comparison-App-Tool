@@ -5,7 +5,7 @@
 @tailwind utilities;
 
 :root {
-  /* Brand — teal, never green */
+/* Brand, teal, never green */
   --gmc-teal:        #14B5AF;
   --gmc-teal-deep:   #006A66;
   --gmc-teal-mid:    #0D8A86;
@@ -240,7 +240,7 @@ body {
   border-radius: var(--gmc-r-chip);
 }
 
-/* Toggle pill — exact spec: 38×22 track, 16px white thumb at 3px offset.
+/* Toggle pill. Exact spec: 38×22 track, 16px white thumb at 3px offset.
    Uses !important to defeat the .gmc-tap min-width/height that would
    otherwise inflate it to 44×44. Tap-area is provided by the surrounding
    row / hit-slop instead. */
@@ -373,7 +373,7 @@ body {
   min-width: 44px;
 }
 
-/* Prevent iOS auto-zoom on input focus — inputs must be >= 16px */
+/* Prevent iOS auto-zoom on input focus. Inputs must be >= 16px */
 @media (max-width: 767px) {
   input[type="text"],
   input[type="search"],
@@ -399,7 +399,7 @@ select:focus-visible {
   box-shadow: 0 0 0 3px rgba(20, 181, 175, 0.35);
 }
 
-/* Print stylesheet — clean, ink-friendly comparison table */
+/* Print stylesheet, clean, ink-friendly comparison table */
 @media print {
   body { background: white; }
   .gmc-nav,

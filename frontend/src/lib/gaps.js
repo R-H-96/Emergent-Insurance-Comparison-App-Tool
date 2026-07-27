@@ -7,8 +7,8 @@
  *  The `signal` values in gmc_tool_data.json mix two very different kinds of
  *  absence, and conflating them would put a false statement on screen:
  *
- *    "none"          — the policy genuinely does not provide this.
- *    "not-stated"    — WE could not find it in the policy document. That is a
+* "none". The policy genuinely does not provide this.
+* "not-stated". WE could not find it in the policy document. That is a
  *    "not-in-wording"  gap in our extraction, NOT a gap in the policy. Telling
  *    "none-identified" a user an insurer "doesn't cover" something on this
  *    "verify"          basis would be actively misleading.
@@ -51,13 +51,13 @@ export const STATE_META = {
   },
   [COVER_STATE.CONDITIONAL]: {
     label: "Only sometimes",
-    help: "Covered in some circumstances only — for example if it's accepted when you apply, or if you buy an optional add-on. Open the row for the exact wording.",
+help: "Covered in some circumstances only. For example if it's accepted when you apply, or if you buy an optional add-on. Open the row for the exact wording.",
     fill: "#FAEEDA",
     text: "#854F0B",
   },
   [COVER_STATE.UNSTATED]: {
     label: "Not confirmed",
-    help: "We haven't found this stated either way in the policy document yet. It does NOT mean the policy excludes it — it means nobody has confirmed it. Check with an adviser or the insurer before relying on it.",
+help: "We haven't found this stated either way in the policy document yet. It does NOT mean the policy excludes it. It means nobody has confirmed it. Check with an adviser or the insurer before relying on it.",
     fill: "#F1EFE8",
     text: "#5F5E5A",
   },

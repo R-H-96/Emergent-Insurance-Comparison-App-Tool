@@ -1,21 +1,21 @@
 /**
  * ─────────────────────────────────────────────────────────────────────────
- *  ⚠  ASSUME_VERIFIED — MUST BE FALSE BEFORE THIS GOES ANYWHERE PUBLIC
+* ⚠ ASSUME_VERIFIED. MUST BE FALSE BEFORE THIS GOES ANYWHERE PUBLIC
  * ─────────────────────────────────────────────────────────────────────────
  *
  *  When true, every value renders with the "Checked against the policy" marker
- *  even though nothing in gmc_tool_data.json has actually been verified — all
+* even though nothing in gmc_tool_data.json has actually been verified, all
  *  125 values are still `"verified": "pending"`.
  *
  *  This exists so the tool can be demoed without every row shouting "still
  *  being checked". It is a DISPLAY override only. The data file is deliberately
- *  left truthful, so nothing here has to be undone later — flip this one flag
+* left truthful, so nothing here has to be undone later, flip this one flag
  *  and the tool tells the truth again.
  *
  *  Why it's a flag and not an edit to the data:
  *    · "Every value is cited and checked" is the product's entire claim. Baking
  *      a false verified state into the dataset would make that claim unfalsifiable
- *      from inside the repo — you'd have no record of what was actually checked.
+* from inside the repo. You'd have no record of what was actually checked.
  *    · The launch rule in the original UI/UX map is explicit: nothing renders as
  *      Verified unless the source says YES.
  *

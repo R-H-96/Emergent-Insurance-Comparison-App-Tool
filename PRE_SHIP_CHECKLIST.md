@@ -8,7 +8,7 @@ Things that must be resolved before this tool is visible to the public. Ordered 
 
 **File:** `frontend/src/lib/config.js`
 
-Right now every value displays "Checked against the policy" and the trust line reads "Checked against policy documents". **None of that is true yet** — all 125 values in `gmc_tool_data.json` are still `"verified": "pending"`.
+Right now every value displays "Checked against the policy" and the trust line reads "Checked against policy documents". **None of that is true yet**. All 125 values in `gmc_tool_data.json` are still `"verified": "pending"`.
 
 This is a display override so the tool demos cleanly. The data file was deliberately left truthful so there's nothing to undo.
 
@@ -28,7 +28,7 @@ or edit the constant in `config.js`.
 
 **Tracker:** `GMC_Verification_Checklist.xlsx` (in the Get My Cover Website Project folder)
 
-125 values across 5 policies and 25 features. The "Do these first" tab ranks them by leverage — the 9 notable features that drive the differences view and priority cards, then the values currently showing users "Not confirmed".
+125 values across 5 policies and 25 features. The "Do these first" tab ranks them by leverage. The 9 notable features that drive the differences view and priority cards, then the values currently showing users "Not confirmed".
 
 When a value is confirmed, set its `verified` field in `gmc_tool_data.json` to `"verified YYYY-MM-DD"`. Once all are done, delete the `ASSUME_VERIFIED` flag entirely.
 
@@ -38,13 +38,13 @@ When a value is confirmed, set its `verified` field in `gmc_tool_data.json` to `
 
 Neither of these is a fact-check, so neither is in the spreadsheet. Both put words on screen that a user could act on.
 
-**`frontend/src/data/glanceModel.js` — `THEME_BANDS`**
+**`frontend/src/data/glanceModel.js`, `THEME_BANDS`**
 
 The Standard / Higher / Highest bands behind the coverage radar, the care journey and the priority cards. An editorial read of how large each policy's stated limits are. The file carries its own note saying these need review before launch. Everything downstream is a pure function of these numbers.
 
-**`frontend/src/lib/gaps.js` — cover-state groupings**
+**`frontend/src/lib/gaps.js`, cover-state groupings**
 
-Which `signal` values count as "Not covered" versus "Only sometimes" versus "Not confirmed". Getting this wrong tells someone a policy excludes something it doesn't — the highest-consequence error the tool can make. The three-state split exists specifically so "we couldn't find it" is never rendered as "not covered"; keep that separation if the mapping is revised.
+Which `signal` values count as "Not covered" versus "Only sometimes" versus "Not confirmed". Getting this wrong tells someone a policy excludes something it doesn't. The highest-consequence error the tool can make. The three-state split exists specifically so "we couldn't find it" is never rendered as "not covered"; keep that separation if the mapping is revised.
 
 ---
 
@@ -58,13 +58,13 @@ Which `signal` values count as "Not covered" versus "Only sometimes" versus "Not
 
 ## 5. Wire the adviser CTA
 
-Every CTA carries the `gmc-quote-trigger` class and no click handler, by design — the parent site's global modal binds to that class. Confirm that binding exists on the page where this is embedded, or the primary conversion path silently does nothing.
+Every CTA carries the `gmc-quote-trigger` class and no click handler, by design. The parent site's global modal binds to that class. Confirm that binding exists on the page where this is embedded, or the primary conversion path silently does nothing.
 
 ---
 
 ## 6. Legal and compliance
 
-- Insurer logo usage — the trademark fair-use check flagged in the original UI/UX map.
+- Insurer logo usage. The trademark fair-use check flagged in the original UI/UX map.
 - Confirm the standing disclaimer and the "not affiliated with any insurer" line appear on every rendered view, including the print output.
 - Check that no ranking language has crept back in. The tool describes; it never recommends.
 

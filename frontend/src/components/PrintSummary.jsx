@@ -3,12 +3,12 @@ import { coverState, gapFeatures, STATE_META, COVER_STATE } from "@/lib/gaps";
 import { isNotableForSelection } from "@/lib/notable";
 
 /**
- * "Take this to your adviser" — the printable artefact.
+* "Take this to your adviser", the printable artefact.
  *
  * Hidden on screen, rendered on print. The tool's job ends at describing
  * differences; the adviser conversation is where those differences get turned
  * into a decision, so the most useful thing we can hand someone is a page they
- * can put on the table in that conversation — every value, every cover gap, and
+* can put on the table in that conversation. Every value, every cover gap, and
  * every citation, on paper.
  *
  * Deliberately plain: no colour fills, no chrome, nothing that costs ink or
@@ -96,7 +96,7 @@ export default function PrintSummary({ features, insurers, lookup, intake }) {
                       {st !== COVER_STATE.COVERED ? `[${STATE_META[st].label}]` : ""}
                     </td>
                     <td style={{ padding: "2px 0", verticalAlign: "top" }}>
-                      {(entry?.short || "—").replace(/[{}]/g, "")}
+{(entry?.short || "Not recorded").replace(/[{}]/g, "")}
                       {entry?.source && (
                         <div style={{ fontSize: 9 }}>Source: {entry.source}</div>
                       )}
@@ -116,7 +116,7 @@ export default function PrintSummary({ features, insurers, lookup, intake }) {
         {insurers.map((ins) =>
           (ins.sources || []).map((s, i) => (
             <li key={`${ins.id}-${i}`} style={{ marginBottom: 2 }}>
-              {ins.name} — {s.label}: {s.url}
+{ins.name}, {s.label}: {s.url}
             </li>
           )),
         )}
@@ -130,13 +130,13 @@ export default function PrintSummary({ features, insurers, lookup, intake }) {
         <li>What would each policy cost me, and how do excess choices change that?</li>
         <li>What happens to anything I&apos;ve already been treated for?</li>
         {intake?.switching && (
-          <li>What do I lose from my current policy if I move — waiting periods, loyalty benefits?</li>
+<li>What do I lose from my current policy if I move, waiting periods, loyalty benefits?</li>
         )}
       </ul>
 
       <p style={{ fontSize: 9.5, marginTop: 16, lineHeight: 1.5 }}>
         Summaries for general information only, not financial advice. Values marked
-        &ldquo;Not confirmed&rdquo; have not been located in the policy wording — that does not
+&ldquo;Not confirmed&rdquo; have not been located in the policy wording, that does not
         mean they are excluded. Always confirm against the insurer&apos;s current policy
         document. Get My Cover is independent and is not affiliated with or endorsed by any
         insurer. Insurer names are used to identify the products compared.

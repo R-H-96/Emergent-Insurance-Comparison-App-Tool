@@ -3,14 +3,19 @@ import { ChevronLeft, ArrowRight } from "lucide-react";
 import InsurerMark from "@/components/InsurerMark";
 import GlossaryText from "@/components/GlossaryText";
 import TierBadge from "@/components/TierBadge";
+import MobileSheet from "@/components/MobileSheet";
+import useMediaQuery from "@/hooks/useMediaQuery";
 import { RADAR_THEMES, THEME_BANDS, BAND_META, bandToScore, standoutThemes } from "@/data/glanceModel";
 import { groupLabel, groupShortLabel } from "@/lib/personalisation";
 import { isNotableForSelection } from "@/lib/notable";
 
 const CX = 130;
-const CY = 126;
-const R = 82;
-const VB = { ox: -54, oy: -18, w: 368, h: 300 };
+const CY = 130;
+const R = 78;
+// Generous margins. On a phone the axis labels previously sat almost on top of
+// the plot, so the viewBox carries far more space around the shape than the
+// geometry strictly needs.
+const VB = { ox: -76, oy: -34, w: 412, h: 340 };
 
 function hexToRgba(hex, a) {
   if (!hex || hex[0] !== "#") return `rgba(20,181,175,${a})`;
@@ -32,10 +37,10 @@ const toPct = (x, y) => ({
 /**
  * Coverage profile.
  *
- * Tapping an axis opens that area's actual policy wording in the side column —
- * the chart is a way into the data, not a picture you look at and then go
- * hunting elsewhere. Hover still previews on desktop, but every interaction is
- * reachable by tap, because hover does not exist on a phone.
+ * Tapping an axis opens that area's actual policy wording. On a wide screen it
+ * fills the side column; on a phone it arrives as a sheet, because a panel
+ * below a full-width chart lands off the bottom of the screen and reads as
+ * nothing having happened.
  *
  * Tapping an insurer isolates its shape. That is the per-insurer filter people
  * ask for, achieved by direct manipulation rather than another row of controls.
@@ -50,6 +55,7 @@ export default function InsurerRadar({
   const [focusInsurer, setFocusInsurer] = useState(null);
   const [hoverTheme, setHoverTheme] = useState(null);
   const [openTheme, setOpenTheme] = useState(null);
+  const isWide = useMediaQuery("(min-width: 1024px)");
 
   const dimmed = focusInsurer || hoverInsurer;
   const isDim = (id) => !!dimmed && dimmed !== id;
@@ -71,13 +77,80 @@ export default function InsurerRadar({
 
   const active = openTheme ? themes.find((t) => t.id === openTheme) : null;
   const areaFeatures = active
-    ? features.filter(
-        (f) => f.group === active.group && isNotableForSelection(f, insurers, lookup),
-      )
+    ? features.filter((f) => f.group === active.group && isNotableForSelection(f, insurers, lookup))
     : [];
 
   const toggleTheme = (id) => setOpenTheme((cur) => (cur === id ? null : id));
   const toggleFocus = (id) => setFocusInsurer((cur) => (cur === id ? null : id));
+
+  const AreaDetail = active ? (
+    <div>
+      {isWide && (
+        <button
+          type="button"
+          className="gmc-tap inline-flex items-center gap-1.5 text-[12px] font-bold mb-2"
+          style={{ color: "var(--gmc-teal-mid)" }}
+          onClick={() => setOpenTheme(null)}
+          data-testid="radar-area-back"
+        >
+          <ChevronLeft className="w-3.5 h-3.5" strokeWidth={2.5} aria-hidden="true" />
+          Back
+        </button>
+      )}
+      {isWide && (
+        <div className="text-[13px] font-extrabold mb-2" style={{ color: "var(--gmc-ink)" }}>
+          {groupLabel(active.group)}
+        </div>
+      )}
+
+      {areaFeatures.length === 0 ? (
+        <p className="text-[13px] leading-relaxed" style={{ color: "var(--gmc-body)" }}>
+          These policies don&apos;t differ notably in this area.
+        </p>
+      ) : (
+        <div className="space-y-2.5">
+          {areaFeatures.map((f) => (
+            <div key={f.feature} className="rounded-[10px] p-3" style={{ background: "var(--gmc-bg-alt)" }}>
+              <button
+                type="button"
+                className="text-left w-full text-[13px] font-extrabold leading-snug"
+                style={{ color: "var(--gmc-ink)" }}
+                onClick={() => onOpenFeature && onOpenFeature(f.feature)}
+                data-testid={`radar-area-feature-${f.feature.replace(/\s+/g, "-").toLowerCase()}`}
+              >
+                {f.plain || f.feature}
+              </button>
+              {insurers.map((ins) => {
+                const entry = lookup[ins.id]?.[f.feature];
+                return (
+                  <div key={ins.id} className="flex items-start gap-2 mt-2">
+                    <InsurerMark insurer={ins} size={18} />
+                    <span className="text-[12.5px] leading-snug" style={{ color: "var(--gmc-ink-2)" }}>
+                      {entry?.short ? (
+                        <GlossaryText text={entry.short} glossary={glossary} />
+                      ) : (
+                        <span style={{ color: "var(--gmc-faint)" }}>Not recorded</span>
+                      )}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          ))}
+        </div>
+      )}
+
+      <button
+        type="button"
+        className="gmc-btn-outline gmc-tap w-full mt-3"
+        onClick={() => { setOpenTheme(null); onOpenTheme && onOpenTheme(active.group); }}
+        data-testid="radar-area-open-table"
+      >
+        See this section in full
+        <ArrowRight className="w-3.5 h-3.5" strokeWidth={2.5} aria-hidden="true" />
+      </button>
+    </div>
+  ) : null;
 
   return (
     <div className="gmc-card p-3 sm:p-6" data-testid="coverage-profile">
@@ -89,12 +162,12 @@ export default function InsurerRadar({
           Coverage profile
         </div>
         <div className="text-[12.5px] mt-0.5" style={{ color: "var(--gmc-muted)" }}>
-          Each shape maps an insurer across six areas — a bigger reach means larger stated
+          Each shape maps an insurer across six areas. A bigger reach means larger stated
           limits there. Tap an area to read the wording behind it.
         </div>
       </div>
 
-      <div className="grid md:grid-cols-[1.15fr_0.85fr] gap-4 items-start mt-3">
+      <div className="grid lg:grid-cols-[1.15fr_0.85fr] gap-4 items-start mt-3">
         <div className="relative">
           <svg
             viewBox={`${VB.ox} ${VB.oy} ${VB.w} ${VB.h}`}
@@ -122,7 +195,7 @@ export default function InsurerRadar({
                   strokeWidth={dim ? 1.25 : 2.25}
                   strokeOpacity={dim ? 0.35 : 1}
                   strokeLinejoin="round"
-                  style={{ transition: "all .15s", cursor: "pointer" }}
+                  style={{ transition: "all .15s", cursor: "pointer", outline: "none" }}
                   onPointerEnter={() => setHoverInsurer(ins.id)}
                   onPointerLeave={() => setHoverInsurer(null)}
                   onClick={() => toggleFocus(ins.id)}
@@ -132,12 +205,14 @@ export default function InsurerRadar({
             })}
 
             {themes.map((t, i) => {
-              const [px, py] = axisPoint(i, N, R + 26);
+              const [px, py] = axisPoint(i, N, R + 40);
               const ux = axisPoint(i, N, 1)[0] - CX;
               const anchor = ux > 4 ? "start" : ux < -4 ? "end" : "middle";
               const [hx, hy] = axisPoint(i, N, R);
               const isOpen = openTheme === t.id;
               const isPicked = highlightGroups.includes(t.group);
+              const label = groupShortLabel(t.group);
+              const w = label.length * 7.4 + 16;
               return (
                 <g
                   key={t.id}
@@ -147,13 +222,13 @@ export default function InsurerRadar({
                   onClick={() => toggleTheme(t.id)}
                   role="button"
                   tabIndex={0}
-                  aria-label={`${groupLabel(t.group)} — show the wording`}
+                  aria-label={`${groupLabel(t.group)}, show the wording`}
                   onKeyDown={(e) => {
                     if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggleTheme(t.id); }
                   }}
                   data-testid={`radar-axis-${t.id}`}
                 >
-                  <circle cx={hx} cy={hy} r="18" fill="transparent" />
+                  <circle cx={hx} cy={hy} r="22" fill="transparent" />
                   <circle
                     cx={hx}
                     cy={hy}
@@ -161,11 +236,20 @@ export default function InsurerRadar({
                     fill={isOpen || isPicked ? "var(--gmc-teal)" : "var(--gmc-line)"}
                     style={{ transition: "fill .15s" }}
                   />
+                  <rect
+                    x={anchor === "start" ? px - 8 : anchor === "end" ? px - w + 8 : px - w / 2}
+                    y={py - 16}
+                    width={w}
+                    height="26"
+                    rx="13"
+                    fill={isOpen ? "var(--gmc-teal-tint-2)" : "transparent"}
+                    style={{ transition: "fill .15s" }}
+                  />
                   <text
                     x={px}
                     y={py}
                     textAnchor={anchor}
-                    fontSize="12"
+                    fontSize="13"
                     fontWeight={isOpen || isPicked ? "800" : "700"}
                     fill={
                       isOpen
@@ -176,14 +260,14 @@ export default function InsurerRadar({
                     }
                     style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
                   >
-                    {groupShortLabel(t.group)}
+                    {label}
                   </text>
                 </g>
               );
             })}
           </svg>
 
-          {tipTheme && tipAnchor && (
+          {tipTheme && tipAnchor && isWide && (
             <div
               className="absolute z-10 pointer-events-none rounded-[10px] px-3 py-2 shadow-[0_8px_24px_rgba(22,28,39,0.16)]"
               style={{
@@ -204,7 +288,7 @@ export default function InsurerRadar({
                 return (
                   <div key={ins.id} className="flex items-center justify-between gap-3 text-[11px] py-0.5">
                     <span className="font-semibold" style={{ color: ins.accent }}>{ins.name}</span>
-                    <span className="font-bold" style={{ color: meta?.text }}>{meta?.label || "—"}</span>
+                    <span className="font-bold" style={{ color: meta?.text }}>{meta?.label || "Not recorded"}</span>
                   </div>
                 );
               })}
@@ -234,10 +318,7 @@ export default function InsurerRadar({
                   data-testid={`radar-legend-${ins.id}`}
                 >
                   <InsurerMark insurer={ins} size={24} />
-                  <span
-                    className="text-[13px] font-extrabold"
-                    style={{ color: ins.accent || "var(--gmc-ink)" }}
-                  >
+                  <span className="text-[13px] font-extrabold" style={{ color: ins.accent || "var(--gmc-ink)" }}>
                     {ins.name}
                   </span>
                 </button>
@@ -257,81 +338,9 @@ export default function InsurerRadar({
           </div>
         </div>
 
-        {/* Right column — the index, or the wording for the tapped area */}
         <div data-testid="radar-summary">
-          {active ? (
-            <div>
-              <button
-                type="button"
-                className="gmc-tap inline-flex items-center gap-1.5 text-[12px] font-bold mb-2"
-                style={{ color: "var(--gmc-teal-mid)" }}
-                onClick={() => setOpenTheme(null)}
-                data-testid="radar-area-back"
-              >
-                <ChevronLeft className="w-3.5 h-3.5" strokeWidth={2.5} aria-hidden="true" />
-                Back
-              </button>
-              <div
-                className="text-[13px] font-extrabold mb-2"
-                style={{ color: "var(--gmc-ink)" }}
-              >
-                {groupLabel(active.group)}
-              </div>
-
-              {areaFeatures.length === 0 ? (
-                <p className="text-[12px] leading-relaxed" style={{ color: "var(--gmc-body)" }}>
-                  These policies don&apos;t differ notably in this area.
-                </p>
-              ) : (
-                <div className="space-y-2.5">
-                  {areaFeatures.map((f) => (
-                    <div
-                      key={f.feature}
-                      className="rounded-[10px] p-2.5"
-                      style={{ background: "var(--gmc-bg-alt)" }}
-                    >
-                      <button
-                        type="button"
-                        className="text-left w-full text-[12.5px] font-extrabold leading-snug"
-                        style={{ color: "var(--gmc-ink)" }}
-                        onClick={() => onOpenFeature && onOpenFeature(f.feature)}
-                        data-testid={`radar-area-feature-${f.feature.replace(/\s+/g, "-").toLowerCase()}`}
-                      >
-                        {f.feature}
-                      </button>
-                      {insurers.map((ins) => {
-                        const entry = lookup[ins.id]?.[f.feature];
-                        return (
-                          <div key={ins.id} className="flex items-start gap-1.5 mt-1.5">
-                            <InsurerMark insurer={ins} size={16} />
-                            <span
-                              className="text-[11.5px] leading-snug"
-                              style={{ color: "var(--gmc-ink-2)" }}
-                            >
-                              {entry?.short ? (
-                                <GlossaryText text={entry.short} glossary={glossary} />
-                              ) : (
-                                <span style={{ color: "var(--gmc-faint)" }}>—</span>
-                              )}
-                            </span>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  ))}
-                </div>
-              )}
-
-              <button
-                type="button"
-                className="gmc-btn-outline gmc-tap w-full mt-3"
-                onClick={() => onOpenTheme && onOpenTheme(active.group)}
-                data-testid="radar-area-open-table"
-              >
-                See this section in full
-                <ArrowRight className="w-3.5 h-3.5" strokeWidth={2.5} aria-hidden="true" />
-              </button>
-            </div>
+          {active && isWide ? (
+            AreaDetail
           ) : (
             <div className="space-y-2.5">
               <div
@@ -373,33 +382,41 @@ export default function InsurerRadar({
                         {ins.name}
                         <TierBadge band={so.band} />
                       </span>
-                      <span
-                        className="block text-[12px] leading-snug"
-                        style={{ color: "var(--gmc-body)" }}
-                      >
+                      <span className="block text-[12px] leading-snug" style={{ color: "var(--gmc-body)" }}>
                         Largest stated limits in {so.groups.map(groupLabel).join(", ")}
                       </span>
                     </span>
                   </div>
                 );
               })}
-              <p
-                className="text-[10.5px] leading-snug pt-1"
-                style={{ color: "var(--gmc-faint)" }}
-              >
-                Each policy is measured against its own other areas here, not against the
-                other insurers. Tap an insurer to isolate it, or an area on the chart to read
-                the wording.
+              <p className="text-[10.5px] leading-snug pt-1" style={{ color: "var(--gmc-faint)" }}>
+                Each policy is measured against its own other areas here, not against the other
+                insurers. Tap an insurer to isolate it, or an area on the chart to read the
+                wording.
               </p>
             </div>
           )}
         </div>
       </div>
 
+      {!isWide && (
+        <MobileSheet
+          open={!!active}
+          onClose={() => setOpenTheme(null)}
+          eyebrow="Coverage area"
+          title={active ? groupLabel(active.group) : ""}
+          testId="radar-area-sheet"
+          scrollKey={openTheme || ""}
+          maxHeight="min(78dvh, 640px)"
+        >
+          <div className="p-5">{AreaDetail}</div>
+        </MobileSheet>
+      )}
+
       <p className="mt-3 text-[11px] leading-relaxed italic" style={{ color: "var(--gmc-faint)" }}>
-        Reach reflects the size and breadth of each insurer&apos;s stated limits by area — a
-        factual orientation, not a recommendation. A wider shape isn&apos;t automatically
-        better for your situation.
+        Reach reflects the size and breadth of each insurer&apos;s stated limits by area. A
+        factual orientation, not a recommendation. A wider shape isn&apos;t automatically better
+        for your situation.
       </p>
     </div>
   );

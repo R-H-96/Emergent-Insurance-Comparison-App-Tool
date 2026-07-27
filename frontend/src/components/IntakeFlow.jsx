@@ -4,7 +4,7 @@ import {
   ArrowRight, ArrowLeft, Check, User, Users, UsersRound,
   Ribbon, Scissors, Stethoscope, Home, Hourglass, Award,
 } from "lucide-react";
-import InsurerLogo from "@/components/InsurerLogo";
+import InsurerMark from "@/components/InsurerMark";
 import CTA from "@/components/CTA";
 import {
   HOUSEHOLD_OPTIONS, PRIORITY_OPTIONS, KNOWLEDGE_OPTIONS,
@@ -21,11 +21,11 @@ const STEPS = ["household", "priorities", "knowledge", "insurers"];
 const MAX_PRIORITIES = 3;
 
 /**
- * Guided intake — four short screens shown before the comparison surface.
+* Guided intake. Four short screens shown before the comparison surface.
  *
  * Answers only re-order and re-explain what's shown; nothing is ever hidden
  * permanently (the "Everything" level of the ladder always shows all 25
- * features). "Skip — just compare" is available on every screen.
+* features). "Skip. Just compare" is available on every screen.
  *
  * No contact details are collected here. Lead capture happens only via the
  * adviser CTA, which the parent site's modal binds to.
@@ -103,7 +103,7 @@ export default function IntakeFlow({
             style={{ color: "var(--gmc-muted)" }}
             data-testid="intake-skip"
           >
-            Skip — just compare
+Skip, just compare
           </button>
         </div>
         <div
@@ -134,7 +134,7 @@ export default function IntakeFlow({
             {key === "household" && (
               <Screen
                 title="Who's this cover for?"
-                sub="Just so we show you the right kind of detail — there are no wrong answers."
+sub="Just so we show you the right kind of detail, there are no wrong answers."
               >
                 <div className="space-y-3">
                   {HOUSEHOLD_OPTIONS.map((o) => {
@@ -158,7 +158,7 @@ export default function IntakeFlow({
             {key === "priorities" && (
               <Screen
                 title="What matters most to you?"
-                sub={`Pick up to ${MAX_PRIORITIES}. We'll put those first — you can still see everything else.`}
+sub={`Pick up to ${MAX_PRIORITIES}. We'll put those first. You can still see everything else.`}
               >
                 <div className="grid sm:grid-cols-2 gap-3">
                   {PRIORITY_OPTIONS.map((o) => {
@@ -228,11 +228,11 @@ export default function IntakeFlow({
                         style={{
                           borderColor: isSel ? accent : "var(--gmc-line-soft)",
                           background: isSel ? "var(--gmc-teal-tint-2)" : "white",
-                          boxShadow: isSel ? `0 0 0 2px ${accent}` : "none",
+                          boxShadow: isSel ? `inset 0 0 0 2px ${accent}` : "none",
                         }}
                         data-testid={`intake-insurer-${ins.id}`}
                       >
-                        <InsurerLogo insurer={ins} size={30} />
+                        <InsurerMark insurer={ins} size={38} />
                         <span className="min-w-0 flex-1">
                           <span
                             className="block font-extrabold text-[15px] leading-tight"
@@ -304,7 +304,7 @@ export default function IntakeFlow({
           <p className="text-[13px] mb-3" style={{ color: "var(--gmc-body)" }}>
             Rather have someone walk you through it?
           </p>
-          <CTA compact label="Talk to an FMA-licensed adviser — free" data-testid="intake-cta" />
+<CTA compact label="Talk to an FMA-licensed adviser, free" data-testid="intake-cta" />
         </div>
       </div>
     </section>

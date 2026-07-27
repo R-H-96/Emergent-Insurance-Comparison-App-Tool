@@ -7,7 +7,7 @@ const ICONS = { user: User, search: Search, scissors: Scissors, heart: HeartPuls
 
 /**
  * Each stage maps to exactly one feature (stage.headline), so tapping a stage
- * goes straight to that feature's full detail — no intermediate panel, unlike
+* goes straight to that feature's full detail, no intermediate panel, unlike
  * the radar, whose axes each cover a whole group.
  *
  * Making the stages open matters beyond convenience: the timeline shows only
@@ -221,7 +221,7 @@ export default function CareJourney({ insurers, lookup, onOpen }) {
       </div>
 
       <p className="mt-3 text-[11px] leading-relaxed italic" style={{ color: "var(--gmc-faint)" }}>
-        &ldquo;Largest limit&rdquo; reflects the stated wording for that area only — it doesn&apos;t account for excess,
+&ldquo;Largest limit&rdquo; reflects the stated wording for that area only, it doesn&apos;t account for excess,
         price, or your own health needs.
       </p>
     </div>

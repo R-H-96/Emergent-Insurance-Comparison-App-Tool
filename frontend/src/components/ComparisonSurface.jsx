@@ -16,15 +16,15 @@ import { pushEvent } from "@/lib/analytics";
  * The comparison surface, organised around ONE control: a three-rung
  * disclosure ladder.
  *
- *   0 · Your priorities  — PriorityCards. The differences inside the groups
+* 0 · Your priorities. PriorityCards. The differences inside the groups
  *                          the user chose, each with plain-English context.
- *   1 · All differences  — AtAGlance (radar / journey / diff reel), with the
+* 1 · All differences. AtAGlance (radar / journey / diff reel), with the
  *                          chart-heavy panels hidden for self-declared
  *                          beginners.
- *   2 · Everything       — the full 25-feature grouped table.
+* 2 · Everything, the full 25-feature grouped table.
  *
  * This ladder replaces BOTH the old Quick/Full density segmented control and
- * the separate "notable differences only" toggle — rungs 0 and 1 are
+* the separate "notable differences only" toggle, rungs 0 and 1 are
  * inherently difference-only, so the toggle had nothing left to do. Group
  * filters are only relevant at rung 2, so they only appear there.
  */
@@ -61,6 +61,8 @@ export default function ComparisonSurface({
           insurers={insurers}
           onEditIntake={onEditIntake}
           onEditInsurers={onOpenPicker}
+          onShare={onShare}
+          onPrint={() => { pushEvent("gmc_print", { level }); window.print(); }}
         />
 
         {/* Sticky ladder */}
@@ -118,44 +120,10 @@ export default function ComparisonSurface({
 
             <button
               type="button"
-              onClick={onOpenPicker}
-              className="gmc-tap hidden sm:flex items-center gap-1.5 rounded-full pl-1 pr-2.5 py-1 flex-shrink-0 transition-colors hover:bg-[color:var(--gmc-teal-tint)]"
-              style={{ border: "1px solid var(--gmc-line)", background: "white" }}
-              aria-label="Change which insurers you are comparing"
-              data-testid="sticky-insurers"
-            >
-              <span className="flex flex-shrink-0">
-                {insurers.map((ins, i) => (
-                  <span
-                    key={ins.id}
-                    style={{
-                      marginLeft: i > 0 ? -7 : 0,
-                      boxShadow: "0 0 0 2px white",
-                      borderRadius: "50%",
-                      display: "flex",
-                      zIndex: insurers.length - i,
-                      position: "relative",
-                    }}
-                  >
-                    <InsurerMark insurer={ins} size={22} />
-                  </span>
-                ))}
-              </span>
-              <Pencil
-                className="w-3.5 h-3.5 flex-shrink-0"
-                strokeWidth={2.2}
-                style={{ color: "var(--gmc-teal-mid)" }}
-                aria-hidden="true"
-              />
-            </button>
-
-            <button
-              type="button"
               onClick={() => { pushEvent("gmc_print", { level }); window.print(); }}
-              className="gmc-tap hidden sm:flex items-center justify-center w-10 h-10 rounded-full flex-shrink-0 transition-colors hover:bg-[color:var(--gmc-teal-tint)]"
+              className="gmc-tap hidden lg:flex items-center justify-center w-10 h-10 rounded-full flex-shrink-0 transition-colors hover:bg-[color:var(--gmc-teal-tint)]"
               style={{ border: "1px solid var(--gmc-line)", background: "white" }}
               aria-label="Print or save this comparison to take to an adviser"
-              title="Print / save as PDF"
               data-testid="print-btn"
             >
               <Printer className="w-4 h-4" strokeWidth={2.2} style={{ color: "var(--gmc-body)" }} />
@@ -164,16 +132,12 @@ export default function ComparisonSurface({
             <button
               type="button"
               onClick={onShare}
-              className="gmc-tap flex items-center justify-center w-10 h-10 rounded-full flex-shrink-0 transition-colors hover:bg-[color:var(--gmc-teal-tint)]"
+              className="gmc-tap hidden lg:flex items-center justify-center w-10 h-10 rounded-full flex-shrink-0 transition-colors hover:bg-[color:var(--gmc-teal-tint)]"
               style={{ border: "1px solid var(--gmc-line)", background: "white" }}
               aria-label="Share this comparison"
               data-testid="share-btn"
             >
-              <Share2
-                className="w-4 h-4"
-                strokeWidth={2.2}
-                style={{ color: linkCopied ? "var(--gmc-teal)" : "var(--gmc-body)" }}
-              />
+              <Share2 className="w-4 h-4" strokeWidth={2.2} style={{ color: linkCopied ? "var(--gmc-teal)" : "var(--gmc-body)" }} />
             </button>
           </div>
         </div>
@@ -194,7 +158,7 @@ export default function ComparisonSurface({
           </button>
         </div>
 
-        {/* Group filters — only meaningful in the full table */}
+{/* Group filters. Only meaningful in the full table */}
         {level === 2 && (
           <div className="mt-3">
             <div className="flex items-center gap-2 mb-2">

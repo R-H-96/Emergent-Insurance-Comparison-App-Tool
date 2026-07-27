@@ -1,4 +1,4 @@
-# GMC Comparison Tool — Handover
+# GMC Comparison Tool, Handover
 
 A **100% static React** insurance-comparison tool (no backend). Reads a bundled JSON, renders a highly-polished compliance-strict comparison surface, and hands a minimal context snapshot to the host site when the user clicks any adviser CTA.
 
@@ -28,13 +28,13 @@ A **100% static React** insurance-comparison tool (no backend). Reads a bundled 
 * **Framework**: React 19 + CRA / craco (build only, no dev server needed)
 * **Styling**: Tailwind + shadcn/ui + a small brand-token CSS layer (`index.css`)
 * **Motion**: `framer-motion` (bottom-sheet drag, morph transitions, staggered reveals)
-* **State**: pure React (`useState` / `useMemo`) — persisted to `localStorage` + `URLSearchParams`
+* **State**: pure React (`useState` / `useMemo`), persisted to `localStorage` + `URLSearchParams`
 * **Data**: bundled JSON (see below). No fetch, no backend, no DB.
 * **Deploy**: static build → GitHub Pages via the workflow at `.github/workflows/build.yml`
 
 ---
 
-## 2. Data — `frontend/src/data/gmc_tool_data.json`
+## 2. Data, `frontend/src/data/gmc_tool_data.json`
 
 Single JSON, imported at build time. Shape:
 
@@ -68,7 +68,7 @@ Data flow:
 2. Selected insurers, filters, and density mode are read from `URLSearchParams` (share link), then fall back to `localStorage.gmc_last_selection`, then to defaults (`sc`, `nib`).
 3. Everything downstream is a pure function of those pieces of state.
 
-To add data: **only** edit `gmc_tool_data.json` — no code change required for new insurers, features, groups, or glossary terms. The only exception is the circular-mark PNG set (see §3).
+To add data: **only** edit `gmc_tool_data.json`. No code change required for new insurers, features, groups, or glossary terms. The only exception is the circular-mark PNG set (see §3).
 
 ---
 
@@ -145,13 +145,13 @@ To add data: **only** edit `gmc_tool_data.json` — no code change required for 
 | File | Purpose |
 |---|---|
 | `hooks/useMediaQuery.js` | SSR-safe `matchMedia` hook. |
-| `hooks/useCompareContextBridge.js` | **Context bridge** — capture-phase click listener on `.gmc-quote-trigger` (see §4). |
+| `hooks/useCompareContextBridge.js` | **Context bridge**. Capture-phase click listener on `.gmc-quote-trigger` (see §4). |
 | `lib/notable.js` | Pair-aware notability engine: which rows are worth highlighting for the current insurer pair. |
 | `lib/analytics.js` | `pushEvent(name, payload)` → `window.dataLayer`. |
 
 ### UI primitives
 
-`components/ui/*` — vanilla shadcn (Dialog, Popover, Sheet, Button, Command, etc.). Reused verbatim.
+`components/ui/*`. Vanilla shadcn (Dialog, Popover, Sheet, Button, Command, etc.). Reused verbatim.
 
 ---
 
@@ -180,7 +180,7 @@ The tool is embed-ready. Everything the host needs to know:
 
 ### 4.4 `localStorage.gmc_compare_context`
 
-The **only** state the tool writes for the host. Privacy-restricted — no questions, no filters, no browsing state.
+The **only** state the tool writes for the host. Privacy-restricted. No questions, no filters, no browsing state.
 
 ```js
 {
@@ -193,11 +193,11 @@ The **only** state the tool writes for the host. Privacy-restricted — no quest
 }
 ```
 
-The host site handles all consent UI — the tool does **no** consent gating itself. Read it, use it to pre-fill a HubSpot form, and clear it after submit.
+The host site handles all consent UI. The tool does **no** consent gating itself. Read it, use it to pre-fill a HubSpot form, and clear it after submit.
 
 Also present, unchanged:
 
-* `localStorage.gmc_last_selection` — internal use only (persists user's last chosen insurers + filters + density between visits).
+* `localStorage.gmc_last_selection`. Internal use only (persists user's last chosen insurers + filters + density between visits).
 
 ---
 
@@ -242,7 +242,7 @@ cp build/index.html build/404.html
 touch build/.nojekyll
 ```
 
-Output lands in `frontend/build/` — deploy that folder to any static host. `PUBLIC_URL=.` produces relative asset paths so the app runs from any sub-path (e.g. `getmycover.co.nz/tools/compare/`).
+Output lands in `frontend/build/`. Deploy that folder to any static host. `PUBLIC_URL=.` produces relative asset paths so the app runs from any sub-path (e.g. `getmycover.co.nz/tools/compare/`).
 
 ### 6.3 GitHub Pages via CI
 
@@ -255,7 +255,7 @@ Output lands in `frontend/build/` — deploy that folder to any static host. `PU
 
 Enable Pages once in **Repo → Settings → Pages → Source = "GitHub Actions"**. The workflow does the rest.
 
-The `frontend/build/` folder is also committed to the repo as a **manual fallback** — a maintainer can point any static host directly at `frontend/build/` without running CI.
+The `frontend/build/` folder is also committed to the repo as a **manual fallback**. A maintainer can point any static host directly at `frontend/build/` without running CI.
 
 ---
 
@@ -265,19 +265,19 @@ The `frontend/build/` folder is also committed to the repo as a **manual fallbac
 |---|---|
 | Add a new insurer | `gmc_tool_data.json` (`insurers` + `data.{id}`) + drop `public/logos/{id}.png`. If they have a clean symbol, add a cropped `public/logos/marks/{id}.png` (128×128) and include the id in `InsurerMark.jsx → MARK_IDS`. |
 | Add a new feature | `gmc_tool_data.json` (`features` + `data.*` entries) + add a lucide icon mapping in `FeatureIcon.jsx`. |
-| Adjust brand colours | `frontend/src/index.css` (top of file — `--gmc-teal`, `--gmc-ink`, etc.) |
+| Adjust brand colours | `frontend/src/index.css` (top of file, `--gmc-teal`, `--gmc-ink`, etc.) |
 | Change spacing scale | Everything is on multiples of 4 px. Radii are three named tokens (`--gmc-r-ctl`, `--gmc-r-card`, `--gmc-r-chip`) in `index.css`. |
-| Add an analytics event | `lib/analytics.js` — just call `pushEvent(name, payload)`. |
+| Add an analytics event | `lib/analytics.js`, just call `pushEvent(name, payload)`. |
 
 ---
 
 ## 8. Gotchas learned in production
 
-* **React StrictMode double-invokes effects in dev** — `MobileSheet` uses a 150 ms time guard to ignore the spurious `popstate` that the double-mount pattern produces. Do not remove.
+* **React StrictMode double-invokes effects in dev**. `MobileSheet` uses a 150 ms time guard to ignore the spurious `popstate` that the double-mount pattern produces. Do not remove.
 * **`min-width` / `min-height` from `.gmc-tap` will win over an explicit `width`** if `.gmc-tap` is defined later in `index.css`. `.gmc-toggle` therefore uses `!important` on width/height to enforce the 38 × 22 spec.
-* **iOS Safari auto-zooms on focus if input `font-size` < 16 px** — a global media rule in `index.css` forces 16 px on all inputs on `<768px`.
-* **Sub-2 px borders snap to 1 px in Chromium** — the "Comparing" strip uses `inset box-shadow` to render a crisp 1.5 px stroke.
-* **GitHub Pages returns 404 on client-side deep links** — the workflow copies `index.html` to `404.html` so refreshes still work.
+* **iOS Safari auto-zooms on focus if input `font-size` < 16 px**. A global media rule in `index.css` forces 16 px on all inputs on `<768px`.
+* **Sub-2 px borders snap to 1 px in Chromium**. The "Comparing" strip uses `inset box-shadow` to render a crisp 1.5 px stroke.
+* **GitHub Pages returns 404 on client-side deep links**. The workflow copies `index.html` to `404.html` so refreshes still work.
 
 ---
 
@@ -285,5 +285,5 @@ The `frontend/build/` folder is also committed to the repo as a **manual fallbac
 
 * No backend, no DB, no server-side rendering.
 * No auth, no user accounts.
-* No consent UI — the host site owns that.
-* No `?ask=` prefill / no filter or ask-question state in `gmc_compare_context` — privacy restriction is deliberate.
+* No consent UI, the host site owns that.
+* No `?ask=` prefill / no filter or ask-question state in `gmc_compare_context`, privacy restriction is deliberate.

@@ -8,7 +8,7 @@ import useMediaQuery from "@/hooks/useMediaQuery";
  * Every insurance word in one place.
  *
  * Terms wrapped in {braces} already explain themselves where they appear, but
- * that only covers text we've marked up — the insurers' own values are full of
+* that only covers text we've marked up. The insurers' own values are full of
  * jargon we deliberately haven't edited. This is the fallback: a reader who
  * hits an unfamiliar word anywhere can look it up without leaving the page.
  */
@@ -38,7 +38,7 @@ export default function GlossaryPanel({ glossary, open, onOpenChange }) {
           type="text"
           value={q}
           onChange={(e) => setQ(e.target.value)}
-          placeholder="Search a word — try 'excess'"
+placeholder="Search a word, try 'excess'"
           className="flex-1 bg-transparent text-[15px] focus:outline-none py-2"
           style={{ color: "var(--gmc-ink)" }}
           aria-label="Search the glossary"
@@ -58,7 +58,7 @@ export default function GlossaryPanel({ glossary, open, onOpenChange }) {
 
       {terms.length === 0 ? (
         <p className="text-[13.5px] py-4 text-center" style={{ color: "var(--gmc-body)" }}>
-          Nothing matches &ldquo;{q}&rdquo;. Try a shorter word, or ask an adviser — some terms
+Nothing matches &ldquo;{q}&rdquo;. Try a shorter word, or ask an adviser, some terms
           only appear in an insurer&apos;s own wording.
         </p>
       ) : (

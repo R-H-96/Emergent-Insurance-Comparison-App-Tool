@@ -18,7 +18,7 @@ import { groupLabel, featureTitle } from "@/lib/personalisation";
 
 /**
  * Internal extraction notes ("VERIFY", "EXTERNAL VERIFICATION NEEDED") live in
- * `internal_note`, which is never rendered — but they have also been written
+* `internal_note`, which is never rendered but they have also been written
  * into `detail` strings, and this modal falls back to `detail` when a row has
  * no `detail_points`. That leaked six of them to users once, so the fallback is
  * filtered here as well as cleaned in the data. Belt and braces: the data can
@@ -105,7 +105,7 @@ export default function DetailModal({ feature, insurers, lookup, glossary, expla
                 </div>
               </>
             ) : (
-              <p className="mt-4 text-[18px] font-light" style={{ color: "var(--gmc-faint)" }}>—</p>
+<p className="mt-4 text-[14px]" style={{ color: "var(--gmc-faint)" }}>Not recorded</p>
             )}
           </div>
         );
@@ -119,9 +119,9 @@ export default function DetailModal({ feature, insurers, lookup, glossary, expla
       style={{ background: "var(--gmc-bg-alt)" }}
     >
       <p className="text-[13px] leading-relaxed max-w-md" style={{ color: "var(--gmc-body)" }}>
-        Not sure how this applies to you? Ask an adviser — free.
+Not sure how this applies to you? Ask an adviser, free.
       </p>
-      <CTA label="Ask an adviser — free" data-testid="detail-modal-cta" />
+<CTA label="Ask an adviser, free" data-testid="detail-modal-cta" />
     </div>
   );
 
@@ -180,9 +180,9 @@ export default function DetailModal({ feature, insurers, lookup, glossary, expla
           style={{ borderColor: "var(--gmc-line)", background: "var(--gmc-bg-alt)" }}
         >
           <p className="text-[13px] leading-relaxed max-w-md" style={{ color: "var(--gmc-body)" }}>
-            Not sure how this applies to you? Ask an adviser — free.
+Not sure how this applies to you? Ask an adviser, free.
           </p>
-          <CTA label="Ask an adviser — free" data-testid="detail-modal-cta" />
+<CTA label="Ask an adviser, free" data-testid="detail-modal-cta" />
         </div>
       </DialogContent>
     </Dialog>

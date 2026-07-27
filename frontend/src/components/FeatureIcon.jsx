@@ -76,7 +76,7 @@ export function iconForFeature(name) {
 }
 
 /**
- * <FeatureIcon name={feature.feature} /> — renders an 18px muted-ink icon.
+* <FeatureIcon name={feature.feature} />, renders an 18px muted-ink icon.
  * Size + colour are overridable via props.
  */
 export default function FeatureIcon({

@@ -1,20 +1,20 @@
 /**
- * At-a-glance model — the single source of truth for the redesigned
+* At-a-glance model. The single source of truth for the redesigned
  * At-a-glance surface (radar hero → care journey → differences reel).
  *
  * ─────────────────────────────────────────────────────────────────────────
- *  COMPLIANCE NOTE — READ BEFORE LAUNCH
+* COMPLIANCE NOTE, READ BEFORE LAUNCH
  * ─────────────────────────────────────────────────────────────────────────
  *  The `THEME_BANDS` below are an editorial *orientation* of how large /
  *  broad each insurer's STATED limits are in a given area. They describe the
- *  size of the wording — a factual read — NOT a recommendation, and NOT a
+* size of the wording. A factual read. NOT a recommendation, and NOT a
  *  judgement of which policy is "better". A higher band is not automatically
  *  better for any given person (excess, price, health needs all matter).
  *
  *  Bands are a first pass drafted from the policy values in
  *  `gmc_tool_data.json`. They MUST be reviewed and signed off (ideally by an
- *  adviser) before this surface goes live. Everything downstream — radar
- *  shape, journey leaders, tier badges — is a pure function of these numbers,
+* adviser) before this surface goes live. Everything downstream, radar
+* shape, journey leaders, tier badges. Is a pure function of these numbers,
  *  so adjusting a band here updates the whole surface.
  *
  *  Band scale:  1 = Standard limits · 2 = Higher limits · 3 = Highest / broadest
@@ -76,14 +76,14 @@ export function leadersForTheme(themeId, insurers) {
 // Factual "standout" line for one insurer: the theme labels where it holds its
 // own highest band (used by the radar side-summary). Describes limit size only.
 /**
- * The areas where THIS insurer states its own largest limits — measured against
+* The areas where THIS insurer states its own largest limits, measured against
  * its other five areas, NOT against the other insurers on screen. Returns the
  * canonical group names so the caller applies the shared vocabulary.
  */
 export function standoutThemes(insurerId) {
   const bands = THEME_BANDS[insurerId] || {};
   const top = Math.max(0, ...RADAR_THEMES.map((t) => bands[t.id] || 0));
-  // Unknown insurer or all-zero bands — nothing meaningful to surface.
+// Unknown insurer or all-zero bands, nothing meaningful to surface.
   if (top === 0) return { band: 0, groups: [] };
   const groups = RADAR_THEMES.filter((t) => (bands[t.id] || 0) === top).map((t) => t.group);
   return { band: top, groups };

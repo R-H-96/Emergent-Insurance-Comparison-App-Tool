@@ -7,14 +7,14 @@ import DifferencesPanel from "@/components/DifferencesPanel";
 import { isNotableForSelection } from "@/lib/notable";
 
 /**
- * Rung 1 of the disclosure ladder — "All differences".
+* Rung 1 of the disclosure ladder, "All differences".
  *
  * Which panels appear depends on how much insurance knowledge the reader told
  * us they have (see explanationMode in lib/personalisation):
- *   new      — the prose diff reel only. A six-axis radar is an abstraction on
+* new. The prose diff reel only. A six-axis radar is an abstraction on
  *              top of an abstraction for someone still learning the words.
- *   some     — journey timeline + diff reel.
- *   informed — everything, including the radar.
+* some, journey timeline + diff reel.
+* informed, everything, including the radar.
  *
  * Mobile shows whichever panels are enabled as a tabbed carousel; desktop
  * stacks them.
@@ -39,7 +39,7 @@ export default function AtAGlance({
 
   if (!insurers.length) return null;
 
-  // Hiding the chart outright from beginners was too blunt — it's offered,
+// Hiding the chart outright from beginners was too blunt, it's offered,
   // just folded away so it can't be the first thing that greets them.
   const radarOpenByDefault = explanation?.showRadar !== false;
   const showRadar = true;
@@ -115,7 +115,7 @@ export default function AtAGlance({
       {notable.length === 0 ? (
         <div className="gmc-card p-6 sm:p-8 text-center" data-testid="at-a-glance-empty">
           <p className="text-[14px]" style={{ color: "var(--gmc-body)" }}>
-            These policies agree on the notable points for this selection — switch an
+These policies agree on the notable points for this selection, switch an
             insurer to surface the interesting differences.
           </p>
         </div>
@@ -216,7 +216,7 @@ function CollapsedPanel({ label, children }) {
           {open ? "Hide" : "Show"} the {label.toLowerCase()}
         </span>
         <span className="text-[12px] ml-auto" style={{ color: "var(--gmc-muted)" }}>
-          A visual summary — more detail than most people need
+A visual summary. More detail than most people need
         </span>
       </button>
       {open && <div className="mt-4">{children}</div>}

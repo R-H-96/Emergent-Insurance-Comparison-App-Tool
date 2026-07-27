@@ -9,7 +9,7 @@ import GlossaryText from "@/components/GlossaryText";
 import CTA from "@/components/CTA";
 
 /**
- * Floating ask panel — desktop drawer (~420px) anchored bottom-right.
+* Floating ask panel, desktop drawer (~420px) anchored bottom-right.
  * On mobile the content is surfaced via MobileFAB's Ask tab instead;
  * this component renders nothing below xl.
  */
@@ -184,10 +184,10 @@ export function AskPanelBody({ askState, examples, insurers, lookup, glossary, o
                   className="font-extrabold text-[14px]"
                   style={{ color: "var(--gmc-ink)" }}
                 >
-                  Good question — that&apos;s one for an adviser.
+Good question, that&apos;s one for an adviser.
                 </div>
                 <div className="mt-2">
-                  <CTA compact label="Ask an adviser — free" data-testid="ask-panel-adviser-cta" />
+<CTA compact label="Ask an adviser, free" data-testid="ask-panel-adviser-cta" />
                 </div>
               </div>
             </div>
@@ -245,7 +245,7 @@ export function AskPanelBody({ askState, examples, insurers, lookup, glossary, o
               </div>
             ) : (
               <div className="text-[12px] mt-1" style={{ color: "var(--gmc-body)" }}>
-                No direct match — logged for an adviser to review.
+No direct match. Logged for an adviser to review.
               </div>
             )}
           </div>
@@ -306,7 +306,7 @@ function ResultCard({ feature, insurers, lookup, glossary, onLocate, onOpenFeatu
                   {entry?.short ? (
                     <GlossaryText text={entry.short} glossary={glossary} />
                   ) : (
-                    <span style={{ color: "var(--gmc-faint)" }}>—</span>
+<span style={{ color: "var(--gmc-faint)" }}>Not recorded</span>
                   )}
                 </div>
               </div>
