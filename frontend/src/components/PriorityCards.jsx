@@ -1,4 +1,4 @@
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, Lightbulb } from "lucide-react";
 import FeatureIcon from "@/components/FeatureIcon";
 import InsurerMark from "@/components/InsurerMark";
 import GlossaryText from "@/components/GlossaryText";
@@ -82,7 +82,7 @@ export default function PriorityCards({
 
   const Card = ({ f, note }) => (
     <div
-      className="gmc-card p-4 sm:p-5"
+      className="gmc-card p-5 sm:p-5"
       data-testid={`priority-card-${f.feature.replace(/\s+/g, "-").toLowerCase()}`}
     >
       <div className="flex items-center gap-2 flex-wrap mb-1.5">
@@ -109,15 +109,15 @@ export default function PriorityCards({
         data-testid={`priority-open-${f.feature.replace(/\s+/g, "-").toLowerCase()}`}
       >
         <span
-          className="flex items-center gap-2 font-extrabold text-[16px] sm:text-[17px] leading-snug"
+          className="flex items-start gap-2.5 font-extrabold text-[18px] sm:text-[17px] leading-snug"
           style={{ color: "var(--gmc-ink)" }}
         >
-          <FeatureIcon name={f.feature} size={19} />
+          <FeatureIcon name={f.feature} size={20} className="mt-1" />
           <span className="flex-1">
             {featureTitle(f, mode).primary}
             {featureTitle(f, mode).secondary && (
               <span
-                className="block text-[12.5px] sm:text-[11.5px] font-semibold mt-0.5"
+                className="block text-[13.5px] sm:text-[11.5px] font-semibold mt-1.5"
                 style={{ color: "var(--gmc-muted)" }}
               >
                 {featureTitle(f, mode).secondary}
@@ -137,8 +137,18 @@ export default function PriorityCards({
         tag="div"
         text={f.definition}
         glossary={glossary}
-        className="text-[14px] sm:text-[13px] mt-1 leading-relaxed"
+        className="text-[14.5px] sm:text-[13px] mt-2.5 leading-relaxed"
       />
+
+      {note && (
+        <div
+          className="flex items-start gap-1.5 mt-2.5 text-[13px] sm:text-[11.5px] font-semibold"
+          style={{ color: "var(--gmc-teal-deep)" }}
+        >
+          <Lightbulb className="w-3.5 h-3.5 flex-shrink-0 mt-0.5" strokeWidth={2.2} aria-hidden="true" />
+          {note}
+        </div>
+      )}
 
       <WhyReveal
         why={f.why}
@@ -154,7 +164,7 @@ export default function PriorityCards({
           return (
             <div
               key={ins.id}
-              className="flex items-start gap-2.5 py-2.5"
+              className="flex items-start gap-2.5 py-3 sm:py-2.5"
               style={{ borderTop: "1px solid var(--gmc-line)" }}
             >
               <InsurerMark insurer={ins} size={24} />
@@ -186,7 +196,7 @@ export default function PriorityCards({
   );
 
   const SectionHeading = ({ children, sub }) => (
-    <div className="mb-2.5 mt-1">
+    <div className="mb-3 mt-1">
       <div
         className="text-[12.5px] sm:text-[11px] font-bold uppercase tracking-[0.08em]"
         style={{ color: "var(--gmc-muted)" }}

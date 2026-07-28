@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { ChevronLeft, ArrowRight } from "lucide-react";
+import InfoReveal from "@/components/InfoReveal";
+import { Info } from "lucide-react";
 import InsurerMark from "@/components/InsurerMark";
 import GlossaryText from "@/components/GlossaryText";
 import TierBadge from "@/components/TierBadge";
@@ -11,11 +13,12 @@ import { isNotableForSelection } from "@/lib/notable";
 
 const CX = 130;
 const CY = 130;
-const R = 78;
-// Generous margins. On a phone the axis labels previously sat almost on top of
-// the plot, so the viewBox carries far more space around the shape than the
-// geometry strictly needs.
-const VB = { ox: -76, oy: -34, w: 412, h: 340 };
+const R = 92;
+// Frame sized to the actual label extents rather than guessed at, so the plot
+// fills as much of the width as the longest label allows. Every label position
+// is checked against these bounds.
+const LABEL_OFFSET = 34;
+const VB = { ox: -89, oy: -19, w: 423, h: 292 };
 
 function hexToRgba(hex, a) {
   if (!hex || hex[0] !== "#") return `rgba(20,181,175,${a})`;
@@ -153,21 +156,46 @@ export default function InsurerRadar({
   ) : null;
 
   return (
-    <div className="gmc-card p-3 sm:p-6" data-testid="coverage-profile">
-      <div className="mb-1">
-        <div
-          className="text-[17px] sm:text-[19px] font-extrabold"
-          style={{ color: "var(--gmc-ink)", fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+    <div className="gmc-card p-4 sm:p-6" data-testid="coverage-profile">
+      <div className="mb-1 flex items-start justify-between gap-2">
+        <div className="min-w-0">
+          <div
+            className="text-[18px] sm:text-[19px] font-extrabold"
+            style={{ color: "var(--gmc-ink)", fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+          >
+            Coverage profile
+          </div>
+          <div className="text-[13.5px] sm:text-[12.5px] mt-0.5" style={{ color: "var(--gmc-muted)" }}>
+            A bigger shape means larger stated limits in that area.
+          </div>
+        </div>
+        <InfoReveal
+          title="Reading this chart"
+          testId="radar-help"
+          side="bottom"
+          align="end"
+          triggerClassName="gmc-tap flex items-center justify-center w-9 h-9 rounded-full flex-shrink-0"
+          triggerStyle={{ background: "var(--gmc-bg-alt)" }}
+          ariaLabel="How to read this chart"
+          body={
+            <>
+              Each coloured shape is one insurer, mapped across six areas of cover. The
+              further a shape reaches along an axis, the larger that policy&apos;s stated
+              limits are in that area.
+              <br /><br />
+              Tap any area name to read the actual policy wording behind it. Tap an insurer
+              to show only its shape.
+              <br /><br />
+              A wider shape is not automatically better for you. Excess, price and your own
+              health needs all matter, and none of them appear here.
+            </>
+          }
         >
-          Coverage profile
-        </div>
-        <div className="text-[13.5px] sm:text-[12.5px] mt-0.5" style={{ color: "var(--gmc-muted)" }}>
-          Each shape maps an insurer across six areas. A bigger reach means larger stated
-          limits there. Tap an area to read the wording behind it.
-        </div>
+          <Info className="w-4 h-4" strokeWidth={2.2} style={{ color: "var(--gmc-teal-mid)" }} />
+        </InfoReveal>
       </div>
 
-      <div className="grid lg:grid-cols-[1.15fr_0.85fr] gap-4 items-start mt-3">
+      <div className="grid lg:grid-cols-[1.15fr_0.85fr] gap-4 items-start mt-3 -mx-2 sm:mx-0">
         <div className="relative">
           <svg
             viewBox={`${VB.ox} ${VB.oy} ${VB.w} ${VB.h}`}
@@ -205,14 +233,14 @@ export default function InsurerRadar({
             })}
 
             {themes.map((t, i) => {
-              const [px, py] = axisPoint(i, N, R + 40);
+              const [px, py] = axisPoint(i, N, R + LABEL_OFFSET);
               const ux = axisPoint(i, N, 1)[0] - CX;
               const anchor = ux > 4 ? "start" : ux < -4 ? "end" : "middle";
               const [hx, hy] = axisPoint(i, N, R);
               const isOpen = openTheme === t.id;
               const isPicked = highlightGroups.includes(t.group);
               const label = groupShortLabel(t.group);
-              const w = label.length * 7.4 + 16;
+              const w = label.length * 7.15 + 18;
               return (
                 <g
                   key={t.id}
@@ -238,10 +266,10 @@ export default function InsurerRadar({
                   />
                   <rect
                     x={anchor === "start" ? px - 8 : anchor === "end" ? px - w + 8 : px - w / 2}
-                    y={py - 16}
+                    y={py - 17}
                     width={w}
-                    height="26"
-                    rx="13"
+                    height="28"
+                    rx="14"
                     fill={isOpen ? "var(--gmc-teal-tint-2)" : "transparent"}
                     style={{ transition: "fill .15s" }}
                   />

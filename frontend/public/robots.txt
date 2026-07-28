@@ -1,0 +1,4 @@
+# Preview build. Not for indexing until the policy values have been verified
+# against each insurer's wording. See PRE_SHIP_CHECKLIST.md in the repo root.
+User-agent: *
+Disallow: /

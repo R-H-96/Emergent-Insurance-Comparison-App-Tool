@@ -66,7 +66,11 @@ export default function ComparisonSurface({
         {/* Sticky ladder */}
         <div
           className="sticky z-[40] py-3 -mx-4 px-4 sm:mx-0 sm:px-0"
-          style={{ top: "var(--gmc-sticky-offset, 0px)", background: "var(--gmc-bg)" }}
+          style={{
+            top: "var(--gmc-sticky-offset, 0px)",
+            background: "var(--gmc-bg)",
+            boxShadow: "0 8px 8px -8px rgba(22,28,39,0.10)",
+          }}
           data-testid="ladder-sticky"
         >
           <div className="flex items-center gap-2">

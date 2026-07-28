@@ -121,7 +121,7 @@ exclusions doesn&apos;t make a policy better for you, limits, excess and price a
           onKeyDown={(e) => {
             if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onOpen(f.feature); }
           }}
-          className="w-full text-left px-5 sm:px-6 py-4 border-t cursor-pointer transition-colors hover:bg-[color:var(--gmc-teal-tint)] focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[color:var(--gmc-teal)]"
+          className="w-full text-left px-5 sm:px-6 py-5 sm:py-4 border-t cursor-pointer transition-colors hover:bg-[color:var(--gmc-teal-tint)] focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[color:var(--gmc-teal)]"
           style={{ borderColor: "var(--gmc-line)" }}
           data-testid={`diff-row-${f.feature.replace(/\s+/g, "-").toLowerCase()}`}
         >
@@ -140,7 +140,7 @@ exclusions doesn&apos;t make a policy better for you, limits, excess and price a
               {featureTitle(f, explanation).primary}
               {featureTitle(f, explanation).secondary && (
                 <span
-                  className="block text-[12.5px] sm:text-[11.5px] font-semibold mt-0.5"
+                  className="block text-[13.5px] sm:text-[11.5px] font-semibold mt-1.5"
                   style={{ color: "var(--gmc-muted)" }}
                 >
                   {featureTitle(f, explanation).secondary}
@@ -160,7 +160,7 @@ exclusions doesn&apos;t make a policy better for you, limits, excess and price a
               tag="div"
               text={f.definition}
               glossary={glossary}
-              className="mt-1 text-[13px] sm:text-[12px] leading-snug"
+              className="mt-2.5 text-[14px] sm:text-[12px] leading-relaxed"
             />
           )}
 

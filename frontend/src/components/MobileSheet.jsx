@@ -162,13 +162,16 @@ export default function MobileSheet({
 {/* Drag handle + sticky header. Entire zone is a drag target */}
             <div
               className="flex-shrink-0 bg-white border-b"
-              style={{ borderColor: "var(--gmc-line)", touchAction: "none" }}
-              onPointerDown={(e) => { if (!reduce) dragControls.start(e); }}
+              style={{ borderColor: "var(--gmc-line)" }}
             >
               {/* Handle pill */}
-              <div className="flex justify-center pt-3 pb-1">
+              <div
+                className="flex justify-center pt-3 pb-2"
+                style={{ touchAction: "none" }}
+                onPointerDown={(e) => { if (!reduce) dragControls.start(e); }}
+              >
                 <div
-                  className="h-[5px] w-9 rounded-full"
+                  className="h-[5px] w-12 rounded-full"
                   style={{ background: "var(--gmc-line)" }}
                   aria-hidden="true"
                 />

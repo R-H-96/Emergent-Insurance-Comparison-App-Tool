@@ -1,9 +1,5 @@
 import { Fragment, useMemo } from "react";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import InfoReveal from "@/components/InfoReveal";
 
 /**
  * Renders text with {term} markers replaced by dotted-underline spans that
@@ -56,7 +52,7 @@ export default function GlossaryText({ text, glossary, className, tag = "span" }
 }
 
 function GlossaryTerm({ term, definition }) {
-  // If no definition, still show dotted underline so authors notice missing terms.
+  // No definition: still underline it so authors notice the gap.
   if (!definition) {
     return (
       <span
@@ -69,49 +65,16 @@ function GlossaryTerm({ term, definition }) {
     );
   }
   return (
-    <Popover>
-      <PopoverTrigger asChild>
-        <button
-          type="button"
-          onClick={(e) => e.stopPropagation()}
-          onMouseDown={(e) => e.stopPropagation()}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" || e.key === " ") e.stopPropagation();
-          }}
-          className="underline decoration-dotted decoration-1 underline-offset-2 hover:decoration-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gmc-teal)] rounded-sm px-0.5 -mx-0.5 cursor-help"
-          style={{ color: "var(--gmc-teal-deep)" }}
-          data-testid={`glossary-term-${term.replace(/\s+/g, "-").toLowerCase()}`}
-          aria-label={`Glossary: ${term}`}
-        >
-          {term}
-        </button>
-      </PopoverTrigger>
-      <PopoverContent
-        className="w-80 bg-white border rounded-[16px] p-4 shadow-[0_12px_40px_rgba(22,28,39,0.12)]"
-        style={{ borderColor: "var(--gmc-line)" }}
-        side="top"
-        align="start"
-        data-testid="glossary-popover"
-      >
-        <div
-          className="text-[11px] font-bold uppercase tracking-[0.1em] mb-1"
-          style={{ color: "var(--gmc-teal-mid)" }}
-        >
-          Glossary
-        </div>
-        <div
-          className="font-extrabold text-[14px] mb-1.5"
-          style={{ color: "var(--gmc-ink)" }}
-        >
-          {term}
-        </div>
-        <p
-          className="text-[13px] leading-relaxed"
-          style={{ color: "var(--gmc-body)" }}
-        >
-          {definition}
-        </p>
-      </PopoverContent>
-    </Popover>
+    <InfoReveal
+      eyebrow="Glossary"
+      title={term}
+      body={definition}
+      ariaLabel={`Glossary: ${term}`}
+      testId={`glossary-term-${term.replace(/\s+/g, "-").toLowerCase()}`}
+      triggerClassName="underline decoration-dotted decoration-1 underline-offset-2 hover:decoration-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gmc-teal)] rounded-sm px-0.5 -mx-0.5 cursor-help"
+      triggerStyle={{ color: "var(--gmc-teal-deep)" }}
+    >
+      {term}
+    </InfoReveal>
   );
 }
