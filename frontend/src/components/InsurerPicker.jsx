@@ -13,7 +13,7 @@ export default function InsurerPicker({ insurers, selected, onToggle, compact = 
           )}
         </div>
         <div
-          className="text-xs font-semibold"
+          className="text-xs gmc-w-strong"
           style={{ color: "var(--gmc-muted)" }}
           data-testid="insurer-count"
         >
@@ -55,7 +55,7 @@ export default function InsurerPicker({ insurers, selected, onToggle, compact = 
                 )}
               </div>
               <div
-                className="text-[13px] sm:text-[12px] font-bold text-center leading-tight w-full"
+                className="gmc-t-sm gmc-w-strong text-center leading-tight w-full"
                 style={{ color: isSelected ? accent : "var(--gmc-ink)" }}
               >
                 {ins.name}
@@ -107,13 +107,13 @@ export default function InsurerPicker({ insurers, selected, onToggle, compact = 
                 )}
               </div>
               <div
-                className="mt-3 font-extrabold text-[15px] leading-tight"
+                className="mt-3 gmc-w-heavy gmc-t-md leading-tight"
                 style={{ color: isSelected ? accent : "var(--gmc-ink)" }}
               >
                 {ins.name}
               </div>
               <div
-                className="mt-1 text-xs font-semibold"
+                className="mt-1 text-xs gmc-w-strong"
                 style={{ color: "var(--gmc-muted)" }}
               >
                 {ins.product}

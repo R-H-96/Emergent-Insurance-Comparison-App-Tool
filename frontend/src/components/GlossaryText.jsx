@@ -71,7 +71,7 @@ function GlossaryTerm({ term, definition }) {
       body={definition}
       ariaLabel={`Glossary: ${term}`}
       testId={`glossary-term-${term.replace(/\s+/g, "-").toLowerCase()}`}
-      triggerClassName="underline decoration-dotted decoration-1 underline-offset-2 hover:decoration-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gmc-teal)] rounded-sm px-0.5 -mx-0.5 cursor-help"
+      triggerClassName="underline decoration-dotted decoration-1 underline-offset-2 hover:decoration-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gmc-teal)] rounded-[var(--gmc-r-ctl)] px-0.5 -mx-0.5 cursor-help"
       triggerStyle={{ color: "var(--gmc-teal-deep)" }}
     >
       {term}

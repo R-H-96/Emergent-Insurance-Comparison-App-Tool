@@ -41,7 +41,7 @@ export default function InsurerMark({ insurer, size = 32, className = "" }) {
         />
       ) : (
         <span
-          className="text-white font-extrabold leading-none"
+          className="text-white gmc-w-heavy leading-none"
           style={{
             fontSize: size * 0.42,
             fontFamily: "'Plus Jakarta Sans', sans-serif",

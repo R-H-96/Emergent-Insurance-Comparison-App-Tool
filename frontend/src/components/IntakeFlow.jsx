@@ -91,7 +91,7 @@ export default function IntakeFlow({
         {/* Progress + skip */}
         <div className="flex items-center justify-between gap-4 mb-2">
           <span
-            className="text-[12px] sm:text-[11px] font-bold uppercase tracking-[0.1em]"
+            className="gmc-t-xs gmc-w-strong uppercase tracking-[0.1em]"
             style={{ color: "var(--gmc-teal-mid)" }}
           >
             Step {step + 1} of {STEPS.length}
@@ -99,7 +99,7 @@ export default function IntakeFlow({
           <button
             type="button"
             onClick={skip}
-            className="text-[14px] sm:text-[13px] font-semibold underline decoration-dotted underline-offset-2 hover:decoration-solid"
+            className="gmc-t-sm gmc-w-strong underline decoration-dotted underline-offset-2 hover:decoration-solid"
             style={{ color: "var(--gmc-muted)" }}
             data-testid="intake-skip"
           >
@@ -179,7 +179,7 @@ sub={`Pick up to ${MAX_PRIORITIES}. We'll put those first. You can still see eve
                     );
                   })}
                 </div>
-                <p className="mt-3 text-[13px] sm:text-[12px]" style={{ color: "var(--gmc-muted)" }}>
+                <p className="mt-3 gmc-t-sm" style={{ color: "var(--gmc-muted)" }}>
                   {priorities.length} of {MAX_PRIORITIES} chosen
                 </p>
               </Screen>
@@ -235,13 +235,13 @@ sub={`Pick up to ${MAX_PRIORITIES}. We'll put those first. You can still see eve
                         <InsurerMark insurer={ins} size={38} />
                         <span className="min-w-0 flex-1">
                           <span
-                            className="block font-extrabold text-[15px] leading-tight"
+                            className="block gmc-w-heavy gmc-t-md leading-tight"
                             style={{ color: isSel ? accent : "var(--gmc-ink)" }}
                           >
                             {ins.name}
                           </span>
                           <span
-                            className="block text-[13px] sm:text-[12px] font-semibold mt-0.5"
+                            className="block gmc-t-sm gmc-w-strong mt-0.5"
                             style={{ color: "var(--gmc-muted)" }}
                           >
                             {ins.product}
@@ -259,7 +259,7 @@ sub={`Pick up to ${MAX_PRIORITIES}. We'll put those first. You can still see eve
                     );
                   })}
                 </div>
-                <p className="mt-3 text-[13px] sm:text-[12px]" style={{ color: "var(--gmc-muted)" }}>
+                <p className="mt-3 gmc-t-sm" style={{ color: "var(--gmc-muted)" }}>
                   {selected.length} of 3 selected · Get My Cover is independent and is not
                   affiliated with or endorsed by any insurer.
                 </p>
@@ -274,7 +274,7 @@ sub={`Pick up to ${MAX_PRIORITIES}. We'll put those first. You can still see eve
             <button
               type="button"
               onClick={back}
-              className="gmc-tap inline-flex items-center gap-2 text-[15px] sm:text-[14px] font-bold"
+              className="gmc-tap inline-flex items-center gap-2 gmc-t-base gmc-w-strong"
               style={{ color: "var(--gmc-body)" }}
               data-testid="intake-back"
             >
@@ -301,7 +301,7 @@ sub={`Pick up to ${MAX_PRIORITIES}. We'll put those first. You can still see eve
           className="mt-8 pt-6 text-center"
           style={{ borderTop: "1px solid var(--gmc-line)" }}
         >
-          <p className="text-[14px] sm:text-[13px] mb-3" style={{ color: "var(--gmc-body)" }}>
+          <p className="gmc-t-sm mb-3" style={{ color: "var(--gmc-body)" }}>
             Rather have someone walk you through it?
           </p>
 <CTA compact label="Talk to an FMA-licensed adviser, free" data-testid="intake-cta" />
@@ -315,7 +315,7 @@ function Screen({ title, sub, children }) {
   return (
     <div>
       <h2 className="gmc-h2 text-2xl sm:text-4xl mb-2">{title}</h2>
-      <p className="text-[15px] mb-6 sm:mb-8" style={{ color: "var(--gmc-body)" }}>
+      <p className="gmc-t-md mb-6 sm:mb-8" style={{ color: "var(--gmc-body)" }}>
         {sub}
       </p>
       {children}
@@ -342,7 +342,7 @@ function OptionRow({ selected, disabled, onClick, icon: Icon, label, blurb, test
     >
       {Icon && (
         <span
-          className="w-10 h-10 rounded-[10px] flex items-center justify-center flex-shrink-0"
+          className="w-10 h-10 rounded-[var(--gmc-r-ctl)] flex items-center justify-center flex-shrink-0"
           style={{
             background: selected ? "var(--gmc-teal)" : "var(--gmc-teal-tint)",
             color: selected ? "white" : "var(--gmc-teal-deep)",
@@ -353,7 +353,7 @@ function OptionRow({ selected, disabled, onClick, icon: Icon, label, blurb, test
       )}
       <span className="min-w-0 flex-1">
         <span
-          className="flex items-center gap-1.5 font-extrabold text-[15px] leading-tight"
+          className="flex items-center gap-1.5 gmc-w-heavy gmc-t-md leading-tight"
           style={{ color: "var(--gmc-ink)" }}
         >
           {label}
@@ -365,7 +365,7 @@ function OptionRow({ selected, disabled, onClick, icon: Icon, label, blurb, test
             />
           )}
         </span>
-        <span className="block text-[14px] sm:text-[13px] mt-0.5" style={{ color: "var(--gmc-body)" }}>
+        <span className="block gmc-t-sm mt-0.5" style={{ color: "var(--gmc-body)" }}>
           {blurb}
         </span>
       </span>

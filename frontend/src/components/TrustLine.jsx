@@ -26,11 +26,11 @@ export default function TrustLine({ data, className = "" }) {
 
   return (
     <div
-      className={`inline-flex flex-wrap items-center gap-2.5 text-[12px] ${className}`}
+      className={`inline-flex flex-wrap items-center gap-2.5 gmc-t-sm ${className}`}
       data-testid="trust-line"
     >
       <span
-        className="inline-flex items-center gap-1.5 font-semibold"
+        className="inline-flex items-center gap-1.5 gmc-w-strong"
         style={{ color: "var(--gmc-teal-deep)" }}
       >
         <ShieldCheck className="w-4 h-4" strokeWidth={2.2} />
@@ -39,7 +39,7 @@ export default function TrustLine({ data, className = "" }) {
       <span aria-hidden style={{ color: "var(--gmc-faint)" }}>·</span>
       <a
         href="/compare/how-we-compare"
-        className="font-semibold underline underline-offset-2 decoration-dotted hover:decoration-solid"
+        className="gmc-w-strong underline underline-offset-2 decoration-dotted hover:decoration-solid"
         style={{ color: "var(--gmc-teal-deep)" }}
         data-testid="how-we-compare-link"
       >

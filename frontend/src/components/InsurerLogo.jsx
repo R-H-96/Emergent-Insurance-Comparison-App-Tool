@@ -14,7 +14,7 @@ export default function InsurerLogo({ insurer, size = 40, className = "" }) {
 
   return (
     <div
-      className={`flex items-center justify-center rounded-[10px] overflow-hidden flex-shrink-0 ${className}`}
+      className={`flex items-center justify-center rounded-[var(--gmc-r-ctl)] overflow-hidden flex-shrink-0 ${className}`}
       style={{
         width: size * 1.6,
         height: size,
@@ -35,7 +35,7 @@ export default function InsurerLogo({ insurer, size = 40, className = "" }) {
         />
       ) : (
         <span
-          className="text-white font-extrabold"
+          className="text-white gmc-w-heavy"
           style={{
             fontSize: size * 0.4,
             fontFamily: "'Plus Jakarta Sans', sans-serif",

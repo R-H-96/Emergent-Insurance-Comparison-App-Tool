@@ -434,3 +434,63 @@ select:focus-visible {
     background-color: transparent !important;
   }
 }
+
+/* ─────────────────────────────────────────────────────────────────────────
+   TYPE SCALE. Seven steps, each carrying its own mobile and desktop size.
+
+   Use these classes instead of arbitrary Tailwind sizes. Before this existed
+   the app had grown to seventeen distinct font sizes, including 10.5px, 12.5px
+   and 13.5px, because every component nudged whatever was nearest rather than
+   picking from a scale. Half-pixel sizes are the tell: nobody designs 13.5px
+   on purpose, it is what happens when you add one to 12.5.
+
+   Mobile is the larger value. Phones need more, not less.
+   ───────────────────────────────────────────────────────────────────────── */
+.gmc-t-xs   { font-size: 12px; line-height: 1.5; }
+.gmc-t-sm   { font-size: 13px; line-height: 1.5; }
+.gmc-t-base { font-size: 15px; line-height: 1.6; }
+.gmc-t-md   { font-size: 16px; line-height: 1.5; }
+.gmc-t-lg   { font-size: 18px; line-height: 1.35; }
+.gmc-t-xl   { font-size: 22px; line-height: 1.25; }
+.gmc-t-2xl  { font-size: 28px; line-height: 1.15; }
+
+@media (min-width: 640px) {
+  .gmc-t-xs   { font-size: 11px; }
+  .gmc-t-sm   { font-size: 12px; }
+  .gmc-t-base { font-size: 14px; }
+  .gmc-t-md   { font-size: 15px; }
+  .gmc-t-lg   { font-size: 17px; }
+  .gmc-t-xl   { font-size: 20px; }
+  .gmc-t-2xl  { font-size: 26px; }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   WEIGHT. Two only.
+
+   600 for anything that needs to stand out from body copy, 800 for headings
+   and names. A third weight in between stops weight signalling anything at
+   all: the app previously used semibold, bold and extrabold at similar sizes,
+   which is noise rather than hierarchy.
+   ───────────────────────────────────────────────────────────────────────── */
+.gmc-w-strong { font-weight: 600; }
+.gmc-w-heavy  { font-weight: 800; }
+
+/* ─────────────────────────────────────────────────────────────────────────
+   ELEVATION. Three named shadows, plus the functional ones.
+
+   Anything else should be a reason to add a token here, not an inline value.
+   ───────────────────────────────────────────────────────────────────────── */
+:root {
+  --gmc-shadow-card:  0 12px 40px rgba(22, 28, 39, 0.06);
+  --gmc-shadow-float: 0 20px 60px rgba(22, 28, 39, 0.18);
+  --gmc-shadow-sticky: 0 8px 8px -8px rgba(22, 28, 39, 0.10);
+}
+
+/* Insurer identity band. Colour groups the identity row rather than running
+   the full height of a card. A full-height left bar starts to read like a
+   progress rail once a card runs to more than a few lines, and the same device
+   was also being used for unrelated callouts. */
+.gmc-ident-band {
+  padding: 11px 14px;
+  border-bottom: 1px solid var(--gmc-line);
+}

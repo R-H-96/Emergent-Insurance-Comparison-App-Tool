@@ -83,7 +83,7 @@ export default function MobileFAB({
           type="button"
           role="tab"
           aria-selected={activeTab === id}
-          className="flex-1 flex items-center justify-center gap-2 py-3.5 text-[15px] sm:text-[14px] font-bold transition-colors"
+          className="flex-1 flex items-center justify-center gap-2 py-3.5 gmc-t-base gmc-w-strong transition-colors"
           style={{
             color: activeTab === id ? "var(--gmc-teal)" : "var(--gmc-muted)",
             borderBottom:
@@ -113,8 +113,7 @@ export default function MobileFAB({
               right: 16,
               bottom: "calc(env(safe-area-inset-bottom, 0px) + 20px)",
               background: "var(--gmc-teal)",
-              boxShadow:
-                "0 8px 28px rgba(20,181,175,0.45), 0 3px 8px rgba(22,28,39,0.18)",
+              boxShadow:"0 8px 28px rgba(20,181,175,0.45), 0 3px 8px rgba(22,28,39,0.18)",
             }}
             onClick={() => {
               setActiveTab("ask");

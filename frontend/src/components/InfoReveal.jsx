@@ -46,18 +46,18 @@ export default function InfoReveal({
     <>
       {eyebrow && (
         <div
-          className="text-[11px] font-bold uppercase tracking-[0.1em] mb-1"
+          className="gmc-t-xs gmc-w-strong uppercase tracking-[0.1em] mb-1"
           style={{ color: "var(--gmc-teal-mid)" }}
         >
           {eyebrow}
         </div>
       )}
       {title && (
-        <div className="font-extrabold text-[15px] sm:text-[14px] mb-1" style={{ color: "var(--gmc-ink)" }}>
+        <div className="gmc-w-heavy gmc-t-base mb-1" style={{ color: "var(--gmc-ink)" }}>
           {title}
         </div>
       )}
-      <div className="text-[14.5px] sm:text-[13px] leading-relaxed" style={{ color: "var(--gmc-body)" }}>
+      <div className="gmc-t-base sm:gmc-t-sm leading-relaxed" style={{ color: "var(--gmc-body)" }}>
         {body}
       </div>
       {footer}
@@ -85,7 +85,7 @@ export default function InfoReveal({
     <Popover>
       <PopoverTrigger asChild>{Trigger}</PopoverTrigger>
       <PopoverContent
-        className={`${width} max-w-[calc(100vw-2rem)] bg-white border rounded-[16px] p-4 shadow-[0_12px_40px_rgba(22,28,39,0.12)]`}
+        className={`${width} max-w-[calc(100vw-2rem)] bg-white border rounded-[var(--gmc-r-ctl)] p-4 shadow-[var(--gmc-shadow-float)]`}
         style={{ borderColor: "var(--gmc-line)", zIndex: 95 }}
         side={side}
         align={align}

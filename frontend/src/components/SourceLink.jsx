@@ -22,14 +22,14 @@ export default function SourceLink({ insurer, citation, className = "", align = 
       width="w-72"
       ariaLabel={`Source for ${insurer.name}`}
       testId={`source-link-${insurer.id}`}
-      triggerClassName={`gmc-tap inline-flex items-center gap-1 text-[12.5px] sm:text-[11px] font-semibold underline decoration-dotted underline-offset-2 hover:decoration-solid focus:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gmc-teal)] rounded-sm ${className}`}
+      triggerClassName={`gmc-tap inline-flex items-center gap-1 gmc-t-sm sm:gmc-t-xs gmc-w-strong underline decoration-dotted underline-offset-2 hover:decoration-solid focus:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gmc-teal)] rounded-[var(--gmc-r-ctl)] ${className}`}
       triggerStyle={{ color: "var(--gmc-muted)" }}
       body={
         <>
           <p className="leading-relaxed">{insurer.version}</p>
           {citation && (
             <p
-              className="text-[13px] sm:text-[11.5px] leading-relaxed mt-2 pt-2"
+              className="gmc-t-sm sm:gmc-t-xs leading-relaxed mt-2 pt-2"
               style={{ color: "var(--gmc-muted)", borderTop: "1px solid var(--gmc-line)" }}
             >
               Cited passage: {citation}
@@ -43,7 +43,7 @@ export default function SourceLink({ insurer, citation, className = "", align = 
                     href={s.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-start gap-1.5 text-[14px] sm:text-[12px] underline decoration-dotted underline-offset-2 hover:decoration-solid"
+                    className="inline-flex items-start gap-1.5 gmc-t-base sm:gmc-t-sm underline decoration-dotted underline-offset-2 hover:decoration-solid"
                     style={{ color: "var(--gmc-teal-deep)" }}
                   >
                     {s.label}

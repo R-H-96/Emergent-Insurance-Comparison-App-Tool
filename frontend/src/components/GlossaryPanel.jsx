@@ -39,7 +39,7 @@ export default function GlossaryPanel({ glossary, open, onOpenChange }) {
           value={q}
           onChange={(e) => setQ(e.target.value)}
 placeholder="Search a word, try 'excess'"
-          className="flex-1 bg-transparent text-[15px] focus:outline-none py-2"
+          className="flex-1 bg-transparent gmc-t-md focus:outline-none py-2"
           style={{ color: "var(--gmc-ink)" }}
           aria-label="Search the glossary"
           data-testid="glossary-search"
@@ -57,7 +57,7 @@ placeholder="Search a word, try 'excess'"
       </div>
 
       {terms.length === 0 ? (
-        <p className="text-[14.5px] sm:text-[13.5px] py-4 text-center" style={{ color: "var(--gmc-body)" }}>
+        <p className="gmc-t-sm py-4 text-center" style={{ color: "var(--gmc-body)" }}>
 Nothing matches &ldquo;{q}&rdquo;. Try a shorter word, or ask an adviser, some terms
           only appear in an insurer&apos;s own wording.
         </p>
@@ -70,10 +70,10 @@ Nothing matches &ldquo;{q}&rdquo;. Try a shorter word, or ask an adviser, some t
               style={{ borderBottom: "1px solid var(--gmc-line)" }}
               data-testid={`glossary-entry-${term.replace(/\s+/g, "-").toLowerCase()}`}
             >
-              <dt className="font-extrabold text-[14.5px]" style={{ color: "var(--gmc-ink)" }}>
+              <dt className="gmc-w-heavy gmc-t-base" style={{ color: "var(--gmc-ink)" }}>
                 {term}
               </dt>
-              <dd className="text-[14.5px] sm:text-[13.5px] leading-relaxed mt-0.5" style={{ color: "var(--gmc-body)" }}>
+              <dd className="gmc-t-sm leading-relaxed mt-0.5" style={{ color: "var(--gmc-body)" }}>
                 {def}
               </dd>
             </div>
@@ -81,7 +81,7 @@ Nothing matches &ldquo;{q}&rdquo;. Try a shorter word, or ask an adviser, some t
         </dl>
       )}
 
-      <p className="text-[12.5px] sm:text-[11.5px] leading-relaxed mt-4" style={{ color: "var(--gmc-faint)" }}>
+      <p className="gmc-t-xs leading-relaxed mt-4" style={{ color: "var(--gmc-faint)" }}>
         Plain-English explanations written by Get My Cover, not definitions from any insurer&apos;s
         policy. Where a policy defines a term differently, the policy wording is what counts.
       </p>
@@ -112,7 +112,7 @@ Nothing matches &ldquo;{q}&rdquo;. Try a shorter word, or ask an adviser, some t
       >
         <DialogHeader className="p-6 pb-3 border-b" style={{ borderColor: "var(--gmc-line)" }}>
           <DialogTitle
-            className="text-2xl font-extrabold tracking-tight text-left flex items-center gap-2.5"
+            className="text-2xl gmc-w-heavy tracking-tight text-left flex items-center gap-2.5"
             style={{ color: "var(--gmc-ink)", fontFamily: "'Plus Jakarta Sans', sans-serif" }}
           >
             <BookOpen className="w-5 h-5" strokeWidth={2.2} style={{ color: "var(--gmc-teal)" }} />

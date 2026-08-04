@@ -1,4 +1,4 @@
-import { Pencil, Sparkles, User, Users, UsersRound } from "lucide-react";
+import { Pencil, User, Users, UsersRound } from "lucide-react";
 import InsurerMark from "@/components/InsurerMark";
 import {
   HOUSEHOLD_OPTIONS, PRIORITY_OPTIONS, intakeSummary,
@@ -51,12 +51,9 @@ export default function ReceiptBar({ intake, insurers, onEditIntake, onEditInsur
       data-testid="receipt-bar"
     >
       <span
-        className="hidden sm:inline-flex items-center gap-1.5 text-[12px] sm:text-[11px] font-bold uppercase tracking-[0.08em] flex-shrink-0"
+        className="hidden sm:inline-flex items-center gap-1.5 gmc-t-xs gmc-w-strong uppercase tracking-[0.08em] flex-shrink-0"
         style={{ color: "var(--gmc-muted)" }}
       >
-        {personalised && (
-          <Sparkles className="w-3.5 h-3.5" strokeWidth={2.2} style={{ color: "var(--gmc-teal)" }} aria-hidden="true" />
-        )}
         Comparing
       </span>
 
@@ -100,7 +97,7 @@ export default function ReceiptBar({ intake, insurers, onEditIntake, onEditInsur
           data-testid="receipt-chip-household"
         >
           <HouseholdIcon className="w-4 h-4" strokeWidth={2.2} aria-hidden="true" />
-          <span className="hidden sm:inline text-[13px] sm:text-[12px] font-bold">{household?.label}</span>
+          <span className="hidden sm:inline gmc-t-sm gmc-w-strong">{household?.label}</span>
         </button>
       )}
 
@@ -118,7 +115,7 @@ export default function ReceiptBar({ intake, insurers, onEditIntake, onEditInsur
             const Icon = PRI_ICONS[p.icon];
             return Icon ? <Icon key={p.id} className="w-4 h-4" strokeWidth={2.2} aria-hidden="true" /> : null;
           })}
-          <span className="hidden lg:inline text-[13px] sm:text-[12px] font-bold">first</span>
+          <span className="hidden lg:inline gmc-t-sm gmc-w-strong">first</span>
         </button>
       )}
 
@@ -127,7 +124,7 @@ export default function ReceiptBar({ intake, insurers, onEditIntake, onEditInsur
         <button
           type="button"
           onClick={onEditIntake}
-          className={`${chip} px-2.5 py-1.5 text-[13px] sm:text-[12px] font-bold`}
+          className={`${chip} px-2.5 py-1.5 gmc-t-sm gmc-w-strong`}
           style={chipStyle}
           data-testid="receipt-chip-knowledge"
         >
@@ -139,11 +136,10 @@ export default function ReceiptBar({ intake, insurers, onEditIntake, onEditInsur
         <button
           type="button"
           onClick={onEditIntake}
-          className={`${chip} px-2.5 py-1.5 text-[13px] sm:text-[12px] font-bold`}
+          className={`${chip} px-2.5 py-1.5 gmc-t-sm gmc-w-strong`}
           style={chipStyle}
           data-testid="receipt-personalise"
         >
-          <Sparkles className="w-3 h-3" strokeWidth={2.2} aria-hidden="true" />
           Personalise this
         </button>
       )}

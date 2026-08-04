@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
-import { Sparkles, Target, Activity, Layers, ChevronDown, ChevronRight } from "lucide-react";
+import { Target, Activity, Layers, ChevronDown, ChevronRight } from "lucide-react";
 import InsurerRadar from "@/components/InsurerRadar";
 import CareJourney from "@/components/CareJourney";
 import DifferencesPanel from "@/components/DifferencesPanel";
@@ -98,7 +98,6 @@ export default function AtAGlance({
   return (
     <section className="pb-4 sm:pb-14" id="at-a-glance" data-testid="at-a-glance">
       <div className="flex items-baseline gap-3 mb-1 flex-wrap">
-        <Sparkles className="w-4 h-4" strokeWidth={2.2} style={{ color: "var(--gmc-teal)" }} />
         <div className="gmc-eyebrow">Where these policies differ</div>
         <span
           className="gmc-badge-verified"
@@ -114,7 +113,7 @@ export default function AtAGlance({
 
       {notable.length === 0 ? (
         <div className="gmc-card p-6 sm:p-8 text-center" data-testid="at-a-glance-empty">
-          <p className="text-[15px] sm:text-[14px]" style={{ color: "var(--gmc-body)" }}>
+          <p className="gmc-t-base" style={{ color: "var(--gmc-body)" }}>
 These policies agree on the notable points for this selection, switch an
             insurer to surface the interesting differences.
           </p>
@@ -127,7 +126,7 @@ These policies agree on the notable points for this selection, switch an
               <div
                 role="tablist"
                 aria-label="Difference views"
-                className="flex p-1 rounded-full bg-white border shadow-[0_2px_10px_rgba(22,28,39,0.04)] mb-4"
+                className="flex p-1 rounded-full bg-white border shadow-[var(--gmc-shadow-card)] mb-4"
                 style={{ borderColor: "var(--gmc-line)" }}
               >
                 {panels.map((s, i) => (
@@ -137,7 +136,7 @@ These policies agree on the notable points for this selection, switch an
                     role="tab"
                     aria-selected={safeSlide === i}
                     onClick={() => goToSlide(i)}
-                    className="gmc-tap flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-full text-[13px] sm:text-[12px] font-bold transition-all"
+                    className="gmc-tap flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-full gmc-t-sm gmc-w-strong transition-all"
                     style={{
                       background: safeSlide === i ? "var(--gmc-teal)" : "transparent",
                       color: safeSlide === i ? "white" : "var(--gmc-body)",
@@ -149,7 +148,7 @@ These policies agree on the notable points for this selection, switch an
                     <span>{s.label}</span>
                     {s.key === "diff" && notableCount != null && (
                       <span
-                        className="ml-0.5 px-1.5 rounded-full text-[10px] font-extrabold"
+                        className="ml-0.5 px-1.5 rounded-full gmc-t-xs gmc-w-heavy"
                         style={{
                           background:
                             safeSlide === i ? "rgba(255,255,255,0.22)" : "var(--gmc-teal-tint-2)",
@@ -212,10 +211,10 @@ function CollapsedPanel({ label, children }) {
         {open
           ? <ChevronDown className="w-4 h-4 flex-shrink-0" strokeWidth={2.5} style={{ color: "var(--gmc-teal-deep)" }} />
           : <ChevronRight className="w-4 h-4 flex-shrink-0" strokeWidth={2.5} style={{ color: "var(--gmc-teal-deep)" }} />}
-        <span className="text-[14px] sm:text-[13px] font-bold" style={{ color: "var(--gmc-ink)" }}>
+        <span className="gmc-t-sm gmc-w-strong" style={{ color: "var(--gmc-ink)" }}>
           {open ? "Hide" : "Show"} the {label.toLowerCase()}
         </span>
-        <span className="text-[13px] sm:text-[12px] ml-auto" style={{ color: "var(--gmc-muted)" }}>
+        <span className="gmc-t-sm ml-auto" style={{ color: "var(--gmc-muted)" }}>
 A visual summary. More detail than most people need
         </span>
       </button>

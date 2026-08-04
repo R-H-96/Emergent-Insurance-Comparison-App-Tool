@@ -32,38 +32,10 @@ import {
  * Matching is case-insensitive and uses a `startsWith` fallback for minor
  * wording variants. Fallback icon is `Info`.
  */
-const MAP = {
-  "surgical benefit maximum": Scissors,
-  "non-surgical hospital": Building2,
-  "excess options": Wallet,
-  "chemotherapy / radiotherapy": Zap,
-  "chemotherapy/radiotherapy": Zap,
-  "non-pharmac medicines": Pill,
-  "follow-up care": RotateCcw,
-  "specialist consultations": Stethoscope,
-  "diagnostic imaging & tests": ScanLine,
-  "diagnostic imaging": ScanLine,
-  "time-link conditions": Clock,
-  "pre-existing conditions": History,
-  "stand-down": Hourglass,
-  "stand-down/waiting": Hourglass,
-  "congenital": Baby,
-  "gp/day-to-day": Home,
-  "gp / day-to-day": Home,
-  "obstetrics/maternity": HeartPulse,
-  "obstetrics / maternity": HeartPulse,
-  "mental health": Brain,
+const MAP = {"surgical benefit maximum": Scissors,"non-surgical hospital": Building2,"excess options": Wallet,"chemotherapy / radiotherapy": Zap,"chemotherapy/radiotherapy": Zap,"non-pharmac medicines": Pill,"follow-up care": RotateCcw,"specialist consultations": Stethoscope,"diagnostic imaging & tests": ScanLine,"diagnostic imaging": ScanLine,"time-link conditions": Clock,"pre-existing conditions": History,"stand-down": Hourglass,"stand-down/waiting": Hourglass,"congenital": Baby,"gp/day-to-day": Home,"gp / day-to-day": Home,"obstetrics/maternity": HeartPulse,"obstetrics / maternity": HeartPulse,"mental health": Brain,
   telehealth: Video,
-  prosthesis: Bone,
-  "approved-provider rules": MapPin,
-  "approved provider": MapPin,
-  "prior approval": CheckCircle2,
-  "claims process": FileText,
-  loyalty: Award,
-  "premium structure": TrendingUp,
-  "guaranteed upgrades": ShieldCheck,
-  "key exclusions": XCircle,
-  "age limits": CalendarClock,
+  prosthesis: Bone,"approved-provider rules": MapPin,"approved provider": MapPin,"prior approval": CheckCircle2,"claims process": FileText,
+  loyalty: Award,"premium structure": TrendingUp,"guaranteed upgrades": ShieldCheck,"key exclusions": XCircle,"age limits": CalendarClock,
 };
 
 export function iconForFeature(name) {

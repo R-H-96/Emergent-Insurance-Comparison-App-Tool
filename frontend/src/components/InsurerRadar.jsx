@@ -91,7 +91,7 @@ export default function InsurerRadar({
       {isWide && (
         <button
           type="button"
-          className="gmc-tap inline-flex items-center gap-1.5 text-[13px] sm:text-[12px] font-bold mb-2"
+          className="gmc-tap inline-flex items-center gap-1.5 gmc-t-sm gmc-w-strong mb-2"
           style={{ color: "var(--gmc-teal-mid)" }}
           onClick={() => setOpenTheme(null)}
           data-testid="radar-area-back"
@@ -101,22 +101,22 @@ export default function InsurerRadar({
         </button>
       )}
       {isWide && (
-        <div className="text-[14px] sm:text-[13px] font-extrabold mb-2" style={{ color: "var(--gmc-ink)" }}>
+        <div className="gmc-t-sm gmc-w-heavy mb-2" style={{ color: "var(--gmc-ink)" }}>
           {groupLabel(active.group)}
         </div>
       )}
 
       {areaFeatures.length === 0 ? (
-        <p className="text-[14px] sm:text-[13px] leading-relaxed" style={{ color: "var(--gmc-body)" }}>
+        <p className="gmc-t-sm leading-relaxed" style={{ color: "var(--gmc-body)" }}>
           These policies don&apos;t differ notably in this area.
         </p>
       ) : (
         <div className="space-y-2.5">
           {areaFeatures.map((f) => (
-            <div key={f.feature} className="rounded-[10px] p-3" style={{ background: "var(--gmc-bg-alt)" }}>
+            <div key={f.feature} className="rounded-[var(--gmc-r-ctl)] p-3" style={{ background: "var(--gmc-bg-alt)" }}>
               <button
                 type="button"
-                className="text-left w-full text-[14px] sm:text-[13px] font-extrabold leading-snug"
+                className="text-left w-full gmc-t-sm gmc-w-heavy leading-snug"
                 style={{ color: "var(--gmc-ink)" }}
                 onClick={() => onOpenFeature && onOpenFeature(f.feature)}
                 data-testid={`radar-area-feature-${f.feature.replace(/\s+/g, "-").toLowerCase()}`}
@@ -128,7 +128,7 @@ export default function InsurerRadar({
                 return (
                   <div key={ins.id} className="flex items-start gap-2 mt-2">
                     <InsurerMark insurer={ins} size={18} />
-                    <span className="text-[13.5px] sm:text-[12.5px] leading-snug" style={{ color: "var(--gmc-ink-2)" }}>
+                    <span className="gmc-t-sm leading-snug" style={{ color: "var(--gmc-ink-2)" }}>
                       {entry?.short ? (
                         <GlossaryText text={entry.short} glossary={glossary} />
                       ) : (
@@ -160,12 +160,12 @@ export default function InsurerRadar({
       <div className="mb-1 flex items-start justify-between gap-2">
         <div className="min-w-0">
           <div
-            className="text-[18px] sm:text-[19px] font-extrabold"
+            className="gmc-t-lg sm:gmc-t-xl gmc-w-heavy"
             style={{ color: "var(--gmc-ink)", fontFamily: "'Plus Jakarta Sans', sans-serif" }}
           >
             Coverage profile
           </div>
-          <div className="text-[13.5px] sm:text-[12.5px] mt-0.5" style={{ color: "var(--gmc-muted)" }}>
+          <div className="gmc-t-sm mt-0.5" style={{ color: "var(--gmc-muted)" }}>
             A bigger shape means larger stated limits in that area.
           </div>
         </div>
@@ -297,7 +297,7 @@ export default function InsurerRadar({
 
           {tipTheme && tipAnchor && isWide && (
             <div
-              className="absolute z-10 pointer-events-none rounded-[10px] px-3 py-2 shadow-[0_8px_24px_rgba(22,28,39,0.16)]"
+              className="absolute z-10 pointer-events-none rounded-[var(--gmc-r-ctl)] px-3 py-2 shadow-[0_8px_24px_rgba(22,28,39,0.16)]"
               style={{
                 ...toPct(tipAnchor[0], tipAnchor[1]),
                 transform: "translate(-50%, -110%)",
@@ -307,20 +307,20 @@ export default function InsurerRadar({
               }}
               data-testid="radar-tooltip"
             >
-              <div className="text-[12px] sm:text-[11px] font-extrabold mb-1" style={{ color: "var(--gmc-ink)" }}>
+              <div className="gmc-t-xs gmc-w-heavy mb-1" style={{ color: "var(--gmc-ink)" }}>
                 {groupLabel(tipTheme.group)}
               </div>
               {insurers.map((ins) => {
                 const band = THEME_BANDS[ins.id]?.[tipTheme.id];
                 const meta = BAND_META[band];
                 return (
-                  <div key={ins.id} className="flex items-center justify-between gap-3 text-[12px] sm:text-[11px] py-0.5">
-                    <span className="font-semibold" style={{ color: ins.accent }}>{ins.name}</span>
-                    <span className="font-bold" style={{ color: meta?.text }}>{meta?.label || "Not recorded"}</span>
+                  <div key={ins.id} className="flex items-center justify-between gap-3 gmc-t-xs py-0.5">
+                    <span className="gmc-w-strong" style={{ color: ins.accent }}>{ins.name}</span>
+                    <span className="gmc-w-strong" style={{ color: meta?.text }}>{meta?.label || "Not recorded"}</span>
                   </div>
                 );
               })}
-              <div className="text-[10px] mt-1" style={{ color: "var(--gmc-faint)" }}>
+              <div className="gmc-t-xs mt-1" style={{ color: "var(--gmc-faint)" }}>
                 Tap to read the wording
               </div>
             </div>
@@ -346,7 +346,7 @@ export default function InsurerRadar({
                   data-testid={`radar-legend-${ins.id}`}
                 >
                   <InsurerMark insurer={ins} size={24} />
-                  <span className="text-[14px] sm:text-[13px] font-extrabold" style={{ color: ins.accent || "var(--gmc-ink)" }}>
+                  <span className="gmc-t-sm gmc-w-heavy" style={{ color: ins.accent || "var(--gmc-ink)" }}>
                     {ins.name}
                   </span>
                 </button>
@@ -355,7 +355,7 @@ export default function InsurerRadar({
             {focusInsurer && (
               <button
                 type="button"
-                className="text-[13px] sm:text-[12px] font-semibold underline decoration-dotted underline-offset-2"
+                className="gmc-t-sm gmc-w-strong underline decoration-dotted underline-offset-2"
                 style={{ color: "var(--gmc-muted)" }}
                 onClick={() => setFocusInsurer(null)}
                 data-testid="radar-clear-focus"
@@ -372,7 +372,7 @@ export default function InsurerRadar({
           ) : (
             <div className="space-y-2.5">
               <div
-                className="text-[12px] sm:text-[11px] font-bold uppercase tracking-[0.08em]"
+                className="gmc-t-xs gmc-w-strong uppercase tracking-[0.08em]"
                 style={{ color: "var(--gmc-muted)" }}
               >
                 Where each policy states its largest limits
@@ -388,10 +388,10 @@ export default function InsurerRadar({
                     onKeyDown={(e) => {
                       if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggleFocus(ins.id); }
                     }}
-                    className="gmc-tap w-full text-left flex items-start gap-2.5 rounded-[10px] p-2.5 transition-all cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gmc-teal)]"
+                    className="gmc-tap w-full text-left flex items-start gap-2.5 rounded-[var(--gmc-r-ctl)] p-2.5 transition-all cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gmc-teal)]"
                     style={{
                       background: "var(--gmc-bg-alt)",
-                      borderLeft: `3px solid ${ins.accent || "var(--gmc-teal)"}`,
+                      border: "1px solid var(--gmc-line)",
                       opacity: isDim(ins.id) ? 0.4 : 1,
                       boxShadow: on ? `inset 0 0 0 1.5px ${ins.accent}` : "none",
                     }}
@@ -404,20 +404,20 @@ export default function InsurerRadar({
                     <InsurerMark insurer={ins} size={24} />
                     <span className="min-w-0">
                       <span
-                        className="flex items-center gap-1.5 text-[13.5px] sm:text-[12.5px] font-extrabold"
+                        className="flex items-center gap-1.5 gmc-t-sm gmc-w-heavy"
                         style={{ color: ins.accent || "var(--gmc-ink)" }}
                       >
                         {ins.name}
                         <TierBadge band={so.band} />
                       </span>
-                      <span className="block text-[13px] sm:text-[12px] leading-snug" style={{ color: "var(--gmc-body)" }}>
+                      <span className="block gmc-t-sm leading-snug" style={{ color: "var(--gmc-body)" }}>
                         Largest stated limits in {so.groups.map(groupLabel).join(", ")}
                       </span>
                     </span>
                   </div>
                 );
               })}
-              <p className="text-[10.5px] leading-snug pt-1" style={{ color: "var(--gmc-faint)" }}>
+              <p className="gmc-t-xs leading-snug pt-1" style={{ color: "var(--gmc-faint)" }}>
                 Each policy is measured against its own other areas here, not against the other
                 insurers. Tap an insurer to isolate it, or an area on the chart to read the
                 wording.
@@ -441,7 +441,7 @@ export default function InsurerRadar({
         </MobileSheet>
       )}
 
-      <p className="mt-3 text-[12px] sm:text-[11px] leading-relaxed italic" style={{ color: "var(--gmc-faint)" }}>
+      <p className="mt-3 gmc-t-xs leading-relaxed italic" style={{ color: "var(--gmc-faint)" }}>
         Reach reflects the size and breadth of each insurer&apos;s stated limits by area. A
         factual orientation, not a recommendation. A wider shape isn&apos;t automatically better
         for your situation.

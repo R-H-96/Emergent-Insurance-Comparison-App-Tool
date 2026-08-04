@@ -67,10 +67,10 @@ export default function PriorityCards({
   if (!yours.length && !also.length) {
     return (
       <div className="gmc-card p-8 text-center" data-testid="priority-empty">
-        <p className="text-[15px] font-bold mb-1" style={{ color: "var(--gmc-ink)" }}>
+        <p className="gmc-t-md gmc-w-strong mb-1" style={{ color: "var(--gmc-ink)" }}>
           These policies agree on the notable points.
         </p>
-        <p className="text-[14.5px] sm:text-[13.5px] mb-4" style={{ color: "var(--gmc-body)" }}>
+        <p className="gmc-t-sm mb-4" style={{ color: "var(--gmc-body)" }}>
           Swap an insurer to surface the differences, or look through everything.
         </p>
         <button type="button" className="gmc-btn-outline gmc-tap" onClick={onSeeAll}>
@@ -87,14 +87,14 @@ export default function PriorityCards({
     >
       <div className="flex items-center gap-2 flex-wrap mb-1.5">
         <span
-          className="text-[10.5px] font-bold uppercase tracking-[0.06em]"
+          className="gmc-t-xs gmc-w-strong uppercase tracking-[0.06em]"
           style={{ color: "var(--gmc-teal-mid)" }}
         >
           {groupLabel(f.group)}
         </span>
         {note && (
           <span
-            className="inline-flex items-center rounded-full px-2 py-0.5 text-[10.5px] font-bold"
+            className="inline-flex items-center rounded-full px-2 py-0.5 gmc-t-xs gmc-w-strong"
             style={{ background: "var(--gmc-bg-alt)", color: "var(--gmc-body)" }}
           >
             {note}
@@ -109,7 +109,7 @@ export default function PriorityCards({
         data-testid={`priority-open-${f.feature.replace(/\s+/g, "-").toLowerCase()}`}
       >
         <span
-          className="flex items-start gap-2.5 font-extrabold text-[18px] sm:text-[17px] leading-snug"
+          className="flex items-start gap-2.5 gmc-w-heavy gmc-t-lg leading-snug"
           style={{ color: "var(--gmc-ink)" }}
         >
           <FeatureIcon name={f.feature} size={20} className="mt-1" />
@@ -117,7 +117,7 @@ export default function PriorityCards({
             {featureTitle(f, mode).primary}
             {featureTitle(f, mode).secondary && (
               <span
-                className="block text-[13.5px] sm:text-[11.5px] font-semibold mt-1.5"
+                className="block gmc-t-sm sm:gmc-t-xs gmc-w-strong mt-1.5"
                 style={{ color: "var(--gmc-muted)" }}
               >
                 {featureTitle(f, mode).secondary}
@@ -137,12 +137,12 @@ export default function PriorityCards({
         tag="div"
         text={f.definition}
         glossary={glossary}
-        className="text-[14.5px] sm:text-[13px] mt-2.5 leading-relaxed"
+        className="gmc-t-base sm:gmc-t-sm mt-2.5 leading-relaxed"
       />
 
       {note && (
         <div
-          className="flex items-start gap-1.5 mt-2.5 text-[13px] sm:text-[11.5px] font-semibold"
+          className="flex items-start gap-1.5 mt-2.5 gmc-t-sm sm:gmc-t-xs gmc-w-strong"
           style={{ color: "var(--gmc-teal-deep)" }}
         >
           <Lightbulb className="w-3.5 h-3.5 flex-shrink-0 mt-0.5" strokeWidth={2.2} aria-hidden="true" />
@@ -170,13 +170,13 @@ export default function PriorityCards({
               <InsurerMark insurer={ins} size={24} />
               <div className="flex-1 min-w-0">
                 <div
-                  className="text-[12px] sm:text-[11px] font-bold leading-tight"
+                  className="gmc-t-xs gmc-w-strong leading-tight"
                   style={{ color: ins.accent || "var(--gmc-teal-mid)" }}
                 >
                   {ins.name}
                 </div>
                 <div
-                  className="text-[14.5px] sm:text-[13.5px] font-semibold leading-snug mt-0.5"
+                  className="gmc-t-sm gmc-w-strong leading-snug mt-0.5"
                   style={{ color: "var(--gmc-ink-2)" }}
                 >
                   {entry?.short ? (
@@ -198,13 +198,13 @@ export default function PriorityCards({
   const SectionHeading = ({ children, sub }) => (
     <div className="mb-3 mt-1">
       <div
-        className="text-[12.5px] sm:text-[11px] font-bold uppercase tracking-[0.08em]"
+        className="gmc-t-sm sm:gmc-t-xs gmc-w-strong uppercase tracking-[0.08em]"
         style={{ color: "var(--gmc-muted)" }}
       >
         {children}
       </div>
       {sub && (
-        <div className="text-[13px] sm:text-[12px] mt-0.5" style={{ color: "var(--gmc-faint)" }}>
+        <div className="gmc-t-sm mt-0.5" style={{ color: "var(--gmc-faint)" }}>
           {sub}
         </div>
       )}

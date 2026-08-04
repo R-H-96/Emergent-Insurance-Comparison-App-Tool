@@ -1,7 +1,6 @@
 export default function CTA({
   compact = false,
-  label,
-  "data-testid": testId,
+  label,"data-testid": testId,
   ...rest
 }) {
 // Class-only trigger. The parent site's global modal binds to `.gmc-quote-trigger`.

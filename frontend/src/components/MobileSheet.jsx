@@ -143,7 +143,7 @@ export default function MobileSheet({
             role="dialog"
             aria-modal="true"
             aria-label={title || "Sheet"}
-            className="fixed inset-x-0 bottom-0 z-[90] flex flex-col bg-white rounded-t-[var(--gmc-r-card)] overflow-hidden shadow-[0_-8px_40px_rgba(0,0,0,0.18)]"
+            className="fixed inset-x-0 bottom-0 z-[90] flex flex-col bg-white rounded-t-[var(--gmc-r-card)] overflow-hidden shadow-[var(--gmc-shadow-float)]"
             style={{ maxHeight: sheetMaxHeight }}
             initial={reduce ? { opacity: 0, y: 0 } : { y: "100%" }}
             animate={reduce ? { opacity: 1, y: 0 } : { y: 0 }}
@@ -180,7 +180,7 @@ export default function MobileSheet({
                 <div className="min-w-0 flex-1">
                   {eyebrow && (
                     <div
-                      className="text-[11px] font-bold uppercase tracking-[0.1em] mb-1"
+                      className="gmc-t-xs gmc-w-strong uppercase tracking-[0.1em] mb-1"
                       style={{ color: "var(--gmc-teal-mid)" }}
                     >
                       {eyebrow}
@@ -188,7 +188,7 @@ export default function MobileSheet({
                   )}
                   {title && (
                     <h2
-                      className="text-[18px] leading-tight font-extrabold flex items-center gap-2"
+                      className="gmc-t-lg leading-tight gmc-w-heavy flex items-center gap-2"
                       style={{ color: "var(--gmc-ink)", fontFamily: "'Plus Jakarta Sans', sans-serif" }}
                     >
                       {titleIcon}

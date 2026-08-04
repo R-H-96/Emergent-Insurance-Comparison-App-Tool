@@ -13,20 +13,20 @@ export default function GmcNav() {
           data-testid="gmc-brand"
         >
           <div
-            className="w-8 h-8 rounded-lg flex items-center justify-center text-white font-bold"
+            className="w-8 h-8 rounded-[var(--gmc-r-ctl)] flex items-center justify-center text-white gmc-w-strong"
             style={{ background: "var(--gmc-grad-button)", fontFamily: "'Plus Jakarta Sans', sans-serif" }}
           >
             G
           </div>
           <span
-            className="font-extrabold tracking-tight text-lg"
+            className="gmc-w-heavy tracking-tight text-lg"
             style={{ color: "var(--gmc-ink)" }}
           >
             Get&nbsp;My&nbsp;Cover
           </span>
         </a>
         <div
-          className="hidden md:flex items-center gap-8 text-sm font-semibold"
+          className="hidden md:flex items-center gap-8 text-sm gmc-w-strong"
           style={{ color: "var(--gmc-body)" }}
         >
           <a href="#compare" className="hover:text-[color:var(--gmc-teal-mid)] transition" data-testid="nav-compare">

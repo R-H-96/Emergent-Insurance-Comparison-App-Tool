@@ -15,7 +15,7 @@ label="Describes how large this policy's stated limits are in this area, measure
       className={className}
     >
       <span
-        className="inline-block rounded-full px-2 py-0.5 text-[10.5px] font-bold"
+        className="inline-block rounded-full px-2 py-0.5 gmc-t-xs gmc-w-strong"
         style={{ background: meta.fill, color: meta.text }}
         data-testid={`tier-badge-${band}`}
       >

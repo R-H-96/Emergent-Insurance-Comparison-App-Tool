@@ -31,7 +31,6 @@ export default function WhyReveal({
       className="flex gap-2 px-3 py-2.5"
       style={{
         background: "var(--gmc-teal-tint)",
-        borderLeft: "3px solid var(--gmc-teal)",
       }}
       data-testid={`${testId}-panel`}
     >
@@ -45,7 +44,7 @@ export default function WhyReveal({
         tag="div"
         text={why}
         glossary={glossary}
-        className="text-[13.5px] sm:text-[12.5px] leading-relaxed"
+        className="gmc-t-sm leading-relaxed"
       />
     </div>
   );
@@ -63,7 +62,7 @@ export default function WhyReveal({
           setOpen((o) => !o);
         }}
         aria-expanded={open}
-        className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[12.5px] sm:text-[11.5px] font-bold transition-colors"
+        className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 gmc-t-xs gmc-w-strong transition-colors"
         style={{
           border: "1px solid var(--gmc-line)",
           background: open ? "var(--gmc-teal-tint)" : "white",

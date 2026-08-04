@@ -42,7 +42,7 @@ export default function AskPanel({
           style={{
             background: "white",
             border: "1px solid var(--gmc-line)",
-            boxShadow: "0 20px 60px rgba(22,28,39,0.18)",
+            boxShadow: "var(--gmc-shadow-float)",
           }}
           data-testid="ask-panel-desktop"
         >
@@ -56,7 +56,7 @@ export default function AskPanel({
                 strokeWidth={2.2}
                 style={{ color: "var(--gmc-teal-mid)" }}
               />
-              <div className="font-extrabold text-[15px]" style={{ color: "var(--gmc-ink)" }}>
+              <div className="gmc-w-heavy gmc-t-md" style={{ color: "var(--gmc-ink)" }}>
                 Ask a question
               </div>
             </div>
@@ -126,7 +126,7 @@ export function AskPanelBody({ askState, examples, insurers, lookup, glossary, o
             onFocus={() => setFocused(true)}
             onBlur={() => setFocused(false)}
             placeholder={placeholder}
-            className="flex-1 bg-transparent text-[16px] focus:outline-none"
+            className="flex-1 bg-transparent gmc-t-md focus:outline-none"
             style={{ color: "var(--gmc-ink)" }}
             maxLength={500}
             aria-label="Ask a question about these policies"
@@ -147,7 +147,7 @@ export function AskPanelBody({ askState, examples, insurers, lookup, glossary, o
       <div className="flex-1 overflow-y-auto p-4 space-y-3 thin-scrollbar" data-testid="ask-panel-body">
         {status === "searching" && (
           <div
-            className="gmc-shimmer rounded-[var(--gmc-r-ctl)] h-14 flex items-center px-4 text-[13px] font-semibold"
+            className="gmc-shimmer rounded-[var(--gmc-r-ctl)] h-14 flex items-center px-4 gmc-t-sm gmc-w-strong"
             style={{ color: "var(--gmc-teal-deep)" }}
             aria-live="polite"
           >
@@ -181,7 +181,7 @@ export function AskPanelBody({ askState, examples, insurers, lookup, glossary, o
               </div>
               <div>
                 <div
-                  className="font-extrabold text-[14px]"
+                  className="gmc-w-heavy gmc-t-base"
                   style={{ color: "var(--gmc-ink)" }}
                 >
 Good question, that&apos;s one for an adviser.
@@ -196,7 +196,7 @@ Good question, that&apos;s one for an adviser.
 
         {history.length > 1 && (
           <div
-            className="text-[10px] font-bold uppercase tracking-[0.1em] pt-2 pb-1"
+            className="gmc-t-xs gmc-w-strong uppercase tracking-[0.1em] pt-2 pb-1"
             style={{ color: "var(--gmc-muted)" }}
           >
             Earlier this session
@@ -205,38 +205,38 @@ Good question, that&apos;s one for an adviser.
         {history.slice(1).map((h, i) => (
           <div
             key={h.at + "_" + i}
-            className="rounded-[10px] border p-3"
+            className="rounded-[var(--gmc-r-ctl)] border p-3"
             style={{ borderColor: "var(--gmc-line)", background: "var(--gmc-bg-alt)" }}
             data-testid={`ask-panel-history-${i}`}
           >
             <div
-              className="text-[11px] font-bold uppercase tracking-[0.08em]"
+              className="gmc-t-xs gmc-w-strong uppercase tracking-[0.08em]"
               style={{ color: "var(--gmc-muted)" }}
             >
               You asked
             </div>
             <div
-              className="text-[13px] font-semibold mt-0.5"
+              className="gmc-t-sm gmc-w-strong mt-0.5"
               style={{ color: "var(--gmc-ink)" }}
             >
               &ldquo;{h.q}&rdquo;
             </div>
             {h.feature ? (
               <div className="mt-2 flex items-center justify-between gap-2 flex-wrap">
-                <div className="text-[12px]" style={{ color: "var(--gmc-body)" }}>
+                <div className="gmc-t-sm" style={{ color: "var(--gmc-body)" }}>
                   Matched to <b>{h.feature.feature}</b>
                 </div>
                 <div className="flex gap-1.5">
                   <button
                     type="button"
-                    className="gmc-btn-outline gmc-tap px-2 py-1 text-[10px]"
+                    className="gmc-btn-outline gmc-tap px-2 py-1 gmc-t-xs"
                     onClick={() => onLocate(h.feature.feature)}
                   >
                     Show me
                   </button>
                   <button
                     type="button"
-                    className="gmc-btn-outline gmc-tap px-2 py-1 text-[10px]"
+                    className="gmc-btn-outline gmc-tap px-2 py-1 gmc-t-xs"
                     onClick={() => onOpenFeature(h.feature.feature)}
                   >
                     Full detail
@@ -244,7 +244,7 @@ Good question, that&apos;s one for an adviser.
                 </div>
               </div>
             ) : (
-              <div className="text-[12px] mt-1" style={{ color: "var(--gmc-body)" }}>
+              <div className="gmc-t-sm mt-1" style={{ color: "var(--gmc-body)" }}>
 No direct match. Logged for an adviser to review.
               </div>
             )}
@@ -264,7 +264,7 @@ function ResultCard({ feature, insurers, lookup, glossary, onLocate, onOpenFeatu
     >
       <div className="flex items-center gap-2 flex-wrap mb-2">
         <span
-          className="text-[10px] font-bold uppercase tracking-[0.1em]"
+          className="gmc-t-xs gmc-w-strong uppercase tracking-[0.1em]"
           style={{ color: "var(--gmc-teal-deep)" }}
         >
           Best match
@@ -276,14 +276,14 @@ function ResultCard({ feature, insurers, lookup, glossary, onLocate, onOpenFeatu
           {feature.group}
         </span>
       </div>
-      <div className="font-extrabold text-[15px]" style={{ color: "var(--gmc-ink)" }}>
+      <div className="gmc-w-heavy gmc-t-md" style={{ color: "var(--gmc-ink)" }}>
         {feature.feature}
       </div>
       <GlossaryText
         tag="p"
         text={feature.definition}
         glossary={glossary}
-        className="text-[12px] mt-1 leading-relaxed"
+        className="gmc-t-sm mt-1 leading-relaxed"
       />
       <div className="mt-2.5 space-y-1.5">
         {insurers.map((ins) => {
@@ -291,18 +291,18 @@ function ResultCard({ feature, insurers, lookup, glossary, onLocate, onOpenFeatu
           return (
             <div
               key={ins.id}
-              className="flex items-start gap-2 rounded-[8px] p-2 bg-white"
-              style={{ borderLeft: `3px solid ${ins.accent || "var(--gmc-teal)"}` }}
+              className="flex items-start gap-2 rounded-[var(--gmc-r-ctl)] p-2 bg-white"
+              style={{ border: "1px solid var(--gmc-line)" }}
             >
               <InsurerLogo insurer={ins} size={20} />
               <div className="flex-1 min-w-0">
                 <div
-                  className="text-[10px] font-bold uppercase tracking-[0.05em]"
+                  className="gmc-t-xs gmc-w-strong uppercase tracking-[0.05em]"
                   style={{ color: ins.accent || "var(--gmc-teal-mid)" }}
                 >
                   {ins.name}
                 </div>
-                <div className="text-[12px] font-semibold" style={{ color: "var(--gmc-ink-2)" }}>
+                <div className="gmc-t-sm gmc-w-strong" style={{ color: "var(--gmc-ink-2)" }}>
                   {entry?.short ? (
                     <GlossaryText text={entry.short} glossary={glossary} />
                   ) : (

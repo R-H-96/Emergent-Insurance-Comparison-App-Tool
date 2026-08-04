@@ -77,7 +77,7 @@ function InlineChip({ active, onClick, label, testid }) {
       type="button"
       onClick={onClick}
       aria-pressed={active}
-      className="gmc-tap inline-flex items-center px-3 py-1.5 text-[12px] font-bold rounded-full flex-shrink-0 whitespace-nowrap transition-all"
+      className="gmc-tap inline-flex items-center px-3 py-1.5 gmc-t-sm gmc-w-strong rounded-full flex-shrink-0 whitespace-nowrap transition-all"
       style={{
         background: active ? "var(--gmc-teal-tint-2)" : "var(--gmc-bg-alt)",
         color: active ? "var(--gmc-teal-deep)" : "var(--gmc-body)",
@@ -96,7 +96,7 @@ function FilledChip({ active, onClick, label, testid }) {
       type="button"
       onClick={onClick}
       aria-pressed={active}
-      className="gmc-tap inline-flex items-center px-3.5 py-2 text-[13px] font-bold rounded-[var(--gmc-r-ctl)] transition-all"
+      className="gmc-tap inline-flex items-center px-3.5 py-2 gmc-t-sm gmc-w-strong rounded-[var(--gmc-r-ctl)] transition-all"
       style={{
         background: active ? "var(--gmc-teal)" : "white",
         color: active ? "white" : "var(--gmc-ink-2)",

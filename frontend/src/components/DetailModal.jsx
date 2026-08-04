@@ -24,6 +24,14 @@ import { groupLabel, featureTitle } from "@/lib/personalisation";
  * filtered here as well as cleaned in the data. Belt and braces: the data can
  * change, this guard can't be forgotten.
  */
+/** The insurer accent at low alpha, for the identity band. */
+function tint(hex) {
+  if (!hex || hex[0] !== "#") return "var(--gmc-teal-tint)";
+  const h = hex.slice(1);
+  const n = parseInt(h.length === 3 ? h.replace(/./g, "$&$&") : h, 16);
+  return `rgba(${(n >> 16) & 255},${(n >> 8) & 255},${n & 255},0.07)`;
+}
+
 const INTERNAL_FLAG = /VERIFY|NEEDS CARE|EXTERNAL VERIFICATION|before publishing/i;
 
 export default function DetailModal({ feature, insurers, lookup, glossary, explanation, onClose }) {
@@ -51,27 +59,25 @@ export default function DetailModal({ feature, insurers, lookup, glossary, expla
         return (
           <div
             key={ins.id}
-            className="rounded-[16px] border p-5"
-            style={{
-              borderColor: "var(--gmc-line)",
-              background: "var(--gmc-card)",
-              borderLeftWidth: 4,
-              borderLeftColor: ins.accent || "var(--gmc-teal)",
-            }}
+            className="rounded-[var(--gmc-r-ctl)] border overflow-hidden"
+            style={{ borderColor: "var(--gmc-line)", background: "var(--gmc-card)" }}
             data-testid={`detail-block-${ins.id}`}
           >
-            <div className="flex items-start justify-between gap-3 flex-wrap">
+            <div
+              className="gmc-ident-band flex items-start justify-between gap-3 flex-wrap"
+              style={{ background: tint(ins.accent) }}
+            >
               <div className="flex items-center gap-3">
                 <InsurerMark insurer={ins} size={44} />
                 <div>
                   <div
-                    className="font-extrabold text-[17px]"
+                    className="gmc-w-heavy gmc-t-lg"
                     style={{ color: ins.accent || "var(--gmc-ink)" }}
                   >
                     {ins.name}
                   </div>
                   <div
-                    className="text-[13px] sm:text-[12px] font-semibold mt-0.5"
+                    className="gmc-t-sm gmc-w-strong mt-0.5"
                     style={{ color: "var(--gmc-muted)" }}
                   >
                     {ins.product}
@@ -81,10 +87,11 @@ export default function DetailModal({ feature, insurers, lookup, glossary, expla
               <VerifiedBadge verified={entry?.verified} />
             </div>
 
+            <div className="p-5 pt-4">
             {entry ? (
               <>
                 <div
-                  className="mt-3 rounded-[10px] px-3 py-2.5 inline-block text-[15px] sm:text-[14px] font-semibold"
+                  className="mt-3 rounded-[var(--gmc-r-ctl)] px-3 py-2.5 inline-block gmc-t-base gmc-w-strong"
                   style={{ background: "var(--gmc-teal-tint)", color: "var(--gmc-teal-deep)" }}
                 >
                   <GlossaryText text={entry.short} glossary={glossary} />
@@ -93,7 +100,7 @@ export default function DetailModal({ feature, insurers, lookup, glossary, expla
                 {points.length > 0 && (
                   <ul className="mt-3 space-y-1.5 list-disc pl-5" data-testid={`detail-points-${ins.id}`}>
                     {points.map((p, i) => (
-                      <li key={i} className="text-[15px] sm:text-[14px] leading-relaxed" style={{ color: "var(--gmc-ink-2)" }}>
+                      <li key={i} className="gmc-t-base leading-relaxed" style={{ color: "var(--gmc-ink-2)" }}>
                         <GlossaryText text={p} glossary={glossary} />
                       </li>
                     ))}
@@ -105,8 +112,9 @@ export default function DetailModal({ feature, insurers, lookup, glossary, expla
                 </div>
               </>
             ) : (
-<p className="mt-4 text-[15px] sm:text-[14px]" style={{ color: "var(--gmc-faint)" }}>Not recorded</p>
+<p className="gmc-t-base" style={{ color: "var(--gmc-faint)" }}>Not recorded</p>
             )}
+            </div>
           </div>
         );
       })}
@@ -118,7 +126,7 @@ export default function DetailModal({ feature, insurers, lookup, glossary, expla
       className="p-5 sm:p-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3"
       style={{ background: "var(--gmc-bg-alt)" }}
     >
-      <p className="text-[14px] sm:text-[13px] leading-relaxed max-w-md" style={{ color: "var(--gmc-body)" }}>
+      <p className="gmc-t-sm leading-relaxed max-w-md" style={{ color: "var(--gmc-body)" }}>
 Not sure how this applies to you? Ask an adviser, free.
       </p>
 <CTA label="Ask an adviser, free" data-testid="detail-modal-cta" />
@@ -137,7 +145,7 @@ Not sure how this applies to you? Ask an adviser, free.
         footer={Footer}
         scrollKey={feature.feature}
       >
-        <div className="px-5 pt-4 pb-2 text-[14px] sm:text-[13px]" style={{ color: "var(--gmc-body)" }}>
+        <div className="px-5 pt-4 pb-2 gmc-t-sm" style={{ color: "var(--gmc-body)" }}>
           <GlossaryText tag="span" text={feature.definition} glossary={glossary} />
         </div>
         {Body}
@@ -153,20 +161,20 @@ Not sure how this applies to you? Ask an adviser, free.
       >
         <DialogHeader className="p-6 sm:p-8 pb-4 border-b" style={{ borderColor: "var(--gmc-line)" }}>
           <div
-            className="text-[12px] sm:text-[11px] font-bold uppercase tracking-[0.1em] mb-2"
+            className="gmc-t-xs gmc-w-strong uppercase tracking-[0.1em] mb-2"
             style={{ color: "var(--gmc-teal-mid)" }}
           >
             {groupLabel(feature.group)}
           </div>
           <DialogTitle
-            className="text-2xl font-extrabold tracking-tight text-left flex items-center gap-2.5"
+            className="text-2xl gmc-w-heavy tracking-tight text-left flex items-center gap-2.5"
             style={{ color: "var(--gmc-ink)", fontFamily: "'Plus Jakarta Sans', sans-serif" }}
           >
             <FeatureIcon name={feature.feature} size={22} strokeWidth={2.2} />
             <span>{featureTitle(feature, explanation).primary}</span>
           </DialogTitle>
           {featureTitle(feature, explanation).secondary && (
-            <div className="text-[13.5px] sm:text-[12.5px] font-semibold mt-1 text-left" style={{ color: "var(--gmc-muted)" }}>
+            <div className="gmc-t-sm gmc-w-strong mt-1 text-left" style={{ color: "var(--gmc-muted)" }}>
               Also called: {featureTitle(feature, explanation).secondary}
             </div>
           )}
@@ -179,7 +187,7 @@ Not sure how this applies to you? Ask an adviser, free.
           className="p-6 sm:p-8 pt-2 border-t flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
           style={{ borderColor: "var(--gmc-line)", background: "var(--gmc-bg-alt)" }}
         >
-          <p className="text-[14px] sm:text-[13px] leading-relaxed max-w-md" style={{ color: "var(--gmc-body)" }}>
+          <p className="gmc-t-sm leading-relaxed max-w-md" style={{ color: "var(--gmc-body)" }}>
 Not sure how this applies to you? Ask an adviser, free.
           </p>
 <CTA label="Ask an adviser, free" data-testid="detail-modal-cta" />

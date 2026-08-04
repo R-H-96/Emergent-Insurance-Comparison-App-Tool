@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
-import { Sparkles, Layers, Table2, Share2, SlidersHorizontal, Pencil, Printer } from "lucide-react";
+import { UserRound, Layers, Table2, Share2, SlidersHorizontal, Pencil, Printer } from "lucide-react";
 import AtAGlance from "@/components/AtAGlance";
 import ComparisonTable from "@/components/ComparisonTable";
 import PriorityCards from "@/components/PriorityCards";
@@ -29,7 +29,7 @@ import { pushEvent } from "@/lib/analytics";
  * filters are only relevant at rung 2, so they only appear there.
  */
 export const LADDER = [
-  { id: 0, label: "Your priorities", short: "Yours", icon: Sparkles, hint: "The things you told us matter most, in plain English." },
+  { id: 0, label: "Your priorities", short: "Yours", icon: UserRound, hint: "The things you told us matter most, in plain English." },
   { id: 1, label: "All differences", short: "Differences", icon: Layers, hint: "Every point where these policies actually differ." },
   { id: 2, label: "Everything", short: "All", icon: Table2, hint: "All 25 features, grouped. Nothing hidden." },
 ];
@@ -69,7 +69,7 @@ export default function ComparisonSurface({
           style={{
             top: "var(--gmc-sticky-offset, 0px)",
             background: "var(--gmc-bg)",
-            boxShadow: "0 8px 8px -8px rgba(22,28,39,0.10)",
+            boxShadow: "var(--gmc-shadow-sticky)",
           }}
           data-testid="ladder-sticky"
         >
@@ -77,7 +77,7 @@ export default function ComparisonSurface({
             <div
               role="tablist"
               aria-label="How much detail to show"
-              className="flex flex-1 p-1 rounded-full bg-white border shadow-[0_2px_10px_rgba(22,28,39,0.04)]"
+              className="flex flex-1 p-1 rounded-full bg-white border shadow-[var(--gmc-shadow-card)]"
               style={{ borderColor: "var(--gmc-line)" }}
               data-testid="ladder"
             >
@@ -91,8 +91,8 @@ export default function ComparisonSurface({
                     role="tab"
                     aria-selected={active}
                     onClick={() => level !== rung.id && onLevelChange(rung.id)}
-                    className={`gmc-tap flex flex-1 items-center justify-center gap-1.5 px-2 sm:px-4 py-2 rounded-full text-[12.5px] sm:text-[13px] transition-all ${
-                      active ? "font-bold" : "font-semibold"
+                    className={`gmc-tap flex flex-1 items-center justify-center gap-1.5 px-2 sm:px-4 py-2 rounded-full gmc-t-sm sm:gmc-t-sm transition-all ${
+                      active ? "gmc-w-strong" : "gmc-w-strong"
                     }`}
                     style={{
                       background: active ? "var(--gmc-teal)" : "transparent",
@@ -106,7 +106,7 @@ export default function ComparisonSurface({
                     <span className="sm:hidden">{rung.short}</span>
                     {rung.id === 1 && notableCount != null && (
                       <span
-                        className="px-1.5 rounded-full text-[12px] sm:text-[11px] font-extrabold"
+                        className="px-1.5 rounded-full gmc-t-xs gmc-w-heavy"
                         style={{
                           background: active ? "rgba(255,255,255,0.22)" : "var(--gmc-teal-tint-2)",
                           color: active ? "white" : "var(--gmc-teal-deep)",
@@ -145,13 +145,13 @@ export default function ComparisonSurface({
         </div>
 
         <div className="pt-2 flex items-baseline gap-3 flex-wrap">
-          <p className="text-[13px] sm:text-[12px] leading-snug" style={{ color: "var(--gmc-muted)" }}>
+          <p className="gmc-t-sm leading-snug" style={{ color: "var(--gmc-muted)" }}>
             {current.hint}
           </p>
           <button
             type="button"
             onClick={onOpenGlossary}
-            className="gmc-tap inline-flex items-center gap-1 text-[13px] sm:text-[12px] font-semibold underline decoration-dotted underline-offset-2 hover:decoration-solid"
+            className="gmc-tap inline-flex items-center gap-1 gmc-t-sm gmc-w-strong underline decoration-dotted underline-offset-2 hover:decoration-solid"
             style={{ color: "var(--gmc-teal-deep)" }}
             data-testid="open-glossary"
           >

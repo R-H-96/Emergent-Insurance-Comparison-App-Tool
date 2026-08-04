@@ -27,7 +27,7 @@ export default function InsurerPickerDialog({
       >
         <DialogHeader className="p-6 pb-4 border-b" style={{ borderColor: "var(--gmc-line)" }}>
           <DialogTitle
-            className="text-2xl font-extrabold tracking-tight text-left"
+            className="text-2xl gmc-w-heavy tracking-tight text-left"
             style={{ color: "var(--gmc-ink)", fontFamily: "'Plus Jakarta Sans', sans-serif" }}
           >
             What are we comparing?
@@ -51,7 +51,7 @@ export default function InsurerPickerDialog({
           className="p-6 pt-4 border-t flex items-center justify-between gap-4 flex-wrap"
           style={{ borderColor: "var(--gmc-line)", background: "var(--gmc-bg-alt)" }}
         >
-          <p className="text-[12px] leading-relaxed max-w-md" style={{ color: "var(--gmc-muted)" }}>
+          <p className="gmc-t-sm leading-relaxed max-w-md" style={{ color: "var(--gmc-muted)" }}>
             Get My Cover is independent and is not affiliated with or endorsed by any insurer.
           </p>
           <button

@@ -36,7 +36,7 @@ export default function ComparisonInfo({ intake, insurers, onEditIntake, onShare
         </button>
       </PopoverTrigger>
       <PopoverContent
-        className="w-[min(20rem,calc(100vw-2rem))] bg-white border rounded-[14px] p-4 shadow-[0_12px_40px_rgba(22,28,39,0.12)]"
+        className="w-[min(20rem,calc(100vw-2rem))] bg-white border rounded-[var(--gmc-r-ctl)] p-4 shadow-[var(--gmc-shadow-float)]"
         style={{ borderColor: "var(--gmc-line)", zIndex: 95 }}
         side="bottom"
         align="end"
@@ -44,31 +44,31 @@ export default function ComparisonInfo({ intake, insurers, onEditIntake, onShare
         data-testid="comparison-info-popover"
       >
         <div
-          className="text-[12px] sm:text-[11px] font-bold uppercase tracking-[0.1em] mb-2"
+          className="gmc-t-xs gmc-w-strong uppercase tracking-[0.1em] mb-2"
           style={{ color: "var(--gmc-teal-mid)" }}
         >
           What you&apos;re looking at
         </div>
-        <dl className="space-y-2.5 text-[14.5px] sm:text-[13.5px]" style={{ color: "var(--gmc-body)" }}>
+        <dl className="space-y-2.5 gmc-t-sm" style={{ color: "var(--gmc-body)" }}>
           <div>
-            <dt className="font-extrabold" style={{ color: "var(--gmc-ink)" }}>Comparing</dt>
+            <dt className="gmc-w-heavy" style={{ color: "var(--gmc-ink)" }}>Comparing</dt>
             <dd>{insurers.map((i) => `${i.name} (${i.product})`).join(", ")}</dd>
           </div>
           {household && (
             <div>
-              <dt className="font-extrabold" style={{ color: "var(--gmc-ink)" }}>Cover for</dt>
+              <dt className="gmc-w-heavy" style={{ color: "var(--gmc-ink)" }}>Cover for</dt>
               <dd>{household.label}. {household.blurb}</dd>
             </div>
           )}
           {priorities.length > 0 && (
             <div>
-              <dt className="font-extrabold" style={{ color: "var(--gmc-ink)" }}>Shown first</dt>
+              <dt className="gmc-w-heavy" style={{ color: "var(--gmc-ink)" }}>Shown first</dt>
               <dd>{priorities.map((p) => p.label).join(", ")}</dd>
             </div>
           )}
           {knowledge && (
             <div>
-              <dt className="font-extrabold" style={{ color: "var(--gmc-ink)" }}>Reading level</dt>
+              <dt className="gmc-w-heavy" style={{ color: "var(--gmc-ink)" }}>Reading level</dt>
               <dd>{knowledge.label}. {knowledge.blurb}</dd>
             </div>
           )}

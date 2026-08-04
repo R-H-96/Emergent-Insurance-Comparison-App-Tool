@@ -63,7 +63,7 @@ export default class ErrorBoundary extends Component {
               />
             </span>
             <h2 className="gmc-h2 text-2xl mb-2">This comparison didn&apos;t load</h2>
-            <p className="text-[15px] sm:text-[14px] leading-relaxed mb-5" style={{ color: "var(--gmc-body)" }}>
+            <p className="gmc-t-base leading-relaxed mb-5" style={{ color: "var(--gmc-body)" }}>
               Something went wrong on our side, not yours. You can start again, or skip
               straight to someone who can answer your questions directly.
             </p>
@@ -78,7 +78,7 @@ export default class ErrorBoundary extends Component {
               </button>
               <CTA data-testid="error-cta" />
             </div>
-            <p className="text-[13px] sm:text-[12px] mt-5" style={{ color: "var(--gmc-faint)" }}>
+            <p className="gmc-t-sm mt-5" style={{ color: "var(--gmc-faint)" }}>
               Summaries for general information only, not financial advice.
             </p>
           </div>

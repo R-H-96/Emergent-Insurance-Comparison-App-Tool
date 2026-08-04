@@ -416,7 +416,7 @@ toast.error("Could not share, long-press the address bar instead.");
           data-testid="embed-disclaimer"
         >
           <div className="gmc-container">
-            <p className="text-[12px] leading-relaxed" style={{ color: "var(--gmc-body)" }}>
+            <p className="gmc-t-sm leading-relaxed" style={{ color: "var(--gmc-body)" }}>
               Summaries for general information only, not financial advice. Always confirm
               against the insurer&apos;s current policy document. Insurer logos are used to
               identify the products compared. Get My Cover is independent and is not
