@@ -36,7 +36,7 @@ export default function TrustLine({ data, className = "" }) {
         <ShieldCheck className="w-4 h-4" strokeWidth={2.2} />
         {label}
       </span>
-      <span aria-hidden style={{ color: "var(--gmc-faint)" }}>·</span>
+      <span aria-hidden style={{ color: "var(--gmc-muted)" }}>·</span>
       <a
         href="/compare/how-we-compare"
         className="gmc-w-strong underline underline-offset-2 decoration-dotted hover:decoration-solid"

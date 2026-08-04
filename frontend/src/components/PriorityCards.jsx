@@ -85,7 +85,7 @@ export default function PriorityCards({
         {children}
       </div>
       {sub && (
-        <div className="gmc-t-sm mt-0.5" style={{ color: "var(--gmc-faint)" }}>
+        <div className="gmc-t-sm mt-0.5" style={{ color: "var(--gmc-muted)" }}>
           {sub}
         </div>
       )}

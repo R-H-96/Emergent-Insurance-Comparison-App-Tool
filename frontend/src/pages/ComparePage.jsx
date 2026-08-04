@@ -58,11 +58,14 @@ function readInitialState() {
   } catch (_err) { stored = null; }
 
   return {
+    // Deliberately empty. Preselecting a pair is an editorial choice about
+    // which insurers get seen, and one an insurer could reasonably object to.
+    // The reader picks, or a shared link says who.
     insurers:
       insurerIds ||
       (stored?.insurers?.length >= 2 && stored.insurers.every((id) => VALID_INSURER_IDS.has(id))
         ? stored.insurers
-        : ["sc", "nib"]),
+        : []),
     activeGroups:
       activeGroups ||
       (Array.isArray(stored?.activeGroups)
@@ -86,7 +89,8 @@ export default function ComparePage({ embed = false, initialGroups = [] }) {
   // or unless a shared link already encodes an explicit selection.
   const arrivedViaSharedLink = initial.level !== null || !!initial.featureSlug;
   const [showIntake, setShowIntake] = useState(
-    !embed && !savedIntake.completed && !savedIntake.skipped && !arrivedViaSharedLink,
+    (!embed && !savedIntake.completed && !savedIntake.skipped && !arrivedViaSharedLink) ||
+      initial.insurers.length < 2,
   );
 
   const explanation = useMemo(() => explanationMode(intake.knowledge), [intake.knowledge]);
@@ -225,7 +229,10 @@ const feat = openFeature ? `${openFeature}, `: "";
     setIntake(next);
     saveIntake(next);
     setLevel(1);
-    setShowIntake(false);
+    // Skipping the questions still requires a choice of insurers. We do not
+    // pick for them.
+    if (selected.length >= 2) setShowIntake(false);
+    else setPickerOpen(true);
   };
 
   const reopenIntake = () => {

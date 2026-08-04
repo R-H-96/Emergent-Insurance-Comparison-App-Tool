@@ -113,7 +113,7 @@ export default function InsurerRadar({
       ) : (
         <div className="space-y-2.5">
           {areaFeatures.map((f) => (
-            <div key={f.feature} className="rounded-[var(--gmc-r-ctl)] p-3" style={{ background: "var(--gmc-bg-alt)" }}>
+            <div key={f.feature} className="gmc-inset p-3">
               <button
                 type="button"
                 className="text-left w-full gmc-t-sm gmc-w-heavy leading-snug"
@@ -132,7 +132,7 @@ export default function InsurerRadar({
                       {entry?.short ? (
                         <GlossaryText text={entry.short} glossary={glossary} />
                       ) : (
-                        <span style={{ color: "var(--gmc-faint)" }}>Not recorded</span>
+                        <span style={{ color: "var(--gmc-muted)" }}>Not recorded</span>
                       )}
                     </span>
                   </div>
@@ -320,7 +320,7 @@ export default function InsurerRadar({
                   </div>
                 );
               })}
-              <div className="gmc-t-xs mt-1" style={{ color: "var(--gmc-faint)" }}>
+              <div className="gmc-t-xs mt-1" style={{ color: "var(--gmc-muted)" }}>
                 Tap to read the wording
               </div>
             </div>
@@ -388,10 +388,8 @@ export default function InsurerRadar({
                     onKeyDown={(e) => {
                       if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggleFocus(ins.id); }
                     }}
-                    className="gmc-tap w-full text-left flex items-start gap-2.5 rounded-[var(--gmc-r-ctl)] p-2.5 transition-all cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gmc-teal)]"
+                    className="gmc-inset gmc-tap w-full text-left flex items-start gap-2.5 p-3 transition-all cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gmc-teal)]"
                     style={{
-                      background: "var(--gmc-bg-alt)",
-                      border: "1px solid var(--gmc-line)",
                       opacity: isDim(ins.id) ? 0.4 : 1,
                       boxShadow: on ? `inset 0 0 0 1.5px ${ins.accent}` : "none",
                     }}
@@ -417,7 +415,7 @@ export default function InsurerRadar({
                   </div>
                 );
               })}
-              <p className="gmc-t-xs leading-snug pt-1" style={{ color: "var(--gmc-faint)" }}>
+              <p className="gmc-t-xs leading-snug pt-1" style={{ color: "var(--gmc-muted)" }}>
                 Each policy is measured against its own other areas here, not against the other
                 insurers. Tap an insurer to isolate it, or an area on the chart to read the
                 wording.
@@ -441,7 +439,7 @@ export default function InsurerRadar({
         </MobileSheet>
       )}
 
-      <p className="mt-3 gmc-t-xs leading-relaxed italic" style={{ color: "var(--gmc-faint)" }}>
+      <p className="mt-3 gmc-t-xs leading-relaxed italic" style={{ color: "var(--gmc-muted)" }}>
         Reach reflects the size and breadth of each insurer&apos;s stated limits by area. A
         factual orientation, not a recommendation. A wider shape isn&apos;t automatically better
         for your situation.

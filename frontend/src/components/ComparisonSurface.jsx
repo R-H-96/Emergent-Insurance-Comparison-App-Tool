@@ -56,6 +56,26 @@ export default function ComparisonSurface({
   return (
     <section id="comparison-surface" className="pb-12 sm:pb-16 print:hidden" data-testid="comparison-surface">
       <div className="gmc-container">
+        {insurers.length < 2 && (
+          <div className="gmc-card p-8 text-center" data-testid="needs-insurers">
+            <h2 className="gmc-t-xl gmc-w-heavy mb-2" style={{ color: "var(--gmc-ink)" }}>
+              Pick two or three insurers
+            </h2>
+            <p className="gmc-t-base mb-5" style={{ color: "var(--gmc-body)" }}>
+              Nothing is chosen for you. Tell us who you want to compare and we will line
+              their policies up side by side.
+            </p>
+            <button
+              type="button"
+              className="gmc-btn-primary gmc-tap"
+              onClick={onOpenPicker}
+              data-testid="needs-insurers-cta"
+            >
+              Choose insurers
+            </button>
+          </div>
+        )}
+        {insurers.length >= 2 && (<>
         <ReceiptBar
           intake={intake}
           insurers={insurers}
@@ -235,6 +255,7 @@ export default function ComparisonSurface({
             </motion.div>
           </AnimatePresence>
         </motion.div>
+        </>)}
       </div>
     </section>
   );

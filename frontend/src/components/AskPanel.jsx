@@ -168,8 +168,7 @@ export function AskPanelBody({ askState, examples, insurers, lookup, glossary, o
 
         {status === "nomatch" && (
           <div
-            className="rounded-[var(--gmc-r-ctl)] p-3"
-            style={{ background: "var(--gmc-teal-tint)" }}
+            className="gmc-inset-note p-3"
             data-testid="ask-panel-nomatch"
           >
             <div className="flex items-start gap-2">
@@ -205,8 +204,7 @@ Good question, that&apos;s one for an adviser.
         {history.slice(1).map((h, i) => (
           <div
             key={h.at + "_" + i}
-            className="rounded-[var(--gmc-r-ctl)] border p-3"
-            style={{ borderColor: "var(--gmc-line)", background: "var(--gmc-bg-alt)" }}
+            className="gmc-inset p-3"
             data-testid={`ask-panel-history-${i}`}
           >
             <div
@@ -306,7 +304,7 @@ function ResultCard({ feature, insurers, lookup, glossary, onLocate, onOpenFeatu
                   {entry?.short ? (
                     <GlossaryText text={entry.short} glossary={glossary} />
                   ) : (
-<span style={{ color: "var(--gmc-faint)" }}>Not recorded</span>
+<span style={{ color: "var(--gmc-muted)" }}>Not recorded</span>
                   )}
                 </div>
               </div>

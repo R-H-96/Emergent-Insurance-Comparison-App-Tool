@@ -21,7 +21,7 @@ export default function Disclaimer() {
         </p>
         <p
           className="mt-6 text-xs"
-          style={{ color: "var(--gmc-faint)" }}
+          style={{ color: "var(--gmc-muted)" }}
         >
           © {new Date().getFullYear()} Get My Cover · NZ
         </p>

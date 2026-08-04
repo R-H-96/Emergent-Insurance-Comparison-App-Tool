@@ -49,7 +49,7 @@ export default function FeatureCard({
           <ChevronRight
             className="w-4 h-4 flex-shrink-0 mt-1.5"
             strokeWidth={2.2}
-            style={{ color: "var(--gmc-faint)" }}
+            style={{ color: "var(--gmc-muted)" }}
             aria-hidden="true"
           />
         </button>
@@ -112,7 +112,7 @@ export default function FeatureCard({
                   {entry?.short ? (
                     <GlossaryText text={entry.short} glossary={glossary} />
                   ) : (
-                    <span style={{ color: "var(--gmc-faint)" }}>Not recorded</span>
+                    <span style={{ color: "var(--gmc-muted)" }}>Not recorded</span>
                   )}
                 </div>
               </div>

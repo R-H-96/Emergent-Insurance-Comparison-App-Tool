@@ -85,7 +85,7 @@ export default function CareJourney({ insurers, lookup, onOpen }) {
                     <ChevronRight
                       className="w-3.5 h-3.5 flex-shrink-0"
                       strokeWidth={2.4}
-                      style={{ color: "var(--gmc-faint)" }}
+                      style={{ color: "var(--gmc-muted)" }}
                       aria-hidden="true"
                     />
                   )}
@@ -93,7 +93,7 @@ export default function CareJourney({ insurers, lookup, onOpen }) {
                 {tied ? (
                   <span
                     className="inline-flex items-center rounded-full px-2 py-0.5 gmc-t-xs gmc-w-strong"
-                    style={{ background: "var(--gmc-bg-alt)", color: "var(--gmc-faint)" }}
+                    style={{ background: "var(--gmc-bg-alt)", color: "var(--gmc-muted)" }}
                   >
                     Comparable
                   </span>
@@ -163,7 +163,7 @@ export default function CareJourney({ insurers, lookup, onOpen }) {
                     <ChevronRight
                       className="w-3.5 h-3.5 flex-shrink-0"
                       strokeWidth={2.4}
-                      style={{ color: "var(--gmc-faint)" }}
+                      style={{ color: "var(--gmc-muted)" }}
                       aria-hidden="true"
                     />
                   )}
@@ -171,7 +171,7 @@ export default function CareJourney({ insurers, lookup, onOpen }) {
                 {tied ? (
                   <span
                     className="inline-flex items-center rounded-full px-2 py-0.5 gmc-t-xs gmc-w-strong"
-                    style={{ background: "var(--gmc-bg-alt)", color: "var(--gmc-faint)" }}
+                    style={{ background: "var(--gmc-bg-alt)", color: "var(--gmc-muted)" }}
                   >
                     Comparable
                   </span>
@@ -220,7 +220,7 @@ export default function CareJourney({ insurers, lookup, onOpen }) {
         ))}
       </div>
 
-      <p className="mt-3 gmc-t-xs leading-relaxed italic" style={{ color: "var(--gmc-faint)" }}>
+      <p className="mt-3 gmc-t-xs leading-relaxed italic" style={{ color: "var(--gmc-muted)" }}>
 &ldquo;Largest limit&rdquo; reflects the stated wording for that area only, it doesn&apos;t account for excess,
         price, or your own health needs.
       </p>

@@ -28,9 +28,8 @@ export default function WhyReveal({
 
   const Panel = (
     <div
-      className="flex gap-2 px-3 py-2.5"
+      className="gmc-inset-note flex gap-2 px-3 py-2.5"
       style={{
-        background: "var(--gmc-teal-tint)",
       }}
       data-testid={`${testId}-panel`}
     >

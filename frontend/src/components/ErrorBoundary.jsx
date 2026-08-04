@@ -53,7 +53,7 @@ export default class ErrorBoundary extends Component {
           <div className="gmc-card p-6 sm:p-8 text-center">
             <span
               className="inline-flex items-center justify-center w-12 h-12 rounded-full mb-4"
-              style={{ background: "var(--gmc-bg-alt)" }}
+              className="gmc-inset"
             >
               <AlertTriangle
                 className="w-6 h-6"
@@ -78,7 +78,7 @@ export default class ErrorBoundary extends Component {
               </button>
               <CTA data-testid="error-cta" />
             </div>
-            <p className="gmc-t-sm mt-5" style={{ color: "var(--gmc-faint)" }}>
+            <p className="gmc-t-sm mt-5" style={{ color: "var(--gmc-muted)" }}>
               Summaries for general information only, not financial advice.
             </p>
           </div>

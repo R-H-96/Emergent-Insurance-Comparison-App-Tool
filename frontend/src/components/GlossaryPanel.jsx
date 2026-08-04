@@ -81,7 +81,7 @@ Nothing matches &ldquo;{q}&rdquo;. Try a shorter word, or ask an adviser, some t
         </dl>
       )}
 
-      <p className="gmc-t-xs leading-relaxed mt-4" style={{ color: "var(--gmc-faint)" }}>
+      <p className="gmc-t-xs leading-relaxed mt-4" style={{ color: "var(--gmc-muted)" }}>
         Plain-English explanations written by Get My Cover, not definitions from any insurer&apos;s
         policy. Where a policy defines a term differently, the policy wording is what counts.
       </p>

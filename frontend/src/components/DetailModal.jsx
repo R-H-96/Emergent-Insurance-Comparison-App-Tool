@@ -112,7 +112,7 @@ export default function DetailModal({ feature, insurers, lookup, glossary, expla
                 </div>
               </>
             ) : (
-<p className="gmc-t-base" style={{ color: "var(--gmc-faint)" }}>Not recorded</p>
+<p className="gmc-t-base" style={{ color: "var(--gmc-muted)" }}>Not recorded</p>
             )}
             </div>
           </div>

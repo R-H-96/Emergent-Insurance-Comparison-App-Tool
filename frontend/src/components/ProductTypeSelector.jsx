@@ -27,7 +27,7 @@ export default function ProductTypeSelector({ value, onChange }) {
                 className="inline-flex items-center rounded-full px-1.5 py-0.5 gmc-t-xs gmc-w-strong uppercase tracking-wider"
                 style={{
                   background: "var(--gmc-bg-soft)",
-                  color: "var(--gmc-faint)",
+                  color: "var(--gmc-muted)",
                   border: "1px solid var(--gmc-line)",
                 }}
               >

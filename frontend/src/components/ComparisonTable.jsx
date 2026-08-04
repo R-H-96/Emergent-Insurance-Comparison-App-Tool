@@ -240,7 +240,7 @@ export default function ComparisonTable({
                           data-testid={`cell-${ins.id}-${f.feature.replace(/\s+/g, "-").toLowerCase()}`}
                         >
                           <div className="gmc-t-sm gmc-w-strong leading-snug flex-1" style={{ color: "var(--gmc-ink-2)" }}>
-{entry?.short ? <GlossaryText text={entry.short} glossary={glossary} />: <span style={{ color: "var(--gmc-faint)" }}>Not recorded</span>}
+{entry?.short ? <GlossaryText text={entry.short} glossary={glossary} />: <span style={{ color: "var(--gmc-muted)" }}>Not recorded</span>}
                           </div>
                           <VerifiedIcon verified={entry?.verified} />
                         </div>
@@ -364,7 +364,7 @@ export default function ComparisonTable({
                               <VerifiedIcon verified={entry?.verified} />
                             </div>
                             <div className="gmc-t-base gmc-w-strong leading-snug" style={{ color: "var(--gmc-ink-2)" }}>
-{entry?.short ? <GlossaryText text={entry.short} glossary={glossary} />: <span style={{ color: "var(--gmc-faint)" }}>Not recorded</span>}
+{entry?.short ? <GlossaryText text={entry.short} glossary={glossary} />: <span style={{ color: "var(--gmc-muted)" }}>Not recorded</span>}
                             </div>
                           </div>
                         );

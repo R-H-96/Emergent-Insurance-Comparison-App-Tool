@@ -31,7 +31,7 @@ export function VerifiedIcon({ verified }) {
     >
       <span
         className="inline-flex items-center justify-center w-[18px] h-[18px] rounded-full flex-shrink-0"
-        style={{ background: "var(--gmc-bg-soft)", color: "var(--gmc-faint)" }}
+        style={{ background: "var(--gmc-bg-soft)", color: "var(--gmc-muted)" }}
         data-testid="pending-icon"
       >
         <Clock className="w-[10px] h-[10px]" strokeWidth={2.5} />

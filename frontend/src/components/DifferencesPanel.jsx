@@ -166,7 +166,7 @@ about whether the policies cover them. Only that nobody has checked. Ask an
                     >
                       {f.feature}
                     </button>
-                    <span className="gmc-t-sm ml-1.5" style={{ color: "var(--gmc-faint)" }}>
+                    <span className="gmc-t-sm ml-1.5" style={{ color: "var(--gmc-muted)" }}>
                       {groupLabel(f.group)}
                     </span>
                   </li>

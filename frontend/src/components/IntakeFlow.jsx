@@ -8,6 +8,7 @@ import InsurerMark from "@/components/InsurerMark";
 import CTA from "@/components/CTA";
 import {
   HOUSEHOLD_OPTIONS, PRIORITY_OPTIONS, KNOWLEDGE_OPTIONS,
+  orderedInsurers,
 } from "@/lib/personalisation";
 import { pushEvent } from "@/lib/analytics";
 
@@ -31,12 +32,13 @@ const MAX_PRIORITIES = 3;
  * adviser CTA, which the parent site's modal binds to.
  */
 export default function IntakeFlow({
-  insurers,
+  insurers: rawInsurers,
   selected,
   onToggleInsurer,
   onComplete,
   onSkip,
 }) {
+  const insurers = orderedInsurers(rawInsurers);
   const reduce = useReducedMotion();
   const [step, setStep] = useState(0);
   const [household, setHousehold] = useState(null);

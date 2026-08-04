@@ -1,8 +1,10 @@
 import { Check } from "lucide-react";
 import InsurerMark from "@/components/InsurerMark";
 import SourceLink from "@/components/SourceLink";
+import { orderedInsurers } from "@/lib/personalisation";
 
-export default function InsurerPicker({ insurers, selected, onToggle, compact = false }) {
+export default function InsurerPicker({ insurers: rawInsurers, selected, onToggle, compact = false }) {
+  const insurers = orderedInsurers(rawInsurers);
   return (
     <div data-testid="insurer-picker">
       <div className="flex items-baseline justify-between gap-4 flex-wrap mb-4">

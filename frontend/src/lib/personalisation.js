@@ -244,3 +244,20 @@ export function intakeSummary(intake) {
   }
   return bits;
 }
+
+/**
+ * Insurers in a neutral order.
+ *
+ * The data file lists Southern Cross first, which hands it the position
+ * advantage of appearing top-left in every picker. Alphabetical is arbitrary
+ * but defensible, and stable across sessions so a returning reader sees the
+ * same layout.
+ *
+ * If a stronger fairness position is wanted later, rotating the order per
+ * session is the usual approach, at the cost of that stability.
+ */
+export function orderedInsurers(insurers) {
+  return [...(insurers || [])].sort((a, b) =>
+    a.name.localeCompare(b.name, "en-NZ", { sensitivity: "base" }),
+  );
+}

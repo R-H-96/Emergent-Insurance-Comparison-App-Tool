@@ -19,7 +19,7 @@
   --gmc-ink-2:       #1E293B;
   --gmc-body:        #4B5F7F;
   --gmc-muted:       #64748B;
-  --gmc-faint:       #94A3B8;
+  --gmc-faint:       #94A3B8;   /* decorative only. Fails AA on white at 2.56, never use for text */
 
   /* Surfaces */
   --gmc-bg:          #F9F9FF;
@@ -493,4 +493,28 @@ select:focus-visible {
 .gmc-ident-band {
   padding: 11px 14px;
   border-bottom: 1px solid var(--gmc-line);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   INSET SURFACES.
+
+   A tint alone does not make a panel read as a panel. At 6% teal the
+   background sits at a 1.05 contrast ratio against the white card behind it,
+   which is invisible in normal light: readers saw floating text rather than a
+   container. Tint plus a hairline border is what separates them.
+
+   Two variants only, so the distinction stays meaningful:
+     .gmc-inset      neutral. Grouped content, list rows, summaries.
+     .gmc-inset-note teal. An aside the reader can skip, such as
+                     "why this matters".
+   ───────────────────────────────────────────────────────────────────────── */
+.gmc-inset {
+  background: #EEF1F8;
+  border: 1px solid #DDE3F0;
+  border-radius: var(--gmc-r-ctl);
+}
+.gmc-inset-note {
+  background: #E8F8F7;
+  border: 1px solid #BFE9E6;
+  border-radius: var(--gmc-r-ctl);
 }
