@@ -216,7 +216,9 @@ export function explanationMode(knowledge) {
 export function featureTitle(feature, explanation) {
   const plain = feature?.plain;
   if (!plain || explanation?.plainTitles === false) {
-    return { primary: feature?.feature, secondary: null };
+    // Reader knows the market: lead with the term they would use with an
+    // insurer, and offer the plain wording behind the info button instead.
+    return { primary: feature?.feature, secondary: plain || null };
   }
   return { primary: plain, secondary: feature?.feature };
 }

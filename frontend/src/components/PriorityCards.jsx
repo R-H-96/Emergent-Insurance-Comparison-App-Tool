@@ -1,13 +1,7 @@
-import { ChevronRight, Lightbulb } from "lucide-react";
-import FeatureIcon from "@/components/FeatureIcon";
-import InsurerMark from "@/components/InsurerMark";
-import GlossaryText from "@/components/GlossaryText";
-import TierBadge from "@/components/TierBadge";
-import WhyReveal from "@/components/WhyReveal";
-import { VerifiedIcon } from "@/components/VerifiedBadge";
+import FeatureCard from "@/components/FeatureCard";
 import { isNotableForSelection } from "@/lib/notable";
 import {
-  groupLabel, priorityGroups, suggestedGroups, explanationMode, featureTitle,
+  priorityGroups, suggestedGroups, explanationMode,
 } from "@/lib/personalisation";
 import { THEME_BANDS, RADAR_THEMES } from "@/data/glanceModel";
 
@@ -80,120 +74,7 @@ export default function PriorityCards({
     );
   }
 
-  const Card = ({ f, note }) => (
-    <div
-      className="gmc-card p-5 sm:p-5"
-      data-testid={`priority-card-${f.feature.replace(/\s+/g, "-").toLowerCase()}`}
-    >
-      <div className="flex items-center gap-2 flex-wrap mb-1.5">
-        <span
-          className="gmc-t-xs gmc-w-strong uppercase tracking-[0.06em]"
-          style={{ color: "var(--gmc-teal-mid)" }}
-        >
-          {groupLabel(f.group)}
-        </span>
-        {note && (
-          <span
-            className="inline-flex items-center rounded-full px-2 py-0.5 gmc-t-xs gmc-w-strong"
-            style={{ background: "var(--gmc-bg-alt)", color: "var(--gmc-body)" }}
-          >
-            {note}
-          </span>
-        )}
-      </div>
-
-      <button
-        type="button"
-        onClick={() => onOpenFeature(f.feature)}
-        className="w-full text-left"
-        data-testid={`priority-open-${f.feature.replace(/\s+/g, "-").toLowerCase()}`}
-      >
-        <span
-          className="flex items-start gap-2.5 gmc-w-heavy gmc-t-lg leading-snug"
-          style={{ color: "var(--gmc-ink)" }}
-        >
-          <FeatureIcon name={f.feature} size={20} className="mt-1" />
-          <span className="flex-1">
-            {featureTitle(f, mode).primary}
-            {featureTitle(f, mode).secondary && (
-              <span
-                className="block gmc-t-sm sm:gmc-t-xs gmc-w-strong mt-1.5"
-                style={{ color: "var(--gmc-muted)" }}
-              >
-                {featureTitle(f, mode).secondary}
-              </span>
-            )}
-          </span>
-          <ChevronRight
-            className="w-4 h-4 flex-shrink-0"
-            strokeWidth={2.2}
-            style={{ color: "var(--gmc-faint)" }}
-            aria-hidden="true"
-          />
-        </span>
-      </button>
-
-      <GlossaryText
-        tag="div"
-        text={f.definition}
-        glossary={glossary}
-        className="gmc-t-base sm:gmc-t-sm mt-2.5 leading-relaxed"
-      />
-
-      {note && (
-        <div
-          className="flex items-start gap-1.5 mt-2.5 gmc-t-sm sm:gmc-t-xs gmc-w-strong"
-          style={{ color: "var(--gmc-teal-deep)" }}
-        >
-          <Lightbulb className="w-3.5 h-3.5 flex-shrink-0 mt-0.5" strokeWidth={2.2} aria-hidden="true" />
-          {note}
-        </div>
-      )}
-
-      <WhyReveal
-        why={f.why}
-        glossary={glossary}
-        inline={mode.whyInline}
-        testId={`why-${f.feature.replace(/\s+/g, "-").toLowerCase()}`}
-      />
-
-      <div className="mt-3.5">
-        {insurers.map((ins) => {
-          const entry = lookup[ins.id]?.[f.feature];
-          const band = bandForGroup(ins.id, f.group);
-          return (
-            <div
-              key={ins.id}
-              className="flex items-start gap-2.5 py-3 sm:py-2.5"
-              style={{ borderTop: "1px solid var(--gmc-line)" }}
-            >
-              <InsurerMark insurer={ins} size={24} />
-              <div className="flex-1 min-w-0">
-                <div
-                  className="gmc-t-xs gmc-w-strong leading-tight"
-                  style={{ color: ins.accent || "var(--gmc-teal-mid)" }}
-                >
-                  {ins.name}
-                </div>
-                <div
-                  className="gmc-t-sm gmc-w-strong leading-snug mt-0.5"
-                  style={{ color: "var(--gmc-ink-2)" }}
-                >
-                  {entry?.short ? (
-                    <GlossaryText text={entry.short} glossary={glossary} />
-                  ) : (
-<span style={{ color: "var(--gmc-faint)" }}>Not recorded</span>
-                  )}
-                </div>
-              </div>
-              {band && <TierBadge band={band} className="mt-0.5 flex-shrink-0" />}
-              <VerifiedIcon verified={entry?.verified} />
-            </div>
-          );
-        })}
-      </div>
-    </div>
-  );
+  const bandFor = (insurerId, group) => bandForGroup(insurerId, group);
 
   const SectionHeading = ({ children, sub }) => (
     <div className="mb-3 mt-1">
@@ -216,8 +97,19 @@ export default function PriorityCards({
       {yours.length > 0 && (
         <>
           <SectionHeading>What you told us matters</SectionHeading>
-          <div className="space-y-3">
-            {yours.map((f) => <Card key={f.feature} f={f} />)}
+          <div className="grid sm:grid-cols-2 gap-3">
+            {yours.map((f) => (
+              <FeatureCard
+                key={f.feature}
+                feature={f}
+                insurers={insurers}
+                lookup={lookup}
+                glossary={glossary}
+                explanation={mode}
+                band={bandFor}
+                onOpen={onOpenFeature}
+              />
+            ))}
           </div>
         </>
       )}
@@ -233,9 +125,19 @@ export default function PriorityCards({
           >
             {yours.length ? "Also worth knowing" : "Where these policies differ"}
           </SectionHeading>
-          <div className="space-y-3">
+          <div className="grid sm:grid-cols-2 gap-3">
             {also.map((f) => (
-              <Card key={f.feature} f={f} note={suggestionLabelFor(f.group)} />
+              <FeatureCard
+                key={f.feature}
+                feature={f}
+                insurers={insurers}
+                lookup={lookup}
+                glossary={glossary}
+                explanation={mode}
+                band={bandFor}
+                note={suggestionLabelFor(f.group)}
+                onOpen={onOpenFeature}
+              />
             ))}
           </div>
         </div>

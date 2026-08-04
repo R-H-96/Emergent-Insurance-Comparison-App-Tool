@@ -173,11 +173,6 @@ Not sure how this applies to you? Ask an adviser, free.
             <FeatureIcon name={feature.feature} size={22} strokeWidth={2.2} />
             <span>{featureTitle(feature, explanation).primary}</span>
           </DialogTitle>
-          {featureTitle(feature, explanation).secondary && (
-            <div className="gmc-t-sm gmc-w-strong mt-1 text-left" style={{ color: "var(--gmc-muted)" }}>
-              Also called: {featureTitle(feature, explanation).secondary}
-            </div>
-          )}
           <DialogDescription className="text-sm mt-2 text-left" style={{ color: "var(--gmc-body)" }}>
             <GlossaryText tag="span" text={feature.definition} glossary={glossary} />
           </DialogDescription>

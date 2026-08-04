@@ -1,13 +1,8 @@
 import { useState } from "react";
 import { ChevronRight, ChevronDown } from "lucide-react";
-import FeatureIcon from "@/components/FeatureIcon";
-import InsurerMark from "@/components/InsurerMark";
-import GlossaryText from "@/components/GlossaryText";
-import WhyReveal from "@/components/WhyReveal";
-import MarkerInfo from "@/components/MarkerInfo";
-import { groupLabel, featureTitle } from "@/lib/personalisation";
+import FeatureCard from "@/components/FeatureCard";
 import { isNotableForSelection } from "@/lib/notable";
-import { coverState, gapFeatures, STATE_META, COVER_STATE } from "@/lib/gaps";
+import { coverState, gapFeatures, COVER_STATE } from "@/lib/gaps";
 
 /**
  * One list, two lenses.
@@ -91,7 +86,7 @@ export default function DifferencesPanel({
   };
 
   return (
-    <div className="gmc-card overflow-hidden" data-testid="differences-panel">
+    <div data-testid="differences-panel">
       <div className="px-5 sm:px-6 pt-5 pb-3.5">
         <div
           className="gmc-t-lg sm:gmc-t-xl gmc-w-heavy tracking-tight"
@@ -112,104 +107,20 @@ exclusions doesn&apos;t make a policy better for you, limits, excess and price a
         )}
       </div>
 
-      {rows.map(({ f, states }) => (
-        <div
-          key={f.feature}
-          role="button"
-          tabIndex={0}
-          onClick={() => onOpen(f.feature)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onOpen(f.feature); }
-          }}
-          className="w-full text-left px-5 sm:px-6 py-5 sm:py-4 border-t cursor-pointer transition-colors hover:bg-[color:var(--gmc-teal-tint)] focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[color:var(--gmc-teal)]"
-          style={{ borderColor: "var(--gmc-line)" }}
-          data-testid={`diff-row-${f.feature.replace(/\s+/g, "-").toLowerCase()}`}
-        >
-          <span
-            className="gmc-t-xs gmc-w-strong uppercase tracking-[0.06em]"
-            style={{ color: "var(--gmc-teal-mid)" }}
-          >
-            {groupLabel(f.group)}
-          </span>
-          <div
-            className="flex items-center gap-2 gmc-w-heavy gmc-t-md leading-snug mt-0.5"
-            style={{ color: "var(--gmc-ink)" }}
-          >
-            <FeatureIcon name={f.feature} size={18} />
-            <span className="flex-1">
-              {featureTitle(f, explanation).primary}
-              {featureTitle(f, explanation).secondary && (
-                <span
-                  className="block gmc-t-sm sm:gmc-t-xs gmc-w-strong mt-1.5"
-                  style={{ color: "var(--gmc-muted)" }}
-                >
-                  {featureTitle(f, explanation).secondary}
-                </span>
-              )}
-            </span>
-            <ChevronRight
-              className="w-4 h-4 flex-shrink-0"
-              strokeWidth={2.2}
-              style={{ color: "var(--gmc-faint)" }}
-              aria-hidden="true"
-            />
-          </div>
-
-          {f.definition && (
-            <GlossaryText
-              tag="div"
-              text={f.definition}
-              glossary={glossary}
-              className="mt-2.5 gmc-t-base sm:gmc-t-sm leading-relaxed"
-            />
-          )}
-
-          {f.why && (
-            <div onClick={(e) => e.stopPropagation()}>
-              <WhyReveal
-                why={f.why}
-                glossary={glossary}
-                inline={!!explanation?.whyInline}
-                testId={`why-diff-${f.feature.replace(/\s+/g, "-").toLowerCase()}`}
-              />
-            </div>
-          )}
-
-          <div className="mt-3 space-y-1.5">
-            {insurers.map((ins, i) => {
-              const entry = lookup[ins.id]?.[f.feature];
-              const state = states[i];
-              const meta = STATE_META[state];
-              const flag = state !== COVER_STATE.COVERED;
-              return (
-                <div key={ins.id} className="flex items-start gap-2">
-                  <InsurerMark insurer={ins} size={20} />
-                  {flag && (
-                    <MarkerInfo title={meta.label} label={meta.help}>
-                      <span
-                        className="inline-block rounded-full px-2 py-0.5 gmc-t-xs gmc-w-strong whitespace-nowrap"
-                        style={{ background: meta.fill, color: meta.text }}
-                      >
-                        {meta.label}
-                      </span>
-                    </MarkerInfo>
-                  )}
-                  <span
-                    className="gmc-t-sm gmc-w-strong leading-snug min-w-0"
-                    style={{ color: "var(--gmc-ink-2)" }}
-                  >
-                    {entry?.short ? (
-                      <GlossaryText text={entry.short} glossary={glossary} />
-                    ) : (
-<span style={{ color: "var(--gmc-faint)" }}>Not recorded</span>
-                    )}
-                  </span>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      ))}
+      <div className="grid sm:grid-cols-2 gap-3 px-5 sm:px-6 pb-5">
+        {rows.map(({ f, states }) => (
+          <FeatureCard
+            key={f.feature}
+            feature={f}
+            insurers={insurers}
+            lookup={lookup}
+            glossary={glossary}
+            explanation={explanation}
+            states={states}
+            onOpen={onOpen}
+          />
+        ))}
+      </div>
 
       {rows.length === 0 && (
         <p

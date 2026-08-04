@@ -18,11 +18,11 @@ import { pushEvent } from "@/lib/analytics";
 export default class ErrorBoundary extends Component {
   constructor(props) {
     super(props);
-    this.state = { failed: false };
+    this.state = { failed: false, detail: "" };
   }
 
-  static getDerivedStateFromError() {
-    return { failed: true };
+  static getDerivedStateFromError(error) {
+    return { failed: true, detail: String(error?.message || error).slice(0, 300) };
   }
 
   componentDidCatch(error, info) {

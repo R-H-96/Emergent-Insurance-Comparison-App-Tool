@@ -200,14 +200,6 @@ export default function ComparisonTable({
                         <FeatureIcon name={f.feature} size={18} />
                         <span>
                           {featureTitle(f, explanation).primary}
-                          {featureTitle(f, explanation).secondary && (
-                            <span
-                              className="block gmc-t-xs gmc-w-strong mt-0.5"
-                              style={{ color: "var(--gmc-muted)" }}
-                            >
-                              {featureTitle(f, explanation).secondary}
-                            </span>
-                          )}
                         </span>
                         {isNotablePair && (
                           <MarkerInfo
@@ -320,14 +312,6 @@ export default function ComparisonTable({
                       <FeatureIcon name={f.feature} size={18} />
                       <span>
                         {featureTitle(f, explanation).primary}
-                        {featureTitle(f, explanation).secondary && (
-                          <span
-                            className="block gmc-t-sm gmc-w-strong mt-0.5"
-                            style={{ color: "var(--gmc-muted)" }}
-                          >
-                            {featureTitle(f, explanation).secondary}
-                          </span>
-                        )}
                       </span>
                       {isNotablePair && (
                         <MarkerInfo
