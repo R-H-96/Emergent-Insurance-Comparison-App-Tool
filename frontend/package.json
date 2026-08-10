@@ -1,6 +1,7 @@
 {
   "name": "frontend",
   "version": "0.1.0",
+  "homepage": "https://r-h-96.github.io/Emergent-Insurance-Comparison-App-Tool",
   "private": true,
   "dependencies": {
     "@hookform/resolvers": "5.0.1",

@@ -11,8 +11,13 @@ function App() {
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
+    // Embedded is not a URL flag, it is a fact about the page. If the host
+    // supplied #gmc-root then the site already provides its own nav, hero and
+    // footer, and ours would duplicate them. ?embed=1 still works for testing
+    // the embedded layout on the standalone build.
     const val = params.get("embed");
-    const isEmbed = val === "1" || val === "true";
+    const isEmbed =
+      val === "1" || val === "true" || !!document.getElementById("gmc-root");
 
     // Accept groups=Core%20limits,Cancer%20care (comma-separated, URL-decoded)
     const groupsParam = params.get("groups");

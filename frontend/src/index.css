@@ -581,3 +581,15 @@ select:focus-visible {
    navbar, so the bar has to start below it. The host page sets this to its own
    navbar height. Standalone it stays 0. */
 .gmc-app { --gmc-sticky-offset: 0px; }
+
+/* The host site's stylesheet can reach elements inside the tool and paint
+   backgrounds behind our text, which is what produced solid blocks behind
+   headings and labels once preflight was disabled. Neutralised in @layer base
+   so our own classes and Tailwind utilities still override it. */
+@layer base {
+  .gmc-app :where(h1, h2, h3, h4, h5, h6, p, span, a, li, dt, dd, small, strong, em, label) {
+    background-color: transparent;
+    background-image: none;
+  }
+  .gmc-app :where(a) { text-decoration: none; }
+}
