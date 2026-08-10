@@ -8,7 +8,7 @@ import useMediaQuery from "@/hooks/useMediaQuery";
  * glossary terms, source citations, and the state markers.
  *
  * On a phone it opens a bottom sheet rather than a popover. Radix popovers
- * render at z-50 while MobileSheet sits at z-[90], so any reveal opened from
+ * render at z-50 while MobileSheet sits at z-[9990], so any reveal opened from
  * inside a sheet (the detail view, the picker, the radar area panel) rendered
  * underneath it and looked like nothing had happened. Raising z-indexes would
  * fix that one symptom; using the sheet removes the whole class of problem, and
@@ -86,7 +86,7 @@ export default function InfoReveal({
       <PopoverTrigger asChild>{Trigger}</PopoverTrigger>
       <PopoverContent
         className={`${width} max-w-[calc(100vw-2rem)] bg-white border rounded-[var(--gmc-r-ctl)] p-4 shadow-[var(--gmc-shadow-float)]`}
-        style={{ borderColor: "var(--gmc-line)", zIndex: 95 }}
+        style={{ borderColor: "var(--gmc-line)", zIndex: 9995 }}
         side={side}
         align={align}
         collisionPadding={12}

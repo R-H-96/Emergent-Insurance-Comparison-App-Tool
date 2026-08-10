@@ -85,6 +85,29 @@ let webpackConfig = {
     },
     configure: (webpackConfig) => {
 
+      // ── Embed build ──────────────────────────────────────────────────────
+      // CRA fingerprints filenames (main.a1b2c3.js) which changes on every
+      // deploy. The Webflow page references these files by name, so they have
+      // to be stable or the snippet breaks each time you push. One JS file and
+      // one CSS file, fixed names, no runtime chunk.
+      if (process.env.NODE_ENV === "production") {
+        webpackConfig.output.filename = "static/js/gmc-tool.js";
+        webpackConfig.output.chunkFilename = "static/js/gmc-tool.[name].js";
+        webpackConfig.optimization = {
+          ...webpackConfig.optimization,
+          runtimeChunk: false,
+          splitChunks: { cacheGroups: { default: false } },
+        };
+        const cssPlugin = webpackConfig.plugins.find(
+          (pl) => pl.constructor && pl.constructor.name === "MiniCssExtractPlugin",
+        );
+        if (cssPlugin) {
+          cssPlugin.options.filename = "static/css/gmc-tool.css";
+          cssPlugin.options.chunkFilename = "static/css/gmc-tool.[name].css";
+        }
+      }
+
+
       // Add ignored patterns to reduce watched directories
         webpackConfig.watchOptions = {
           ...webpackConfig.watchOptions,

@@ -17,7 +17,7 @@ export default function AskLaunchBubble({ open, onToggle, hidden = false }) {
       onClick={onToggle}
       aria-label={open ? "Close ask panel" : "Ask a question"}
       aria-expanded={open}
-      className="fixed bottom-6 right-6 z-[70] print:hidden gmc-tap flex items-center justify-center rounded-full transition-all duration-200 ease-out hover:scale-105 focus:scale-105 active:scale-95"
+      className="fixed bottom-6 right-6 z-[9970] print:hidden gmc-tap flex items-center justify-center rounded-full transition-all duration-200 ease-out hover:scale-105 focus:scale-105 active:scale-95"
       style={{
         width: 56,
         height: 56,

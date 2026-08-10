@@ -1,5 +1,9 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
+  // Preflight is a GLOBAL reset. This bundle is loaded onto the Webflow site
+  // alongside Webflow's own stylesheet, so a global reset would strip styling
+  // from the host page. A scoped equivalent lives under .gmc-app in index.css.
+  corePlugins: { preflight: false },
     darkMode: ["class"],
     content: [
     "./src/**/*.{js,jsx,ts,tsx}",

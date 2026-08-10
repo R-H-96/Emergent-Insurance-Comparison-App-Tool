@@ -50,11 +50,12 @@ Which `signal` values count as "Not covered" versus "Only sometimes" versus "Not
 
 ## 4. Content gaps
 
-- **`why` exists on only 9 of 25 features.** Rows with it show plain-English context; rows without show nothing, which reads as inconsistent rather than deliberate. The missing 16 are the cheapest remaining quality win.
-- **Glossary coverage is patchy.** Terms only get explained where someone wrapped them in `{braces}` in the data file. "Prostheses", "affiliated provider" and "stand-down" appear unwrapped in several values.
-- **15 values are recorded as not found in the wording** (`not-stated`, `not-in-wording`, `none-identified`). These surface to users as "Not confirmed". Each needs either the real value or a confirmation that the policy genuinely is silent.
+Two of the three items here have been closed since this list was written.
 
----
+- **`why` now exists on all 25 features.** The 16 missing lines were drafted and applied. They are editorial copy, not extracted from any policy document, so they still want your read-through. See `GMC_Content_Draft_Review.md` in the project folder for the full list with the two I flagged as needing a second opinion: telehealth and premium structure.
+- **Plain-English titles added for all 25 features.** Beginners see "Drugs the public system won't pay for"; readers who said they know the market see "Non-Pharmac medicines cap". Same editorial caveat applies.
+- **Glossary grown from 15 to 27 terms.** Still only fires where a term is wrapped in `{braces}` in the data file, and terms inside the policy values themselves are deliberately unwrapped, since editing those for readability risks changing what a policy is recorded as saying. Worth doing as one pass during the verification work, when someone is reading those values anyway.
+- **15 values are recorded as not found in the wording** (`not-stated`, `not-in-wording`, `none-identified`). These surface to users as "Not confirmed", which is deliberate and honest, but each needs either the real value or a confirmation that the policy genuinely is silent.
 
 ## 5. Wire the adviser CTA
 

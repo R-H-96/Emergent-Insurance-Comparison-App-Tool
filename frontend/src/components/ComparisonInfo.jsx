@@ -37,7 +37,7 @@ export default function ComparisonInfo({ intake, insurers, onEditIntake, onShare
       </PopoverTrigger>
       <PopoverContent
         className="w-[min(20rem,calc(100vw-2rem))] bg-white border rounded-[var(--gmc-r-ctl)] p-4 shadow-[var(--gmc-shadow-float)]"
-        style={{ borderColor: "var(--gmc-line)", zIndex: 95 }}
+        style={{ borderColor: "var(--gmc-line)", zIndex: 9995 }}
         side="bottom"
         align="end"
         collisionPadding={12}

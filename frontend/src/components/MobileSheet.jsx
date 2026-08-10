@@ -7,8 +7,8 @@ import { X } from "lucide-react";
  * Reusable full-featured mobile bottom sheet.
  *
  * Architecture:
-* Backdrop, fixed inset-0 z-[89], separate AnimatePresence
-* Sheet panel. Fixed inset-x-0 bottom-0 z-[90], no outer wrapper.
+* Backdrop, fixed inset-0 z-[9989], separate AnimatePresence
+* Sheet panel. Fixed inset-x-0 bottom-0 z-[9990], no outer wrapper.
  *     maxHeight: calc(100dvh - max(env(safe-area-inset-top), 56px)) ensures the
  *     panel can never extend above the status bar regardless of dvh support.
  *
@@ -124,7 +124,7 @@ export default function MobileSheet({
             key="gmc-sheet-backdrop"
             type="button"
             aria-label="Close sheet"
-            className="fixed inset-0 z-[89] w-full h-full bg-black/50 cursor-default"
+            className="fixed inset-0 z-[9989] w-full h-full bg-black/50 cursor-default"
             onClick={onClose}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -143,7 +143,7 @@ export default function MobileSheet({
             role="dialog"
             aria-modal="true"
             aria-label={title || "Sheet"}
-            className="fixed inset-x-0 bottom-0 z-[90] flex flex-col bg-white rounded-t-[var(--gmc-r-card)] overflow-hidden shadow-[var(--gmc-shadow-float)]"
+            className="fixed inset-x-0 bottom-0 z-[9990] flex flex-col bg-white rounded-t-[var(--gmc-r-card)] overflow-hidden shadow-[var(--gmc-shadow-float)]"
             style={{ maxHeight: sheetMaxHeight }}
             initial={reduce ? { opacity: 0, y: 0 } : { y: "100%" }}
             animate={reduce ? { opacity: 1, y: 0 } : { y: 0 }}

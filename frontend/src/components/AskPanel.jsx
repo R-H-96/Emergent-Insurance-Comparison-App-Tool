@@ -38,7 +38,7 @@ export default function AskPanel({
           animate={{ opacity: 1, y: 0 }}
           exit={reduce ? { opacity: 0 } : { opacity: 0, y: 20 }}
           transition={{ duration: reduce ? 0 : 0.22, ease: [0.16, 1, 0.3, 1] }}
-          className="fixed right-24 bottom-6 z-[80] w-[420px] max-w-[420px] max-h-[70vh] flex flex-col rounded-[var(--gmc-r-card)] overflow-hidden"
+          className="fixed right-24 bottom-6 z-[9980] w-[420px] max-w-[420px] max-h-[70vh] flex flex-col rounded-[var(--gmc-r-card)] overflow-hidden"
           style={{
             background: "white",
             border: "1px solid var(--gmc-line)",

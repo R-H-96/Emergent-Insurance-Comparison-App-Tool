@@ -13,7 +13,13 @@ const queryClient = new QueryClient({
   },
 });
 
-const root = ReactDOM.createRoot(document.getElementById("root"));
+// Embedded on the Webflow site the host page provides #gmc-root. Standalone
+// (GitHub Pages) it is #root. The .gmc-app class carries the scoped reset, so
+// the app styles itself without touching anything around it.
+const container =
+  document.getElementById("gmc-root") || document.getElementById("root");
+container.classList.add("gmc-app");
+const root = ReactDOM.createRoot(container);
 root.render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>

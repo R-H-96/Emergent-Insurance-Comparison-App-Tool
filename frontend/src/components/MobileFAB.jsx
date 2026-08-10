@@ -108,7 +108,7 @@ export default function MobileFAB({
         {!hidden && !sheetOpen && (
           <motion.button
             type="button"
-            className="fixed z-[60] xl:hidden print:hidden flex items-center justify-center w-14 h-14 rounded-full"
+            className="fixed z-[9960] xl:hidden print:hidden flex items-center justify-center w-14 h-14 rounded-full"
             style={{
               right: 16,
               bottom: "calc(env(safe-area-inset-bottom, 0px) + 20px)",

@@ -518,3 +518,66 @@ select:focus-visible {
   border: 1px solid #BFE9E6;
   border-radius: var(--gmc-r-ctl);
 }
+
+/* ─────────────────────────────────────────────────────────────────────────
+   SCOPED RESET.
+
+   Tailwind's preflight is disabled because this bundle loads onto the Webflow
+   site next to Webflow's own stylesheet, and a global reset would strip the
+   host page. Everything preflight would have done is reproduced here, scoped
+   to the app's mount container, so the tool is self-contained and cannot leak
+   styling outward.
+   ───────────────────────────────────────────────────────────────────────── */
+.gmc-app, .gmc-app *, .gmc-app *::before, .gmc-app *::after {
+  box-sizing: border-box;
+  border-width: 0;
+  border-style: solid;
+  border-color: var(--gmc-line);
+}
+.gmc-app {
+  font-family: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
+  line-height: 1.5;
+  -webkit-text-size-adjust: 100%;
+  -webkit-font-smoothing: antialiased;
+  color: var(--gmc-body);
+}
+.gmc-app h1, .gmc-app h2, .gmc-app h3, .gmc-app h4,
+.gmc-app p, .gmc-app figure, .gmc-app blockquote,
+.gmc-app dl, .gmc-app dd, .gmc-app ul, .gmc-app ol {
+  margin: 0;
+}
+.gmc-app ul, .gmc-app ol { list-style: none; padding: 0; }
+.gmc-app h1, .gmc-app h2, .gmc-app h3, .gmc-app h4 {
+  font-size: inherit;
+  font-weight: inherit;
+}
+.gmc-app a { color: inherit; text-decoration: inherit; }
+.gmc-app button, .gmc-app input, .gmc-app select, .gmc-app textarea {
+  font-family: inherit;
+  font-size: 100%;
+  font-weight: inherit;
+  line-height: inherit;
+  color: inherit;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+}
+.gmc-app button { cursor: pointer; background-image: none; }
+.gmc-app img, .gmc-app svg, .gmc-app video, .gmc-app canvas {
+  display: block;
+  vertical-align: middle;
+  max-width: 100%;
+  height: auto;
+}
+.gmc-app svg { height: revert-layer; }
+.gmc-app table { border-collapse: collapse; }
+
+/* Overlays must clear the host site's navigation. Webflow navbars commonly
+   sit around z-index 1000, which was painting over our sheets and dialogs. */
+  :root { --gmc-z-overlay: 9990; }
+
+/* The app's sticky control bar sticks to the top of the scroll container. On
+   the Webflow site that container is the page, which already has a fixed
+   navbar, so the bar has to start below it. The host page sets this to its own
+   navbar height. Standalone it stays 0. */
+.gmc-app { --gmc-sticky-offset: 0px; }
