@@ -541,16 +541,33 @@ select:focus-visible {
   -webkit-font-smoothing: antialiased;
   color: var(--gmc-body);
 }
-:where(.gmc-app) :where(h1, h2, h3, h4, p, figure, blockquote, dl, dd, ul, ol) {
+:where(.gmc-app) h1,
+:where(.gmc-app) h2,
+:where(.gmc-app) h3,
+:where(.gmc-app) h4,
+:where(.gmc-app) p,
+:where(.gmc-app) figure,
+:where(.gmc-app) blockquote,
+:where(.gmc-app) dl,
+:where(.gmc-app) dd,
+:where(.gmc-app) ul,
+:where(.gmc-app) ol {
   margin: 0;
 }
-:where(.gmc-app) :where(ul, ol) { list-style: none; padding: 0; }
-:where(.gmc-app) :where(h1, h2, h3, h4) {
+:where(.gmc-app) ul,
+:where(.gmc-app) ol { list-style: none; padding: 0; }
+:where(.gmc-app) h1,
+:where(.gmc-app) h2,
+:where(.gmc-app) h3,
+:where(.gmc-app) h4 {
   font-size: inherit;
   font-weight: inherit;
 }
-:where(.gmc-app) :where(a) { color: inherit; text-decoration: inherit; }
-:where(.gmc-app) :where(button, input, select, textarea) {
+:where(.gmc-app) a { color: inherit; text-decoration: inherit; }
+:where(.gmc-app) button,
+:where(.gmc-app) input,
+:where(.gmc-app) select,
+:where(.gmc-app) textarea {
   font-family: inherit;
   font-size: 100%;
   font-weight: inherit;
@@ -558,16 +575,26 @@ select:focus-visible {
   color: inherit;
   margin: 0;
   padding: 0;
-  background: transparent;
+  background-color: transparent;
+  background-image: none;
+  border-radius: 0;
 }
-:where(.gmc-app) :where(button) { cursor: pointer; background-image: none; }
-:where(.gmc-app) :where(img, svg, video, canvas) {
+:where(.gmc-app) button {
+  cursor: pointer;
+  -webkit-appearance: button;
+  appearance: button;
+  text-transform: none;
+}
+:where(.gmc-app) img,
+:where(.gmc-app) svg,
+:where(.gmc-app) video,
+:where(.gmc-app) canvas {
   display: block;
   vertical-align: middle;
   max-width: 100%;
   height: auto;
 }
-:where(.gmc-app) :where(table) { border-collapse: collapse; }
+:where(.gmc-app) table { border-collapse: collapse; }
 
 /* Overlays must clear the host site's navigation. Webflow navbars commonly
    sit around z-index 1000, which was painting over our sheets and dialogs. */
@@ -584,9 +611,14 @@ select:focus-visible {
    headings and labels once preflight was disabled. Neutralised in @layer base
    so our own classes and Tailwind utilities still override it. */
 @layer base {
-  .gmc-app :where(h1, h2, h3, h4, h5, h6, p, span, a, li, dt, dd, small, strong, em, label) {
+  :where(.gmc-app) h1, :where(.gmc-app) h2, :where(.gmc-app) h3,
+  :where(.gmc-app) h4, :where(.gmc-app) h5, :where(.gmc-app) h6,
+  :where(.gmc-app) p, :where(.gmc-app) span, :where(.gmc-app) a,
+  :where(.gmc-app) li, :where(.gmc-app) dt, :where(.gmc-app) dd,
+  :where(.gmc-app) small, :where(.gmc-app) strong, :where(.gmc-app) em,
+  :where(.gmc-app) label {
     background-color: transparent;
     background-image: none;
   }
-  .gmc-app :where(a) { text-decoration: none; }
+  :where(.gmc-app) a { text-decoration: none; }
 }
