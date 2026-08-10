@@ -528,7 +528,7 @@ select:focus-visible {
    to the app's mount container, so the tool is self-contained and cannot leak
    styling outward.
    ───────────────────────────────────────────────────────────────────────── */
-.gmc-app, .gmc-app *, .gmc-app *::before, .gmc-app *::after {
+:where(.gmc-app), :where(.gmc-app) *, :where(.gmc-app) *::before, :where(.gmc-app) *::after {
   box-sizing: border-box;
   border-width: 0;
   border-style: solid;
@@ -541,18 +541,16 @@ select:focus-visible {
   -webkit-font-smoothing: antialiased;
   color: var(--gmc-body);
 }
-.gmc-app h1, .gmc-app h2, .gmc-app h3, .gmc-app h4,
-.gmc-app p, .gmc-app figure, .gmc-app blockquote,
-.gmc-app dl, .gmc-app dd, .gmc-app ul, .gmc-app ol {
+:where(.gmc-app) :where(h1, h2, h3, h4, p, figure, blockquote, dl, dd, ul, ol) {
   margin: 0;
 }
-.gmc-app ul, .gmc-app ol { list-style: none; padding: 0; }
-.gmc-app h1, .gmc-app h2, .gmc-app h3, .gmc-app h4 {
+:where(.gmc-app) :where(ul, ol) { list-style: none; padding: 0; }
+:where(.gmc-app) :where(h1, h2, h3, h4) {
   font-size: inherit;
   font-weight: inherit;
 }
-.gmc-app a { color: inherit; text-decoration: inherit; }
-.gmc-app button, .gmc-app input, .gmc-app select, .gmc-app textarea {
+:where(.gmc-app) :where(a) { color: inherit; text-decoration: inherit; }
+:where(.gmc-app) :where(button, input, select, textarea) {
   font-family: inherit;
   font-size: 100%;
   font-weight: inherit;
@@ -562,15 +560,14 @@ select:focus-visible {
   padding: 0;
   background: transparent;
 }
-.gmc-app button { cursor: pointer; background-image: none; }
-.gmc-app img, .gmc-app svg, .gmc-app video, .gmc-app canvas {
+:where(.gmc-app) :where(button) { cursor: pointer; background-image: none; }
+:where(.gmc-app) :where(img, svg, video, canvas) {
   display: block;
   vertical-align: middle;
   max-width: 100%;
   height: auto;
 }
-.gmc-app svg { height: revert-layer; }
-.gmc-app table { border-collapse: collapse; }
+:where(.gmc-app) :where(table) { border-collapse: collapse; }
 
 /* Overlays must clear the host site's navigation. Webflow navbars commonly
    sit around z-index 1000, which was painting over our sheets and dialogs. */

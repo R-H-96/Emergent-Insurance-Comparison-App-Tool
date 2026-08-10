@@ -1,3 +1,4 @@
+import { asset } from "@/lib/config";
 /**
 * Round insurer mark. Used everywhere the wordmark is NOT appropriate
  * (rail chips, "Comparing" strip, modal blocks, ask panel result rows).
@@ -33,7 +34,7 @@ export default function InsurerMark({ insurer, size = 32, className = "" }) {
     >
       {hasMark ? (
         <img
-          src={`${process.env.PUBLIC_URL || ""}/logos/marks/${insurer.id}.png`}
+          src={asset(`/logos/marks/${insurer.id}.png`)}
           alt=""
           className="w-full h-full object-contain"
           style={{ padding: Math.max(2, size * 0.08) }}

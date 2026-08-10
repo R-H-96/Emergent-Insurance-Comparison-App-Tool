@@ -36,3 +36,21 @@ export function isVerified(verified) {
     (verified === "verified" || verified.startsWith("verified"))
   );
 }
+
+/**
+ * Where the tool's own static files live.
+ *
+ * Embedded, this bundle runs on getmycover.co.nz while its images sit on
+ * GitHub Pages. A relative path resolves against the host domain and 404s, and
+ * CRA's PUBLIC_URL is only ever a pathname, so it cannot help across origins.
+ * The origin has to be stated.
+ *
+ * Override at build time with REACT_APP_ASSET_BASE if the tool moves.
+ */
+export const ASSET_BASE = (
+  process.env.REACT_APP_ASSET_BASE ||
+  "https://r-h-96.github.io/Emergent-Insurance-Comparison-App-Tool"
+).replace(/\/$/, "");
+
+/** Absolute URL for a file in the tool's public folder. */
+export const asset = (path) => `${ASSET_BASE}/${String(path).replace(/^\//, "")}`;

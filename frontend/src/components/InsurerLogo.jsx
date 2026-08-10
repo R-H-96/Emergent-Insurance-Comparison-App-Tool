@@ -1,3 +1,4 @@
+import { asset } from "@/lib/config";
 /**
  * Uniform tile that displays an insurer logo (or an accent-tinted initial
  * tile fallback). Trimming whitespace was done at build time; we constrain
@@ -25,7 +26,7 @@ export default function InsurerLogo({ insurer, size = 40, className = "" }) {
     >
       {hasLogo ? (
         <img
-          src={`${process.env.PUBLIC_URL || ""}${insurer.logo}`}
+          src={asset(insurer.logo)}
           alt={`${insurer.name} logo`}
           className="max-h-[70%] max-w-[85%] object-contain"
           loading="lazy"
