@@ -59,8 +59,11 @@ export default function DetailModal({ feature, insurers, lookup, glossary, expla
         return (
           <div
             key={ins.id}
-            className="rounded-[var(--gmc-r-ctl)] border overflow-hidden"
-            style={{ borderColor: "var(--gmc-line)", background: "var(--gmc-card)" }}
+            className="rounded-[var(--gmc-r-ctl)] overflow-hidden"
+            style={{
+              border: "1px solid var(--gmc-line)",
+              background: "var(--gmc-card)",
+            }}
             data-testid={`detail-block-${ins.id}`}
           >
             <div
