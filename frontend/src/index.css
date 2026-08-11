@@ -1,6 +1,80 @@
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap');
 
 @tailwind base;
+
+/* Scoped reset. Deliberately NOT inside @layer: unlayered styles beat layered
+   ones regardless of specificity, and both Webflow and Tailwind v3 emit
+   unlayered CSS. In a layer this loses to everything. Element-level
+   specificity (0,0,1) ties with the host and wins on load order, while any
+   utility class (0,1,0) still overrides it. */
+:where(.gmc-app), :where(.gmc-app) *, :where(.gmc-app) *::before, :where(.gmc-app) *::after {
+  box-sizing: border-box;
+  border-width: 0;
+  border-style: solid;
+  border-color: var(--gmc-line);
+}
+.gmc-app {
+  font-family: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
+  line-height: 1.5;
+  -webkit-text-size-adjust: 100%;
+  -webkit-font-smoothing: antialiased;
+  color: var(--gmc-body);
+}
+:where(.gmc-app) h1,
+:where(.gmc-app) h2,
+:where(.gmc-app) h3,
+:where(.gmc-app) h4,
+:where(.gmc-app) p,
+:where(.gmc-app) figure,
+:where(.gmc-app) blockquote,
+:where(.gmc-app) dl,
+:where(.gmc-app) dd,
+:where(.gmc-app) ul,
+:where(.gmc-app) ol {
+  margin: 0;
+}
+:where(.gmc-app) ul,
+:where(.gmc-app) ol { list-style: none; padding: 0; }
+:where(.gmc-app) h1,
+:where(.gmc-app) h2,
+:where(.gmc-app) h3,
+:where(.gmc-app) h4 {
+  font-size: inherit;
+  font-weight: inherit;
+}
+:where(.gmc-app) a { color: inherit; text-decoration: inherit; }
+:where(.gmc-app) button,
+:where(.gmc-app) input,
+:where(.gmc-app) select,
+:where(.gmc-app) textarea {
+  font-family: inherit;
+  font-size: 100%;
+  font-weight: inherit;
+  line-height: inherit;
+  color: inherit;
+  margin: 0;
+  padding: 0;
+  background-color: transparent;
+  background-image: none;
+  border-radius: 0;
+}
+:where(.gmc-app) button {
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+  text-transform: none;
+  border-radius: 0;
+}
+:where(.gmc-app) img,
+:where(.gmc-app) svg,
+:where(.gmc-app) video,
+:where(.gmc-app) canvas {
+  display: block;
+  vertical-align: middle;
+  max-width: 100%;
+  height: auto;
+}
+:where(.gmc-app) table { border-collapse: collapse; }
 @tailwind components;
 @tailwind utilities;
 
@@ -528,76 +602,7 @@ select:focus-visible {
    to the app's mount container, so the tool is self-contained and cannot leak
    styling outward.
    ───────────────────────────────────────────────────────────────────────── */
-@layer base {
-  :where(.gmc-app), :where(.gmc-app) *, :where(.gmc-app) *::before, :where(.gmc-app) *::after {
-    box-sizing: border-box;
-    border-width: 0;
-    border-style: solid;
-    border-color: var(--gmc-line);
-  }
-  .gmc-app {
-    font-family: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
-    line-height: 1.5;
-    -webkit-text-size-adjust: 100%;
-    -webkit-font-smoothing: antialiased;
-    color: var(--gmc-body);
-  }
-  :where(.gmc-app) h1,
-  :where(.gmc-app) h2,
-  :where(.gmc-app) h3,
-  :where(.gmc-app) h4,
-  :where(.gmc-app) p,
-  :where(.gmc-app) figure,
-  :where(.gmc-app) blockquote,
-  :where(.gmc-app) dl,
-  :where(.gmc-app) dd,
-  :where(.gmc-app) ul,
-  :where(.gmc-app) ol {
-    margin: 0;
-  }
-  :where(.gmc-app) ul,
-  :where(.gmc-app) ol { list-style: none; padding: 0; }
-  :where(.gmc-app) h1,
-  :where(.gmc-app) h2,
-  :where(.gmc-app) h3,
-  :where(.gmc-app) h4 {
-    font-size: inherit;
-    font-weight: inherit;
-  }
-  :where(.gmc-app) a { color: inherit; text-decoration: inherit; }
-  :where(.gmc-app) button,
-  :where(.gmc-app) input,
-  :where(.gmc-app) select,
-  :where(.gmc-app) textarea {
-    font-family: inherit;
-    font-size: 100%;
-    font-weight: inherit;
-    line-height: inherit;
-    color: inherit;
-    margin: 0;
-    padding: 0;
-    background-color: transparent;
-    background-image: none;
-    border-radius: 0;
-  }
-  :where(.gmc-app) button {
-    cursor: pointer;
-    -webkit-appearance: none;
-    appearance: none;
-    text-transform: none;
-    border-radius: 0;
-  }
-  :where(.gmc-app) img,
-  :where(.gmc-app) svg,
-  :where(.gmc-app) video,
-  :where(.gmc-app) canvas {
-    display: block;
-    vertical-align: middle;
-    max-width: 100%;
-    height: auto;
-  }
-  :where(.gmc-app) table { border-collapse: collapse; }
-}
+
 
 /* Overlays must clear the host site's navigation. Webflow navbars commonly
    sit around z-index 1000, which was painting over our sheets and dialogs. */
@@ -611,17 +616,17 @@ select:focus-visible {
 
 /* The host site's stylesheet can reach elements inside the tool and paint
    backgrounds behind our text, which is what produced solid blocks behind
-   headings and labels once preflight was disabled. Neutralised in @layer base
-   so our own classes and Tailwind utilities still override it. */
-@layer base {
-  :where(.gmc-app) h1, :where(.gmc-app) h2, :where(.gmc-app) h3,
-  :where(.gmc-app) h4, :where(.gmc-app) h5, :where(.gmc-app) h6,
-  :where(.gmc-app) p, :where(.gmc-app) span, :where(.gmc-app) a,
-  :where(.gmc-app) li, :where(.gmc-app) dt, :where(.gmc-app) dd,
-  :where(.gmc-app) small, :where(.gmc-app) strong, :where(.gmc-app) em,
-  :where(.gmc-app) label {
-    background-color: transparent;
-    background-image: none;
-  }
-  :where(.gmc-app) a { text-decoration: none; }
+   headings and labels once preflight was disabled. Unlayered on purpose: a
+   layered rule loses to any unlayered one whatever its specificity, and both
+   Webflow and Tailwind v3 emit unlayered CSS. At element specificity (0,0,1)
+   this beats the host on load order while our own classes still override it. */
+:where(.gmc-app) h1, :where(.gmc-app) h2, :where(.gmc-app) h3,
+:where(.gmc-app) h4, :where(.gmc-app) h5, :where(.gmc-app) h6,
+:where(.gmc-app) p, :where(.gmc-app) span, :where(.gmc-app) a,
+:where(.gmc-app) li, :where(.gmc-app) dt, :where(.gmc-app) dd,
+:where(.gmc-app) small, :where(.gmc-app) strong, :where(.gmc-app) em,
+:where(.gmc-app) label {
+  background-color: transparent;
+  background-image: none;
 }
+:where(.gmc-app) a { text-decoration: none; }

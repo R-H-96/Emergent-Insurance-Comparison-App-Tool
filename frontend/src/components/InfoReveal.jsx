@@ -27,6 +27,19 @@ export default function InfoReveal({
 
   const stop = (e) => e.stopPropagation();
 
+  // Stated inline, not left to the cascade. The host page's stylesheet sets a
+  // background on button elements, and matching its specificity from our own
+  // sheet is a fight we lose the moment the host changes. Callers can still
+  // override by passing their own background in triggerStyle.
+  const baseTriggerStyle = {
+    backgroundColor: "transparent",
+    backgroundImage: "none",
+    border: 0,
+    padding: 0,
+    boxShadow: "none",
+    ...triggerStyle,
+  };
+
   const Trigger = (
     <button
       type="button"
@@ -34,7 +47,7 @@ export default function InfoReveal({
       onMouseDown={stop}
       onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") stop(e); }}
       className={triggerClassName}
-      style={triggerStyle}
+      style={baseTriggerStyle}
       aria-label={ariaLabel || title}
       data-testid={testId}
     >
