@@ -27,19 +27,10 @@ export default function InfoReveal({
 
   const stop = (e) => e.stopPropagation();
 
-  // Stated inline, not left to the cascade. The host page's stylesheet sets a
-  // background on button elements, and matching its specificity from our own
-  // sheet is a fight we lose the moment the host changes. Callers can still
-  // override by passing their own background in triggerStyle.
-  const baseTriggerStyle = {
-    backgroundColor: "transparent",
-    backgroundImage: "none",
-    border: 0,
-    padding: 0,
-    boxShadow: "none",
-    ...triggerStyle,
-  };
-
+  // Host button chrome is handled by the unlayered scoped reset in index.css,
+  // not inline here. Inline padding used to be part of that defence and it
+  // broke the px-0.5 / -mx-0.5 pair on the glossary trigger: the padding died,
+  // the negative margin lived, and every term ate the space either side of it.
   const Trigger = (
     <button
       type="button"
@@ -47,7 +38,7 @@ export default function InfoReveal({
       onMouseDown={stop}
       onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") stop(e); }}
       className={triggerClassName}
-      style={baseTriggerStyle}
+      style={triggerStyle}
       aria-label={ariaLabel || title}
       data-testid={testId}
     >
