@@ -121,7 +121,12 @@ export default function ComparisonSurface({
                     }}
                     data-testid={`ladder-${rung.id}`}
                   >
-                    <Icon className="w-4 h-4 flex-shrink-0" strokeWidth={2.2} aria-hidden="true" />
+                    {/* Icon hidden on phones. Measured at 390px, this rung's
+                        icon plus "Differences" plus the count badge came to
+                        121px inside a 108px third, so the content spilled
+                        under the neighbouring pill and hid the count. The
+                        labels carry the meaning; the icons are decorative. */}
+                    <Icon className="hidden sm:block w-4 h-4 flex-shrink-0" strokeWidth={2.2} aria-hidden="true" />
                     <span className="hidden sm:inline">{rung.label}</span>
                     <span className="sm:hidden">{rung.short}</span>
                     {rung.id === 1 && notableCount != null && (

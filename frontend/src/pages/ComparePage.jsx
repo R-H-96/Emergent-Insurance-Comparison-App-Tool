@@ -290,7 +290,7 @@ toast.error("Could not share, long-press the address bar instead.");
 
   if (showIntake) {
     return (
-      <div className={`min-h-screen ${embed ? "gmc-embed" : ""}`} data-testid="compare-page">
+      <div className={`min-h-screen gmc-fab-clearance ${embed ? "gmc-embed" : ""}`} data-testid="compare-page">
         {!embed && <GmcNav />}
         <IntakeFlow
           insurers={data.insurers}
@@ -305,7 +305,7 @@ toast.error("Could not share, long-press the address bar instead.");
   }
 
   return (
-    <div className={`min-h-screen ${embed ? "gmc-embed" : ""}`} data-testid="compare-page">
+    <div className={`min-h-screen gmc-fab-clearance ${embed ? "gmc-embed" : ""}`} data-testid="compare-page">
       {!embed && <div className="print:hidden"><GmcNav /></div>}
       {!embed && (
         <div className="print:hidden">

@@ -626,6 +626,35 @@ select:focus-visible {
    navbar height. Standalone it stays 0. */
 .gmc-app { --gmc-sticky-offset: 0px; }
 
+/* Room at the end of the page for the floating Ask button. It is fixed at the
+   bottom right below xl, 56px tall and 20px up from the bottom edge, so
+   without this the last card sits underneath it and cannot be scrolled clear.
+   Safe-area inset included for phones with a home indicator. */
+.gmc-fab-clearance { padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 96px); }
+@media (min-width: 1280px) { .gmc-fab-clearance { padding-bottom: 0; } }
+
+/* Extends a small control's hit area to the 44px minimum WITHOUT changing its
+   size on screen. The tier badges are 22px tall and the verified ticks 18px,
+   which is correct visually inside a dense row but too small to tap reliably.
+   The pseudo-element is invisible, is not laid out, and is centred on the
+   control, so nothing moves. Use on inline markers, not on block buttons,
+   which should simply be 44px tall via .gmc-tap. */
+.gmc-tap-area { position: relative; }
+.gmc-tap-area::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: max(100%, 44px);
+  height: max(100%, 44px);
+}
+@media (hover: hover) and (pointer: fine) {
+  /* A mouse does not need the padding, and an invisible 44px box would steal
+     hover from whatever sits next to it. */
+  .gmc-tap-area::after { display: none; }
+}
+
 /* The host site's stylesheet can reach elements inside the tool and paint
    backgrounds behind our text, which is what produced solid blocks behind
    headings and labels once preflight was disabled. Unlayered on purpose: a

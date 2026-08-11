@@ -15,7 +15,10 @@ export default function MarkerInfo({ title, children, label, className = "" }) {
       ariaLabel={label || title}
       testId="marker"
       width="w-64"
-      triggerClassName={`inline-flex items-center flex-shrink-0 cursor-help rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gmc-teal)] ${className}`}
+      // gmc-tap-area, not gmc-tap. These markers sit inline inside dense rows,
+      // so growing them to 44px on screen would wreck the row. The class
+      // extends only the hit area, leaving the badge the size it looks.
+      triggerClassName={`gmc-tap-area inline-flex items-center flex-shrink-0 cursor-help rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gmc-teal)] ${className}`}
     >
       {children}
     </InfoReveal>
