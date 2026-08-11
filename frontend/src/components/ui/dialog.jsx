@@ -3,6 +3,7 @@ import * as DialogPrimitive from "@radix-ui/react-dialog"
 import { X } from "lucide-react"
 
 import { cn } from "@/lib/utils"
+import portalHost from "@/lib/portalHost"
 
 const Dialog = DialogPrimitive.Root
 
@@ -24,7 +25,7 @@ const DialogOverlay = React.forwardRef(({ className, ...props }, ref) => (
 DialogOverlay.displayName = DialogPrimitive.Overlay.displayName
 
 const DialogContent = React.forwardRef(({ className, children, ...props }, ref) => (
-  <DialogPortal>
+  <DialogPortal container={portalHost()}>
     <DialogOverlay />
     <DialogPrimitive.Content
       ref={ref}

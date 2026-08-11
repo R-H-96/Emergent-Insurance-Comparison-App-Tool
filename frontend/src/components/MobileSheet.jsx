@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence, useReducedMotion, useDragControls } from "framer-motion";
 import { X } from "lucide-react";
+import portalHost from "@/lib/portalHost";
 
 /**
  * Reusable full-featured mobile bottom sheet.
@@ -246,6 +247,6 @@ export default function MobileSheet({
         )}
       </AnimatePresence>
     </>,
-    document.body,
+    portalHost(),
   );
 }

@@ -59,6 +59,17 @@
   box-shadow: none;
   border-radius: 0;
 }
+/* Webflow's normalize sets appearance: button, which tells the browser to
+   paint native button chrome no matter what background we set. Ours has to
+   say otherwise. Same element-level specificity, and our sheet loads second. */
+:where(.gmc-app) button,
+:where(.gmc-app) [type="button"],
+:where(.gmc-app) [type="reset"],
+:where(.gmc-app) [type="submit"] {
+  -webkit-appearance: none;
+  appearance: none;
+  cursor: pointer;
+}
 :where(.gmc-app) button {
   cursor: pointer;
   -webkit-appearance: none;

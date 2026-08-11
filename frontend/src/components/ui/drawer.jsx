@@ -2,6 +2,7 @@ import * as React from "react"
 import { Drawer as DrawerPrimitive } from "vaul"
 
 import { cn } from "@/lib/utils"
+import portalHost from "@/lib/portalHost"
 
 const Drawer = ({
   shouldScaleBackground = true,
@@ -26,7 +27,7 @@ const DrawerOverlay = React.forwardRef(({ className, ...props }, ref) => (
 DrawerOverlay.displayName = DrawerPrimitive.Overlay.displayName
 
 const DrawerContent = React.forwardRef(({ className, children, ...props }, ref) => (
-  <DrawerPortal>
+  <DrawerPortal container={portalHost()}>
     <DrawerOverlay />
     <DrawerPrimitive.Content
       ref={ref}
