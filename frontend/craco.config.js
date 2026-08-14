@@ -86,13 +86,23 @@ let webpackConfig = {
     configure: (webpackConfig) => {
 
       // ── Embed build ──────────────────────────────────────────────────────
-      // CRA fingerprints filenames (main.a1b2c3.js) which changes on every
-      // deploy. The Webflow page references these files by name, so they have
-      // to be stable or the snippet breaks each time you push. One JS file and
-      // one CSS file, fixed names, no runtime chunk.
+      // The Webflow page references the tool by URL, so that URL must never
+      // change. It used to be satisfied by giving the bundles fixed names,
+      // which cost us cache busting: GitHub Pages serves everything with
+      // max-age=600, so for ten minutes after a deploy a visitor could hold a
+      // stale file, and worse, could pair old CSS with new JS.
+      //
+      // Now the bundles carry a content hash, so a changed file is a changed
+      // URL and can never be served stale. The fixed URL in the snippet points
+      // at a small generated loader instead (see scripts/build-loader.js),
+      // which injects the current pair together. The snippet still never
+      // changes, and CSS and JS can no longer drift apart.
+      //
+      // One JS file, no runtime chunk, so the loader only ever has two files
+      // to name.
       if (process.env.NODE_ENV === "production") {
-        webpackConfig.output.filename = "static/js/gmc-tool.js";
-        webpackConfig.output.chunkFilename = "static/js/gmc-tool.[name].js";
+        webpackConfig.output.filename = "static/js/gmc-tool.[contenthash:8].js";
+        webpackConfig.output.chunkFilename = "static/js/gmc-tool.[name].[contenthash:8].js";
         webpackConfig.optimization = {
           ...webpackConfig.optimization,
           runtimeChunk: false,
@@ -102,8 +112,8 @@ let webpackConfig = {
           (pl) => pl.constructor && pl.constructor.name === "MiniCssExtractPlugin",
         );
         if (cssPlugin) {
-          cssPlugin.options.filename = "static/css/gmc-tool.css";
-          cssPlugin.options.chunkFilename = "static/css/gmc-tool.[name].css";
+          cssPlugin.options.filename = "static/css/gmc-tool.[contenthash:8].css";
+          cssPlugin.options.chunkFilename = "static/css/gmc-tool.[name].[contenthash:8].css";
         }
       }
 
@@ -159,7 +169,7 @@ if (isDevServer) {
   } catch (err) {
     if (err.code === 'MODULE_NOT_FOUND' && err.message.includes('@emergentbase/visual-edits/craco')) {
       console.warn(
-        "[visual-edits] @emergentbase/visual-edits not installed — visual editing disabled."
+        "[visual-edits] @emergentbase/visual-edits not installed, visual editing disabled."
       );
     } else {
       throw err;
