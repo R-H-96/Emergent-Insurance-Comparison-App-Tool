@@ -1,4 +1,6 @@
-const PRODUCTS = [
+// Exported so the intake's first question and this picker cannot drift apart.
+// One list, two places that render it.
+export const PRODUCTS = [
   { id: "health", label: "Health insurance", enabled: true },
   { id: "life", label: "Life", enabled: false },
   { id: "trauma", label: "Trauma", enabled: false },

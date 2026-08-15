@@ -10,6 +10,7 @@ import {
   HOUSEHOLD_OPTIONS, PRIORITY_OPTIONS, KNOWLEDGE_OPTIONS,
   orderedInsurers,
 } from "@/lib/personalisation";
+import { PRODUCTS } from "@/components/ProductTypeSelector";
 import { pushEvent } from "@/lib/analytics";
 
 const HH_ICONS = { solo: User, couple: Users, family: UsersRound };
@@ -18,15 +19,28 @@ const PRI_ICONS = {
   home: Home, hourglass: Hourglass, award: Award,
 };
 
-const STEPS = ["household", "priorities", "knowledge", "insurers"];
+const STEPS = ["product", "household", "priorities", "knowledge", "insurers"];
 const MAX_PRIORITIES = 3;
 
+// Spelt out because "In 5 quick questions" reads like a form and "In five
+// quick questions" reads like a sentence. Derived from STEPS so the promise on
+// the opening screen cannot fall out of step with the flow behind it.
+const NUMBER_WORDS = ["zero", "one", "two", "three", "four", "five", "six", "seven"];
+const stepCountWord = () => NUMBER_WORDS[STEPS.length] || String(STEPS.length);
+
 /**
-* Guided intake. Four short screens shown before the comparison surface.
+ * Guided intake. An opening prompt, then one question per screen.
+ *
+ * The prompt exists because landing straight on a comparison asks the reader
+ * to understand a dense grid before they have decided they want one. A single
+ * question with a single button is a smaller thing to say yes to, and the
+ * first question then does the work of orienting them.
  *
  * Answers only re-order and re-explain what's shown; nothing is ever hidden
  * permanently (the "Everything" level of the ladder always shows all 25
-* features). "Skip. Just compare" is available on every screen.
+ * features). "Skip, just compare" stays available on every screen, including
+ * the prompt, because a reader who already knows what they want should not
+ * have to answer five questions to get it.
  *
  * No contact details are collected here. Lead capture happens only via the
  * adviser CTA, which the parent site's modal binds to.
@@ -40,7 +54,9 @@ export default function IntakeFlow({
 }) {
   const insurers = orderedInsurers(rawInsurers);
   const reduce = useReducedMotion();
+  const [started, setStarted] = useState(false);
   const [step, setStep] = useState(0);
+  const [product, setProduct] = useState(null);
   const [household, setHousehold] = useState(null);
   const [priorities, setPriorities] = useState([]);
   const [knowledge, setKnowledge] = useState(null);
@@ -48,13 +64,20 @@ export default function IntakeFlow({
   const key = STEPS[step];
 
   // Fired on every screen view so drop-off can be read per step, not just
-  // "finished" vs "skipped".
+  // "finished" vs "skipped". The prompt is its own event, because the drop
+  // between seeing the prompt and answering question one is the number worth
+  // watching once this is live.
   useEffect(() => {
+    if (!started) {
+      pushEvent("gmc_intake_prompt_view", {});
+      return;
+    }
     pushEvent("gmc_intake_step", { step: key, index: step + 1, of: STEPS.length });
-  }, [key, step]);
+  }, [key, step, started]);
   const pct = ((step + 1) / STEPS.length) * 100;
 
   const canContinue =
+    (key === "product" && !!product) ||
     (key === "household" && !!household) ||
     (key === "priorities" && priorities.length > 0) ||
     (key === "knowledge" && !!knowledge) ||
@@ -76,16 +99,69 @@ export default function IntakeFlow({
     }
     const opt = KNOWLEDGE_OPTIONS.find((k) => k.id === knowledge);
     const switching = !!opt?.switching;
-    pushEvent("gmc_intake_complete", { household, priorities, knowledge, switching });
-    onComplete({ household, priorities, knowledge, switching, completed: true, skipped: false });
+    pushEvent("gmc_intake_complete", { product, household, priorities, knowledge, switching });
+    onComplete({ product, household, priorities, knowledge, switching, completed: true, skipped: false });
   };
 
-  const back = () => setStep((s) => Math.max(0, s - 1));
+  // Back from question one returns to the prompt rather than dead-ending, so
+  // the first screen is never a one-way door.
+  const back = () => {
+    if (step === 0) { setStarted(false); return; }
+    setStep((s) => s - 1);
+  };
 
   const skip = () => {
-    pushEvent("gmc_intake_skip", { at_step: key });
+    pushEvent("gmc_intake_skip", { at_step: started ? key : "prompt" });
     onSkip();
   };
+
+  const begin = () => {
+    pushEvent("gmc_intake_start", {});
+    setStarted(true);
+  };
+
+  if (!started) {
+    return (
+      <section className="py-12 sm:py-20" data-testid="intake-prompt">
+        <div className="gmc-container" style={{ maxWidth: 620 }}>
+          <div className="gmc-card px-6 py-10 sm:px-10 sm:py-14 text-center">
+            <h1 className="gmc-h1 text-3xl sm:text-5xl mb-3">
+              Compare NZ Insurance Policies
+            </h1>
+            <p className="gmc-t-md mb-8" style={{ color: "var(--gmc-body)" }}>
+              In {stepCountWord()} quick questions.
+            </p>
+            <button
+              type="button"
+              onClick={begin}
+              className="gmc-btn-primary gmc-tap"
+              data-testid="intake-begin"
+            >
+              Start comparing
+              <ArrowRight className="w-4 h-4" strokeWidth={2.5} />
+            </button>
+            <p className="gmc-t-sm mt-4" style={{ color: "var(--gmc-muted)" }}>
+              Takes about 30 seconds
+            </p>
+            <div
+              className="mt-8 pt-6"
+              style={{ borderTop: "1px solid var(--gmc-line)" }}
+            >
+              <button
+                type="button"
+                onClick={skip}
+                className="gmc-tap gmc-t-sm gmc-w-strong underline decoration-dotted underline-offset-2 hover:decoration-solid"
+                style={{ color: "var(--gmc-muted)" }}
+                data-testid="intake-prompt-skip"
+              >
+                Skip, just compare
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="py-8 sm:py-14" data-testid="intake-flow">
@@ -133,6 +209,28 @@ Skip, just compare
             exit={reduce ? { opacity: 0 } : { opacity: 0, x: -20 }}
             transition={{ duration: reduce ? 0 : 0.24, ease: [0.16, 1, 0.3, 1] }}
           >
+            {key === "product" && (
+              <Screen
+                title="What type of insurance do you want to compare?"
+                sub="Health insurance is live today. The rest are being built."
+              >
+                <div className="grid sm:grid-cols-2 gap-3">
+                  {PRODUCTS.map((p) => (
+                    <OptionRow
+                      key={p.id}
+                      selected={product === p.id}
+                      disabled={!p.enabled}
+                      onClick={() => p.enabled && setProduct(p.id)}
+                      label={p.label}
+                      blurb={p.enabled ? "Five policies, 25 features" : "Not ready yet"}
+                      badge={p.enabled ? null : "Soon"}
+                      testId={`intake-product-${p.id}`}
+                    />
+                  ))}
+                </div>
+              </Screen>
+            )}
+
             {key === "household" && (
               <Screen
                 title="Who's this cover for?"
@@ -272,20 +370,18 @@ sub={`Pick up to ${MAX_PRIORITIES}. We'll put those first. You can still see eve
 
         {/* Nav */}
         <div className="mt-8 flex items-center justify-between gap-4">
-          {step > 0 ? (
-            <button
-              type="button"
-              onClick={back}
-              className="gmc-tap inline-flex items-center gap-2 gmc-t-base gmc-w-strong"
-              style={{ color: "var(--gmc-body)" }}
-              data-testid="intake-back"
-            >
-              <ArrowLeft className="w-4 h-4" strokeWidth={2.5} />
-              Back
-            </button>
-          ) : (
-            <span />
-          )}
+          {/* Always present now. From question one it returns to the opening
+              prompt, so there is no screen the reader cannot back out of. */}
+          <button
+            type="button"
+            onClick={back}
+            className="gmc-tap inline-flex items-center gap-2 gmc-t-base gmc-w-strong"
+            style={{ color: "var(--gmc-body)" }}
+            data-testid="intake-back"
+          >
+            <ArrowLeft className="w-4 h-4" strokeWidth={2.5} />
+            Back
+          </button>
           <button
             type="button"
             onClick={next}
@@ -325,7 +421,7 @@ function Screen({ title, sub, children }) {
   );
 }
 
-function OptionRow({ selected, disabled, onClick, icon: Icon, label, blurb, testId }) {
+function OptionRow({ selected, disabled, onClick, icon: Icon, label, blurb, badge, testId }) {
   return (
     <button
       type="button"
@@ -365,6 +461,18 @@ function OptionRow({ selected, disabled, onClick, icon: Icon, label, blurb, test
               strokeWidth={3}
               style={{ color: "var(--gmc-teal)" }}
             />
+          )}
+          {badge && (
+            <span
+              className="inline-flex items-center rounded-full px-1.5 gmc-t-xs gmc-w-strong uppercase tracking-wider flex-shrink-0"
+              style={{
+                background: "var(--gmc-bg-soft)",
+                color: "var(--gmc-muted)",
+                border: "1px solid var(--gmc-line)",
+              }}
+            >
+              {badge}
+            </span>
           )}
         </span>
         <span className="block gmc-t-sm mt-0.5" style={{ color: "var(--gmc-body)" }}>

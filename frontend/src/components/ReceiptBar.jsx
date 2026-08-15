@@ -1,5 +1,6 @@
 import { Pencil, User, Users, UsersRound } from "lucide-react";
 import InsurerMark from "@/components/InsurerMark";
+import CoachMark from "@/components/CoachMark";
 import {
   HOUSEHOLD_OPTIONS, PRIORITY_OPTIONS, intakeSummary,
 } from "@/lib/personalisation";
@@ -25,7 +26,7 @@ const PRI_ICONS = {
  *
  * Every chip stays tappable and still reopens the step it came from.
  */
-export default function ReceiptBar({ intake, insurers, onEditIntake, onEditInsurers }) {
+export default function ReceiptBar({ intake, insurers, onEditIntake, onEditInsurers, coach = false }) {
   const bits = intakeSummary(intake);
   const personalised = bits.length > 0;
   const HouseholdIcon = HH_ICONS[intake?.household];
@@ -43,13 +44,17 @@ export default function ReceiptBar({ intake, insurers, onEditIntake, onEditInsur
 
   return (
     <div
-      className="flex flex-wrap items-center gap-2 px-3 py-2.5 mb-3 rounded-[var(--gmc-r-ctl)]"
+      className="relative flex flex-wrap items-center gap-2 px-3 py-2.5 mb-3 rounded-[var(--gmc-r-ctl)]"
       style={{
         background: personalised ? "var(--gmc-teal-tint)" : "var(--gmc-bg-alt)",
         border: "1px solid var(--gmc-line)",
       }}
       data-testid="receipt-bar"
     >
+      <CoachMark id="picker" show={coach}>
+        Click here to change your comparison
+      </CoachMark>
+
       <span
         className="hidden sm:inline-flex items-center gap-1.5 gmc-t-xs gmc-w-strong uppercase tracking-[0.08em] flex-shrink-0"
         style={{ color: "var(--gmc-muted)" }}

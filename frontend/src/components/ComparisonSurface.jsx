@@ -41,6 +41,7 @@ export default function ComparisonSurface({
   notableCount, intake, explanation,
   preOpenGroups, flashFeature, onOpenFeature, onOpenGroup,
   onShare, linkCopied, onOpenPicker, onEditIntake, onOpenGlossary,
+  coachPicker = false,
 }) {
   const reduce = useReducedMotion();
   const initialFire = useRef(true);
@@ -81,16 +82,21 @@ export default function ComparisonSurface({
           insurers={insurers}
           onEditIntake={onEditIntake}
           onEditInsurers={onOpenPicker}
+          coach={coachPicker}
         />
 
-        {/* Sticky ladder */}
+        {/* Sticky ladder.
+            The old version bled to the edges with -mx-4 px-4 on mobile only,
+            which left the background stopping at the container edge on desktop
+            and reading as a ragged block rather than a bar. gmc-sticky-bleed
+            paints full width at every size using a pseudo-element, so the
+            controls keep their container padding while the surface behind them
+            runs edge to edge. The top offset comes from the same variable the
+            embed sets to the host navbar height, and the bar's own top padding
+            is folded into that so no gap opens under the header. */}
         <div
-          className="sticky z-[40] py-3 -mx-4 px-4 sm:mx-0 sm:px-0"
-          style={{
-            top: "var(--gmc-sticky-offset, 0px)",
-            background: "var(--gmc-bg)",
-            boxShadow: "var(--gmc-shadow-sticky)",
-          }}
+          className="gmc-sticky-bleed sticky z-[40] py-3"
+          style={{ top: "var(--gmc-sticky-offset, 0px)" }}
           data-testid="ladder-sticky"
         >
           <div className="flex items-center gap-2">

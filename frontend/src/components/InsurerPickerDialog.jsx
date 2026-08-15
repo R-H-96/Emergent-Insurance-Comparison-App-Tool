@@ -22,7 +22,7 @@ export default function InsurerPickerDialog({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
-        className="max-w-3xl max-h-[88vh] overflow-y-auto bg-white rounded-[var(--gmc-r-card)] border-[color:var(--gmc-line)] p-0 gap-0"
+        className="max-w-5xl max-h-[88vh] overflow-y-auto bg-white rounded-[var(--gmc-r-card)] border-[color:var(--gmc-line)] p-0 gap-0"
         data-testid="insurer-picker-dialog"
       >
         <DialogHeader className="p-6 pb-4 border-b" style={{ borderColor: "var(--gmc-line)" }}>

@@ -630,6 +630,30 @@ select:focus-visible {
    bottom right below xl, 56px tall and 20px up from the bottom edge, so
    without this the last card sits underneath it and cannot be scrolled clear.
    Safe-area inset included for phones with a home indicator. */
+/* Full-bleed background for a sticky bar that sits inside a padded container.
+   The pseudo-element paints edge to edge behind the bar at every width, so the
+   controls keep the container's own padding while the surface behind them has
+   no visible left or right edge. Replaces a -mx-4 px-4 pair that only bled on
+   mobile and left desktop looking ragged.
+
+   The 1px top inset closes the hairline the browser leaves between a sticky
+   element and the fixed header above it during momentum scrolling. */
+.gmc-sticky-bleed { position: sticky; }
+.gmc-sticky-bleed::before {
+  content: "";
+  position: absolute;
+  top: -1px;
+  bottom: 0;
+  left: 50%;
+  width: 100vw;
+  transform: translateX(-50%);
+  background: var(--gmc-bg);
+  box-shadow: var(--gmc-shadow-sticky);
+  z-index: -1;
+  pointer-events: none;
+}
+.gmc-sticky-bleed > * { position: relative; }
+
 .gmc-fab-clearance { padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 96px); }
 @media (min-width: 1280px) { .gmc-fab-clearance { padding-bottom: 0; } }
 

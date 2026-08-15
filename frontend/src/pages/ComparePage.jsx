@@ -85,6 +85,11 @@ export default function ComparePage({ embed = false, initialGroups = [] }) {
   const [activeGroups, setActiveGroups] = useState(initial.activeGroups);
   const [intake, setIntake] = useState(savedIntake);
 
+  // One-time coach mark on the Comparing bar. Shown after the intake, because
+  // that bar is the only route back to changing the insurers and nothing about
+  // it currently says so.
+  const [coachPicker, setCoachPicker] = useState(false);
+
   // Show the intake unless they've already been through it (or skipped it),
   // or unless a shared link already encodes an explicit selection.
   const arrivedViaSharedLink = initial.level !== null || !!initial.featureSlug;
@@ -219,8 +224,13 @@ const feat = openFeature ? `${openFeature}, `: "";
     const next = { ...DEFAULT_INTAKE, ...answers };
     setIntake(next);
     saveIntake(next);
+    // The intake now asks which product first, so it owns that choice. Only
+    // health has data behind it, so anything else falls back rather than
+    // rendering an empty comparison.
+    if (answers.product) setProductType(answers.product);
     setLevel(explanationMode(next.knowledge).defaultLevel);
     setShowIntake(false);
+    setCoachPicker(true);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
@@ -229,6 +239,7 @@ const feat = openFeature ? `${openFeature}, `: "";
     setIntake(next);
     saveIntake(next);
     setLevel(1);
+    setCoachPicker(true);
     // Skipping the questions still requires a choice of insurers. We do not
     // pick for them.
     if (selected.length >= 2) setShowIntake(false);
@@ -334,6 +345,7 @@ toast.error("Could not share, long-press the address bar instead.");
       />
 
       <ComparisonSurface
+        coachPicker={coachPicker}
         level={level}
         onLevelChange={setLevel}
         insurers={selectedInsurers}
