@@ -17,7 +17,7 @@ const ICONS = { user: User, search: Search, scissors: Scissors, heart: HeartPuls
  */
 export default function CareJourney({ insurers, lookup, onOpen }) {
   return (
-    <div className="gmc-card p-5 sm:p-6" data-testid="care-journey">
+    <div className="gmc-surface p-5 sm:p-6" data-testid="care-journey">
       <div className="mb-5">
         <div
           className="gmc-t-lg sm:gmc-t-xl gmc-w-heavy"

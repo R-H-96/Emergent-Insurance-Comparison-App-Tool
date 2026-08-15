@@ -76,6 +76,31 @@ The practical consequence: **a deploy is now live the moment the Action finishes
 
 ---
 
+## Class names are a shared namespace
+
+The Webflow site defines **71 classes of its own beginning `gmc-`**, including `gmc-card`, `gmc-nav`, `gmc-pill`, `gmc-cta`, `gmc-header` and `gmc-icon`. Because the tool loads onto the same page, any class name used by both is a collision, and whichever stylesheet comes later wins.
+
+This is not theoretical. `gmc-card` was defined by the site with `padding: 32px`, which silently overrode the tool's card padding everywhere. The symptom looked like a spacing bug in the tool, and no amount of changing the tool's padding value would have fixed it.
+
+Two names were renamed to get out of the way:
+
+| Was | Now | Why |
+|---|---|---|
+| `gmc-card` | `gmc-surface` | Site defines it with its own padding and radius |
+| `gmc-nav` | `gmc-topbar` | Site defines it as the fixed site header |
+
+**Before adding any new class to the tool, check it against the site's stylesheet.** In the browser console on the live page:
+
+```js
+[...document.styleSheets].flatMap(s => { try { return [...s.cssRules] } catch { return [] } })
+  .flatMap(r => [...(r.selectorText || '').matchAll(/\.(gmc-[a-z0-9_-]+)/g)].map(m => m[1]))
+  .filter((v, i, a) => a.indexOf(v) === i).sort()
+```
+
+One class is shared on purpose and must not be renamed: **`gmc-quote-trigger`**, which is how the site's global quote modal binds to the tool's adviser CTAs.
+
+---
+
 ## If Webflow styling still collides
 
 The scoped reset stops the tool affecting the page. The reverse is also possible: a very broad Webflow selector such as `body *` or a global `a` rule can reach inside `#gmc-root`. If something looks wrong, inspect the element in the browser and look for a Webflow class winning the cascade. The fix is to make the Webflow rule more specific rather than fighting it from the tool.

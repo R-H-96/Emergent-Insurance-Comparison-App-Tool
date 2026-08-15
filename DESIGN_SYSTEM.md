@@ -89,6 +89,18 @@ Also: do not signal the same thing three times. A card carrying an insurer's log
 
 ---
 
+## Naming, and the host page
+
+The tool loads onto the Webflow page, so class names are a shared namespace. The site defines 71 classes of its own beginning `gmc-`. Any name used by both collides, and the later stylesheet wins.
+
+`gmc-card` was one. The site set `padding: 32px` on it, which quietly overrode the tool's card padding on every screen. It read as a spacing bug in the tool and could not have been fixed by changing the tool's spacing.
+
+**Check any new class against the host stylesheet before using it.** The one-liner is in `EMBED.md`. `gmc-quote-trigger` is shared deliberately and must stay.
+
+Current tool-side names for the two that clashed: `gmc-surface` (was `gmc-card`) and `gmc-topbar` (was `gmc-nav`).
+
+---
+
 ## Structural rule
 
 **Repeated styling belongs in a class. Inline styles are for genuinely dynamic values only**, such as an insurer's accent colour or a computed position.

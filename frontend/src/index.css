@@ -191,7 +191,7 @@ body {
   .gmc-container { padding-left: 2rem; padding-right: 2rem; }
 }
 
-.gmc-card {
+.gmc-surface {
   background: var(--gmc-card);
   border: 1px solid var(--gmc-line);
   border-radius: var(--gmc-r-card);
@@ -373,7 +373,7 @@ body {
 }
 
 /* Nav frosted glass */
-.gmc-nav {
+.gmc-topbar {
   background: rgba(255, 255, 255, 0.75);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
@@ -488,7 +488,7 @@ select:focus-visible {
 /* Print stylesheet, clean, ink-friendly comparison table */
 @media print {
   body { background: white; }
-  .gmc-nav,
+  .gmc-topbar,
   [data-testid="hero-section"],
   [data-testid="tool-rail-desktop"],
   [data-testid="mobile-tool-pill"],

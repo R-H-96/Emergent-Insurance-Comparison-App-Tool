@@ -156,7 +156,7 @@ export default function InsurerRadar({
   ) : null;
 
   return (
-    <div className="gmc-card p-4 sm:p-6" data-testid="coverage-profile">
+    <div className="gmc-surface p-4 sm:p-6" data-testid="coverage-profile">
       <div className="mb-1 flex items-start justify-between gap-2">
         <div className="min-w-0">
           <div

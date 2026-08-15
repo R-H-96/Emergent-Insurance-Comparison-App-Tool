@@ -84,7 +84,7 @@ export default function ComparisonTable({
   if (!visibleGrouped.length) {
     const hasFilters = activeGroups.length > 0;
     return (
-      <div className="gmc-card p-10 text-center" data-testid="comparison-empty">
+      <div className="gmc-surface p-10 text-center" data-testid="comparison-empty">
         <p className="gmc-t-base gmc-w-strong" style={{ color: "var(--gmc-ink)" }}>
           {hasFilters ? "Nothing in this section for this comparison." : "No features match your current filters."}
         </p>
@@ -100,7 +100,7 @@ export default function ComparisonTable({
   return (
     <>
       {/* ── Desktop grid ── */}
-      <div className="gmc-card overflow-hidden hidden md:block" data-testid="comparison-table">
+      <div className="gmc-surface overflow-hidden hidden md:block" data-testid="comparison-table">
         {/* Header */}
         <div
           className="grid"
@@ -259,7 +259,7 @@ export default function ComparisonTable({
         {visibleGrouped.map(([group, , visibleFeats]) => {
           const isCollapsed = collapsed.has(group);
           return (
-            <div key={group} className="gmc-card overflow-hidden">
+            <div key={group} className="gmc-surface overflow-hidden">
               {/* Mobile group header */}
               <button
                 type="button"

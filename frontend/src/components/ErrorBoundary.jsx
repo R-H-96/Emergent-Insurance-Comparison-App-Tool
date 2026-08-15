@@ -50,7 +50,7 @@ export default class ErrorBoundary extends Component {
     return (
       <section className="py-12 sm:py-20" data-testid="error-boundary">
         <div className="gmc-container" style={{ maxWidth: 640 }}>
-          <div className="gmc-card p-6 sm:p-8 text-center">
+          <div className="gmc-surface p-6 sm:p-8 text-center">
             <span
               className="inline-flex items-center justify-center w-12 h-12 rounded-full mb-4"
               className="gmc-inset"

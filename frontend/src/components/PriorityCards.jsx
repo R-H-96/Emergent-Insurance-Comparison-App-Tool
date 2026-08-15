@@ -60,7 +60,7 @@ export default function PriorityCards({
 
   if (!yours.length && !also.length) {
     return (
-      <div className="gmc-card p-8 text-center" data-testid="priority-empty">
+      <div className="gmc-surface p-8 text-center" data-testid="priority-empty">
         <p className="gmc-t-md gmc-w-strong mb-1" style={{ color: "var(--gmc-ink)" }}>
           These policies agree on the notable points.
         </p>

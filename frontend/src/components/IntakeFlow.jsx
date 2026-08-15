@@ -123,18 +123,18 @@ export default function IntakeFlow({
 
   if (!started) {
     return (
-      <section className="py-12 sm:py-20" data-testid="intake-prompt">
+      <section className="py-8 sm:py-12" data-testid="intake-prompt">
         <div className="gmc-container" style={{ maxWidth: 880 }}>
-          <div className="gmc-card px-6 pt-16 pb-10 sm:px-10 sm:pt-24 sm:pb-14 text-center">
+          <div className="gmc-surface px-6 pt-16 pb-10 sm:px-10 sm:pt-24 sm:pb-14 text-center">
             {/* h2 inside the embed. The host page already has its own h1, and
                 two of them is both an accessibility fault and an SEO one. The
                 visual weight is unchanged either way. */}
             {embed ? (
-              <h2 className="gmc-h1 text-2xl sm:text-4xl mb-3">
+              <h2 className="gmc-h1 text-xl sm:text-3xl mb-3">
                 Compare NZ Insurance Policies
               </h2>
             ) : (
-              <h1 className="gmc-h1 text-2xl sm:text-4xl mb-3">
+              <h1 className="gmc-h1 text-xl sm:text-3xl mb-3">
                 Compare NZ Insurance Policies
               </h1>
             )}
@@ -174,13 +174,13 @@ export default function IntakeFlow({
   }
 
   return (
-    <section className="py-12 sm:py-20" data-testid="intake-flow">
+    <section className="py-8 sm:py-12" data-testid="intake-flow">
       <div className="gmc-container" style={{ maxWidth: 880 }}>
         {/* Same card as the opening prompt. One surface that persists across
             every screen reads as a single thing being moved through; the
             prompt sitting in a card and the questions sitting on the page
             read as two different designs. */}
-        <div className="gmc-card px-6 py-8 sm:px-10 sm:py-10">
+        <div className="gmc-surface px-6 py-8 sm:px-10 sm:py-10">
         {/* Progress + skip */}
         <div className="flex items-center justify-between gap-4 mb-2">
           <span

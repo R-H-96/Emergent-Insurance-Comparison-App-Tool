@@ -58,7 +58,7 @@ export default function ComparisonSurface({
     <section id="comparison-surface" className="pb-12 sm:pb-16 print:hidden" data-testid="comparison-surface">
       <div className="gmc-container">
         {insurers.length < 2 && (
-          <div className="gmc-card p-8 text-center" data-testid="needs-insurers">
+          <div className="gmc-surface p-8 text-center" data-testid="needs-insurers">
             <h2 className="gmc-t-xl gmc-w-heavy mb-2" style={{ color: "var(--gmc-ink)" }}>
               Pick two or three insurers
             </h2>

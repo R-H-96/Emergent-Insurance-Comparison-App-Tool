@@ -32,7 +32,7 @@ export default function FeatureCard({
 
   return (
     <div
-      className="gmc-card flex flex-col p-4 sm:p-5"
+      className="gmc-surface flex flex-col p-4 sm:p-5"
       data-testid={`feature-card-${f.feature.replace(/\s+/g, "-").toLowerCase()}`}
     >
       <div className="flex items-start gap-2">

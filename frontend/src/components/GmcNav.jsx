@@ -3,8 +3,8 @@ import CTA from "@/components/CTA";
 export default function GmcNav() {
   return (
     <nav
-      className="gmc-nav sticky top-0 z-40"
-      data-testid="gmc-nav"
+      className="gmc-topbar sticky top-0 z-40"
+      data-testid="gmc-topbar"
     >
       <div className="gmc-container flex items-center justify-between h-16">
         <a

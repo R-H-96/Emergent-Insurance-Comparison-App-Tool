@@ -112,7 +112,7 @@ export default function AtAGlance({
       </h2>
 
       {notable.length === 0 ? (
-        <div className="gmc-card p-6 sm:p-8 text-center" data-testid="at-a-glance-empty">
+        <div className="gmc-surface p-6 sm:p-8 text-center" data-testid="at-a-glance-empty">
           <p className="gmc-t-base" style={{ color: "var(--gmc-body)" }}>
 These policies agree on the notable points for this selection, switch an
             insurer to surface the interesting differences.
