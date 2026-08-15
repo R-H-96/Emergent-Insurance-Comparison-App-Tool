@@ -125,16 +125,16 @@ export default function IntakeFlow({
     return (
       <section className="py-12 sm:py-20" data-testid="intake-prompt">
         <div className="gmc-container" style={{ maxWidth: 880 }}>
-          <div className="gmc-card px-6 py-10 sm:px-10 sm:py-14 text-center">
+          <div className="gmc-card px-6 pt-16 pb-10 sm:px-10 sm:pt-24 sm:pb-14 text-center">
             {/* h2 inside the embed. The host page already has its own h1, and
                 two of them is both an accessibility fault and an SEO one. The
                 visual weight is unchanged either way. */}
             {embed ? (
-              <h2 className="gmc-h1 text-3xl sm:text-5xl mb-3">
+              <h2 className="gmc-h1 text-2xl sm:text-4xl mb-3">
                 Compare NZ Insurance Policies
               </h2>
             ) : (
-              <h1 className="gmc-h1 text-3xl sm:text-5xl mb-3">
+              <h1 className="gmc-h1 text-2xl sm:text-4xl mb-3">
                 Compare NZ Insurance Policies
               </h1>
             )}
@@ -174,8 +174,13 @@ export default function IntakeFlow({
   }
 
   return (
-    <section className="py-8 sm:py-14" data-testid="intake-flow">
-      <div className="gmc-container" style={{ maxWidth: 760 }}>
+    <section className="py-12 sm:py-20" data-testid="intake-flow">
+      <div className="gmc-container" style={{ maxWidth: 880 }}>
+        {/* Same card as the opening prompt. One surface that persists across
+            every screen reads as a single thing being moved through; the
+            prompt sitting in a card and the questions sitting on the page
+            read as two different designs. */}
+        <div className="gmc-card px-6 py-8 sm:px-10 sm:py-10">
         {/* Progress + skip */}
         <div className="flex items-center justify-between gap-4 mb-2">
           <span
@@ -337,7 +342,7 @@ sub={`Pick up to ${MAX_PRIORITIES}. We'll put those first. You can still see eve
                         }`}
                         style={{
                           borderColor: isSel ? accent : "var(--gmc-line-soft)",
-                          background: isSel ? "var(--gmc-teal-tint-2)" : "white",
+                          background: isSel ? "var(--gmc-teal-tint-2)" : "var(--gmc-bg-alt)",
                           boxShadow: isSel ? `inset 0 0 0 2px ${accent}` : "none",
                         }}
                         data-testid={`intake-insurer-${ins.id}`}
@@ -414,6 +419,7 @@ sub={`Pick up to ${MAX_PRIORITIES}. We'll put those first. You can still see eve
           </p>
 <CTA compact label="Talk to an FMA-licensed adviser, free" data-testid="intake-cta" />
         </div>
+        </div>
       </div>
     </section>
   );
@@ -443,7 +449,7 @@ function OptionRow({ selected, disabled, onClick, icon: Icon, label, blurb, badg
       }`}
       style={{
         borderColor: selected ? "var(--gmc-teal)" : "var(--gmc-line-soft)",
-        background: selected ? "var(--gmc-teal-tint-2)" : "white",
+        background: selected ? "var(--gmc-teal-tint-2)" : "var(--gmc-bg-alt)",
         boxShadow: selected ? "0 0 0 2px var(--gmc-teal)" : "none",
       }}
       data-testid={testId}
