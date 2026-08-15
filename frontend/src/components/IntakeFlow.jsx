@@ -22,25 +22,18 @@ const PRI_ICONS = {
 const STEPS = ["product", "household", "priorities", "knowledge", "insurers"];
 const MAX_PRIORITIES = 3;
 
-// Spelt out because "In 5 quick questions" reads like a form and "In five
-// quick questions" reads like a sentence. Derived from STEPS so the promise on
-// the opening screen cannot fall out of step with the flow behind it.
-const NUMBER_WORDS = ["zero", "one", "two", "three", "four", "five", "six", "seven"];
-const stepCountWord = () => NUMBER_WORDS[STEPS.length] || String(STEPS.length);
-
 /**
- * Guided intake. An opening prompt, then one question per screen.
+ * Guided intake. One question per screen, and it is the landing screen.
  *
- * The prompt exists because landing straight on a comparison asks the reader
- * to understand a dense grid before they have decided they want one. A single
- * question with a single button is a smaller thing to say yes to, and the
- * first question then does the work of orienting them.
+ * There was briefly a separate opening prompt in front of this. It was
+ * removed: the first question is already a single clear thing to answer, so
+ * the prompt was one more screen between the reader and the tool without
+ * asking anything.
  *
  * Answers only re-order and re-explain what's shown; nothing is ever hidden
  * permanently (the "Everything" level of the ladder always shows all 25
- * features). "Skip, just compare" stays available on every screen, including
- * the prompt, because a reader who already knows what they want should not
- * have to answer five questions to get it.
+ * features). "Skip, just compare" stays on every screen, because a reader who
+ * already knows what they want should not have to answer five questions.
  *
  * No contact details are collected here. Lead capture happens only via the
  * adviser CTA, which the parent site's modal binds to.
@@ -51,11 +44,9 @@ export default function IntakeFlow({
   onToggleInsurer,
   onComplete,
   onSkip,
-  embed = false,
 }) {
   const insurers = orderedInsurers(rawInsurers);
   const reduce = useReducedMotion();
-  const [started, setStarted] = useState(false);
   const [step, setStep] = useState(0);
   const [product, setProduct] = useState(null);
   const [household, setHousehold] = useState(null);
@@ -65,16 +56,10 @@ export default function IntakeFlow({
   const key = STEPS[step];
 
   // Fired on every screen view so drop-off can be read per step, not just
-  // "finished" vs "skipped". The prompt is its own event, because the drop
-  // between seeing the prompt and answering question one is the number worth
-  // watching once this is live.
+  // "finished" vs "skipped".
   useEffect(() => {
-    if (!started) {
-      pushEvent("gmc_intake_prompt_view", {});
-      return;
-    }
     pushEvent("gmc_intake_step", { step: key, index: step + 1, of: STEPS.length });
-  }, [key, step, started]);
+  }, [key, step]);
   const pct = ((step + 1) / STEPS.length) * 100;
 
   const canContinue =
@@ -104,83 +89,19 @@ export default function IntakeFlow({
     onComplete({ product, household, priorities, knowledge, switching, completed: true, skipped: false });
   };
 
-  // Back from question one returns to the prompt rather than dead-ending, so
-  // the first screen is never a one-way door.
-  const back = () => {
-    if (step === 0) { setStarted(false); return; }
-    setStep((s) => s - 1);
-  };
+  const back = () => setStep((s) => Math.max(0, s - 1));
 
   const skip = () => {
-    pushEvent("gmc_intake_skip", { at_step: started ? key : "prompt" });
+    pushEvent("gmc_intake_skip", { at_step: key });
     onSkip();
   };
 
-  const begin = () => {
-    pushEvent("gmc_intake_start", {});
-    setStarted(true);
-  };
-
-  if (!started) {
-    return (
-      <section className="py-8 sm:py-12" data-testid="intake-prompt">
-        <div className="gmc-container" style={{ maxWidth: 880 }}>
-          <div className="gmc-surface px-6 pt-16 pb-10 sm:px-10 sm:pt-24 sm:pb-14 text-center">
-            {/* h2 inside the embed. The host page already has its own h1, and
-                two of them is both an accessibility fault and an SEO one. The
-                visual weight is unchanged either way. */}
-            {embed ? (
-              <h2 className="gmc-h1 text-xl sm:text-3xl mb-3">
-                Compare NZ Insurance Policies
-              </h2>
-            ) : (
-              <h1 className="gmc-h1 text-xl sm:text-3xl mb-3">
-                Compare NZ Insurance Policies
-              </h1>
-            )}
-            <p className="gmc-t-md mb-8" style={{ color: "var(--gmc-body)" }}>
-              In {stepCountWord()} quick questions.
-            </p>
-            <button
-              type="button"
-              onClick={begin}
-              className="gmc-btn-primary gmc-tap"
-              data-testid="intake-begin"
-            >
-              Start comparing now
-              <ArrowRight className="w-4 h-4" strokeWidth={2.5} />
-            </button>
-            <p className="gmc-t-sm mt-4" style={{ color: "var(--gmc-muted)" }}>
-              Takes about 30 seconds
-            </p>
-            <div
-              className="mt-8 pt-6"
-              style={{ borderTop: "1px solid var(--gmc-line)" }}
-            >
-              <button
-                type="button"
-                onClick={skip}
-                className="gmc-tap gmc-t-sm gmc-w-strong underline decoration-dotted underline-offset-2 hover:decoration-solid"
-                style={{ color: "var(--gmc-muted)" }}
-                data-testid="intake-prompt-skip"
-              >
-                Skip, just compare
-              </button>
-            </div>
-          </div>
-        </div>
-      </section>
-    );
-  }
-
   return (
-    <section className="py-8 sm:py-12" data-testid="intake-flow">
+    <section className="pt-4 pb-8 sm:pt-6 sm:pb-12" data-testid="intake-flow">
       <div className="gmc-container" style={{ maxWidth: 880 }}>
-        {/* Same card as the opening prompt. One surface that persists across
-            every screen reads as a single thing being moved through; the
-            prompt sitting in a card and the questions sitting on the page
-            read as two different designs. */}
-        <div className="gmc-surface px-6 py-8 sm:px-10 sm:py-10">
+        {/* One surface that persists across every screen, so moving between
+            questions reads as a step rather than a page change. */}
+        <div className="gmc-surface px-6 pt-6 pb-8 sm:px-10 sm:pt-8 sm:pb-10">
         {/* Progress + skip */}
         <div className="flex items-center justify-between gap-4 mb-2">
           <span
@@ -385,18 +306,20 @@ sub={`Pick up to ${MAX_PRIORITIES}. We'll put those first. You can still see eve
 
         {/* Nav */}
         <div className="mt-8 flex items-center justify-between gap-4">
-          {/* Always present now. From question one it returns to the opening
-              prompt, so there is no screen the reader cannot back out of. */}
-          <button
-            type="button"
-            onClick={back}
-            className="gmc-tap inline-flex items-center gap-2 gmc-t-base gmc-w-strong"
-            style={{ color: "var(--gmc-body)" }}
-            data-testid="intake-back"
-          >
-            <ArrowLeft className="w-4 h-4" strokeWidth={2.5} />
-            Back
-          </button>
+          {step > 0 ? (
+            <button
+              type="button"
+              onClick={back}
+              className="gmc-tap inline-flex items-center gap-2 gmc-t-base gmc-w-strong"
+              style={{ color: "var(--gmc-body)" }}
+              data-testid="intake-back"
+            >
+              <ArrowLeft className="w-4 h-4" strokeWidth={2.5} />
+              Back
+            </button>
+          ) : (
+            <span />
+          )}
           <button
             type="button"
             onClick={next}

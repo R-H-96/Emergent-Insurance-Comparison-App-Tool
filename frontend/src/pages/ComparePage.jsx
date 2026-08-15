@@ -308,7 +308,6 @@ toast.error("Could not share, long-press the address bar instead.");
       <div className={`min-h-screen gmc-fab-clearance ${embed ? "gmc-embed" : ""}`} data-testid="compare-page">
         {!embed && <GmcNav />}
         <IntakeFlow
-          embed={embed}
           insurers={data.insurers}
           selected={selected}
           onToggleInsurer={toggleInsurer}
