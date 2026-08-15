@@ -51,6 +51,7 @@ export default function IntakeFlow({
   onToggleInsurer,
   onComplete,
   onSkip,
+  embed = false,
 }) {
   const insurers = orderedInsurers(rawInsurers);
   const reduce = useReducedMotion();
@@ -123,11 +124,20 @@ export default function IntakeFlow({
   if (!started) {
     return (
       <section className="py-12 sm:py-20" data-testid="intake-prompt">
-        <div className="gmc-container" style={{ maxWidth: 620 }}>
+        <div className="gmc-container" style={{ maxWidth: 880 }}>
           <div className="gmc-card px-6 py-10 sm:px-10 sm:py-14 text-center">
-            <h1 className="gmc-h1 text-3xl sm:text-5xl mb-3">
-              Compare NZ Insurance Policies
-            </h1>
+            {/* h2 inside the embed. The host page already has its own h1, and
+                two of them is both an accessibility fault and an SEO one. The
+                visual weight is unchanged either way. */}
+            {embed ? (
+              <h2 className="gmc-h1 text-3xl sm:text-5xl mb-3">
+                Compare NZ Insurance Policies
+              </h2>
+            ) : (
+              <h1 className="gmc-h1 text-3xl sm:text-5xl mb-3">
+                Compare NZ Insurance Policies
+              </h1>
+            )}
             <p className="gmc-t-md mb-8" style={{ color: "var(--gmc-body)" }}>
               In {stepCountWord()} quick questions.
             </p>
@@ -137,7 +147,7 @@ export default function IntakeFlow({
               className="gmc-btn-primary gmc-tap"
               data-testid="intake-begin"
             >
-              Start comparing
+              Start comparing now
               <ArrowRight className="w-4 h-4" strokeWidth={2.5} />
             </button>
             <p className="gmc-t-sm mt-4" style={{ color: "var(--gmc-muted)" }}>

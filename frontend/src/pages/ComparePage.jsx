@@ -16,6 +16,7 @@ import GlossaryPanel from "@/components/GlossaryPanel";
 import InsurerPickerDialog from "@/components/InsurerPickerDialog";
 import useAskEngine from "@/hooks/useAskEngine";
 import useMediaQuery from "@/hooks/useMediaQuery";
+import useHostHeaderOffset from "@/hooks/useHostHeaderOffset";
 import useCompareContextBridge from "@/hooks/useCompareContextBridge";
 import { countNotableForSelection } from "@/lib/notable";
 import { pushEvent } from "@/lib/analytics";
@@ -116,6 +117,9 @@ export default function ComparePage({ embed = false, initialGroups = [] }) {
   const flashTimer = useRef(null);
   const firstMount = useRef(true);
   const isDesktop = useMediaQuery("(min-width: 1200px)");
+
+  // Only in the embed. Standalone has no host header to measure.
+  useHostHeaderOffset(embed);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -304,6 +308,7 @@ toast.error("Could not share, long-press the address bar instead.");
       <div className={`min-h-screen gmc-fab-clearance ${embed ? "gmc-embed" : ""}`} data-testid="compare-page">
         {!embed && <GmcNav />}
         <IntakeFlow
+          embed={embed}
           insurers={data.insurers}
           selected={selected}
           onToggleInsurer={toggleInsurer}
