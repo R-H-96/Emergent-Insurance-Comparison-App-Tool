@@ -115,6 +115,13 @@
   --gmc-line:        #E4E8F4;
   --gmc-line-soft:   rgba(15, 23, 42, 0.10);
 
+  /* Inset surfaces. Were hardcoded in .gmc-inset until the palette trial;
+     they have to be tokens or a palette cannot move them. */
+  --gmc-inset-bg:    #EEF1F8;
+  --gmc-inset-line:  #DDE3F0;
+  --gmc-note-bg:     #E8F8F7;
+  --gmc-note-line:   #BFE9E6;
+
   /* Effects */
   --gmc-shadow:      0 12px 40px rgba(22, 28, 39, 0.06);
   --gmc-shadow-btn:  0 4px 16px rgba(20, 181, 175, 0.25);
@@ -595,14 +602,54 @@ select:focus-visible {
                      "why this matters".
    ───────────────────────────────────────────────────────────────────────── */
 .gmc-inset {
-  background: #EEF1F8;
-  border: 1px solid #DDE3F0;
+  background: var(--gmc-inset-bg);
+  border: 1px solid var(--gmc-inset-line);
   border-radius: var(--gmc-r-ctl);
 }
 .gmc-inset-note {
-  background: #E8F8F7;
-  border: 1px solid #BFE9E6;
+  background: var(--gmc-note-bg);
+  border: 1px solid var(--gmc-note-line);
   border-radius: var(--gmc-r-ctl);
+}
+
+
+/* ─────────────────────────────────────────────────────────────────────────
+   PALETTE TRIAL, cool slate.  Option C from the surface review.
+
+   TO REVERT: delete this whole block. Nothing else references it.
+   TO COMPARE LIVE: add ?palette=lavender to the URL for the old palette,
+   or ?palette=slate to force this one. Default is slate while on trial.
+
+   Why it exists. Measured on the old palette, the white card sat at 1.049
+   against the page, which is no visible edge at all: the cards were held up
+   entirely by their border and shadow. Page against the lavender inset was
+   1.054, so two of the three background tones were doing nothing. Slate
+   widens both gaps.
+
+                       old            slate
+     page vs card      1.049          1.094
+     card vs inset     1.131          1.210
+     muted on inset    4.21 (fails)   4.61 (passes)
+
+   --gmc-muted is darkened here because #64748B failed WCAG 4.5 on a tinted
+   panel in BOTH palettes. That is a real fix, not a side effect of slate.
+
+   Known consequence, and the reason this is a trial. The tool does not paint
+   the page background on the Webflow site, it inherits it. So .gmc-app paints
+   it here to make the trial legible, which puts a visible seam where the embed
+   starts and stops. That seam is the point: it shows exactly what Webflow has
+   to change to match. Do not ship this to a live page without changing the
+   site background in the same release.
+   ───────────────────────────────────────────────────────────────────────── */
+.gmc-app[data-palette="slate"] {
+  --gmc-bg:          #F2F5F9;
+  --gmc-bg-alt:      #E9EEF5;
+  --gmc-bg-soft:     #EDF1F6;
+  --gmc-line:        #DFE6EF;
+  --gmc-inset-bg:    #E4EAF2;
+  --gmc-inset-line:  #D2DCE9;
+  --gmc-muted:       #5A6980;
+  background: var(--gmc-bg);
 }
 
 /* ─────────────────────────────────────────────────────────────────────────

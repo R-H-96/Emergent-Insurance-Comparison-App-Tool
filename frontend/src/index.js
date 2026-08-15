@@ -19,6 +19,14 @@ const queryClient = new QueryClient({
 const container =
   document.getElementById("gmc-root") || document.getElementById("root");
 container.classList.add("gmc-app");
+
+// Palette trial. See the PALETTE TRIAL block in index.css for the numbers and
+// for how to revert. ?palette=lavender restores the original surfaces without
+// a rebuild, so the two can be compared on the live page.
+// Remove these three lines and the CSS block together when the trial ends.
+const palette =
+  new URLSearchParams(window.location.search).get("palette") || "slate";
+container.setAttribute("data-palette", palette);
 const root = ReactDOM.createRoot(container);
 root.render(
   <React.StrictMode>
