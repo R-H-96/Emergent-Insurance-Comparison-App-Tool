@@ -30,5 +30,14 @@ export default function portalHost() {
     host.className = "gmc-app";
     document.body.appendChild(host);
   }
+
+  // Mirror any theming attribute from the app root. The host carries .gmc-app
+  // so the scoped reset applies, but attribute-scoped rules like the palette
+  // trial key off data-palette, and without this modals and sheets silently
+  // keep the default tokens while the page behind them changes.
+  const root = document.getElementById("gmc-root") || document.getElementById("root");
+  const palette = root && root.getAttribute("data-palette");
+  if (palette) host.setAttribute("data-palette", palette);
+
   return host;
 }
