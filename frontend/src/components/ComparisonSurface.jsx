@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
-import { UserRound, Layers, Table2, Share2, SlidersHorizontal, Pencil, Printer } from "lucide-react";
+import { UserRound, Layers, Table2, Share2, Pencil, Printer } from "lucide-react";
 import AtAGlance from "@/components/AtAGlance";
 import ComparisonTable from "@/components/ComparisonTable";
 import PriorityCards from "@/components/PriorityCards";
@@ -175,43 +175,22 @@ export default function ComparisonSurface({
           </div>
         </div>
 
-        <div className="pt-2 flex items-baseline gap-3 flex-wrap">
-          <p className="gmc-t-sm leading-snug" style={{ color: "var(--gmc-muted)" }}>
-            {current.hint}
-          </p>
-          <button
-            type="button"
-            onClick={onOpenGlossary}
-            className="gmc-tap inline-flex items-center gap-1 gmc-t-sm gmc-w-strong underline decoration-dotted underline-offset-2 hover:decoration-solid"
-            style={{ color: "var(--gmc-teal-deep)" }}
-            data-testid="open-glossary"
-          >
-            <BookOpen className="w-3.5 h-3.5 flex-shrink-0" strokeWidth={2.2} aria-hidden="true" />
-            What the words mean
-          </button>
-        </div>
+        {/* The hint line and the glossary link both used to sit here, above the
+            content, alongside the section-filter label and the trust line. Four
+            lines of chrome before a single policy value. The hint restated the
+            tab that was already selected, so it is gone; the glossary moved
+            down next to the trust line, where it is a footnote rather than a
+            competing call to action. */}
 
 {/* Group filters. Only meaningful in the full table */}
         {level === 2 && (
           <div className="mt-3">
-            <div className="flex items-center gap-2 mb-2">
-              <SlidersHorizontal
-                className="w-3.5 h-3.5 flex-shrink-0"
-                strokeWidth={2.2}
-                style={{ color: "var(--gmc-muted)" }}
-                aria-hidden="true"
-              />
-              <span className="gmc-eyebrow">Jump to a section</span>
-            </div>
             <FilterChips
               groups={groupList}
               activeGroups={activeGroups}
               onToggle={onToggleGroup}
               onClear={onClearGroups}
             />
-            <div className="flex justify-end mt-3">
-              <TrustLine data={data} />
-            </div>
           </div>
         )}
 
@@ -266,6 +245,23 @@ export default function ComparisonSurface({
             </motion.div>
           </AnimatePresence>
         </motion.div>
+        {/* Provenance and glossary as a footnote under the content, not chrome
+            above it. Both answer "can I trust this" and "what does that word
+            mean", which are questions asked after reading, not before. */}
+        <div className="mt-5 pt-4 flex flex-wrap items-center justify-between gap-3"
+             style={{ borderTop: "1px solid var(--gmc-line)" }}>
+          <TrustLine data={data} />
+          <button
+            type="button"
+            onClick={onOpenGlossary}
+            className="gmc-tap inline-flex items-center gap-1 gmc-t-sm gmc-w-strong underline decoration-dotted underline-offset-2 hover:decoration-solid"
+            style={{ color: "var(--gmc-teal-deep)" }}
+            data-testid="open-glossary"
+          >
+            <BookOpen className="w-3.5 h-3.5 flex-shrink-0" strokeWidth={2.2} aria-hidden="true" />
+            What the words mean
+          </button>
+        </div>
         </>)}
       </div>
     </section>

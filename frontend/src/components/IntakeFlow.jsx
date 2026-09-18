@@ -5,7 +5,6 @@ import {
   Ribbon, Scissors, Stethoscope, Home, Hourglass, Award,
 } from "lucide-react";
 import InsurerMark from "@/components/InsurerMark";
-import CTA from "@/components/CTA";
 import {
   HOUSEHOLD_OPTIONS, PRIORITY_OPTIONS, KNOWLEDGE_OPTIONS,
   orderedInsurers,
@@ -103,22 +102,13 @@ export default function IntakeFlow({
             questions reads as a step rather than a page change. */}
         <div className="gmc-surface px-6 pt-6 pb-8 sm:px-10 sm:pt-8 sm:pb-10">
         {/* Progress + skip */}
-        <div className="flex items-center justify-between gap-4 mb-2">
+        <div className="flex items-center gap-4 mb-2">
           <span
             className="gmc-t-xs gmc-w-strong uppercase tracking-[0.1em]"
             style={{ color: "var(--gmc-teal-mid)" }}
           >
             Step {step + 1} of {STEPS.length}
           </span>
-          <button
-            type="button"
-            onClick={skip}
-            className="gmc-t-sm gmc-w-strong underline decoration-dotted underline-offset-2 hover:decoration-solid"
-            style={{ color: "var(--gmc-muted)" }}
-            data-testid="intake-skip"
-          >
-Skip, just compare
-          </button>
         </div>
         <div
           className="h-1.5 rounded-full overflow-hidden mb-8 sm:mb-12"
@@ -333,14 +323,22 @@ sub={`Pick up to ${MAX_PRIORITIES}. We'll put those first. You can still see eve
           </button>
         </div>
 
+        {/* One exit under the divider, not two competing ones. The adviser CTA
+            was doing the same job as the sticky one on the results and pulled
+            attention out of a flow the reader has already started. */}
         <div
           className="mt-8 pt-6 text-center"
           style={{ borderTop: "1px solid var(--gmc-line)" }}
         >
-          <p className="gmc-t-sm mb-3" style={{ color: "var(--gmc-body)" }}>
-            Rather have someone walk you through it?
-          </p>
-<CTA compact label="Talk to an FMA-licensed adviser, free" data-testid="intake-cta" />
+          <button
+            type="button"
+            onClick={skip}
+            className="gmc-tap gmc-t-sm gmc-w-strong underline decoration-dotted underline-offset-2 hover:decoration-solid"
+            style={{ color: "var(--gmc-muted)" }}
+            data-testid="intake-skip-footer"
+          >
+            Skip, just compare
+          </button>
         </div>
         </div>
       </div>

@@ -195,7 +195,7 @@ export default function InsurerRadar({
         </InfoReveal>
       </div>
 
-      <div className="grid lg:grid-cols-[1.15fr_0.85fr] gap-4 items-start mt-3 -mx-2 sm:mx-0">
+      <div className="grid lg:grid-cols-[1.15fr_0.85fr] gap-4 items-start mt-3 -mx-5 sm:mx-0">
         <div className="relative">
           <svg
             viewBox={`${VB.ox} ${VB.oy} ${VB.w} ${VB.h}`}

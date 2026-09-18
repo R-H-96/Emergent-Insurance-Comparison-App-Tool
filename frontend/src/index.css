@@ -103,7 +103,10 @@
   /* Ink */
   --gmc-ink:         #161C27;
   --gmc-ink-2:       #1E293B;
-  --gmc-body:        #4B5F7F;
+  /* Darkened from #4B5F7F. On the tinted inset and panel surfaces it read
+     at 5.6, technically passing but visibly washed out against a grey box.
+     Now 7.77 on inset, 8.98 on white, so AAA on both. */
+  --gmc-body:        #3A4A63;
   --gmc-muted:       #64748B;
   --gmc-faint:       #94A3B8;   /* decorative only. Fails AA on white at 2.56, never use for text */
 
@@ -651,7 +654,7 @@ select:focus-visible {
      improves to 4.82. */
   --gmc-inset-bg:    #EAEFF6;
   --gmc-inset-line:  #DAE2ED;
-  --gmc-muted:       #5A6980;
+  --gmc-muted:       #4A5870;
   background: var(--gmc-bg);
 }
 
