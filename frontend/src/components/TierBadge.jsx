@@ -5,9 +5,27 @@ import MarkerInfo from "@/components/MarkerInfo";
  * Shared factual band pill. Describes the size of a stated limit
 * (Standard / Higher / Highest), never a quality judgement.
  */
-export default function TierBadge({ band, className = "" }) {
+export default function TierBadge({ band, className = "", plain = false }) {
   const meta = BAND_META[band];
   if (!meta) return null;
+
+  // plain: the label without the pill. A filled pill is emphasis, and a band is
+  // a relative measure of a stated limit, not something that should shout. The
+  // filled version stays for the places that still want it; comparison rows use
+  // this one, so the value is the only strong thing in the row.
+  if (plain) {
+    return (
+      <MarkerInfo
+        title={`${meta.label} stated limits`}
+label="Describes how large this policy's stated limits are in this area, measured against its own other areas. Not against the other insurers, and not a judgement of which policy is better for you."
+        className={className}
+      >
+        <span className="gmc-t-xs" style={{ color: "var(--gmc-muted)" }} data-testid={`tier-badge-${band}`}>
+          {meta.label}
+        </span>
+      </MarkerInfo>
+    );
+  }
   return (
     <MarkerInfo
       title={`${meta.label} stated limits`}

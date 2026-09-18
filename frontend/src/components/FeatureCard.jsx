@@ -98,14 +98,13 @@ export default function FeatureCard({
           const flagged = state && state !== COVER_STATE.COVERED;
           const b = band ? band(ins.id, f.group) : null;
           return (
-            /* Rung 0. The value is the thing the reader came for, so it gets
-               the display step and the room to be read. Name and provenance
-               are reference information and sit small above and below it.
+            /* Rung 0 and 1 share this row. Name and provenance are reference
+               information and sit small above and below the value.
                No fill, no inner border: separation is space and one hairline,
-               which is why the page underneath can go back to white. */
+               which is why the page underneath can be white. */
             <div
               key={ins.id}
-              className="py-5 first:pt-0"
+              className="py-4 first:pt-0"
               style={{ borderTop: i === 0 ? "none" : "1px solid var(--gmc-line)" }}
             >
               <div className="flex items-center justify-between gap-3">
@@ -125,13 +124,19 @@ export default function FeatureCard({
                         </span>
                       </MarkerInfo>
                     ) : (
-                      <TierBadge band={b} />
+                      <TierBadge band={b} plain />
                     )}
                   </span>
                 )}
               </div>
 
-              <div className="gmc-t-value mt-1.5" style={{ color: "var(--gmc-ink)" }}>
+              {/* Option 1, Comfortable. gmc-t-lg, not a display step. Measured
+                  across the data: only 10 of 125 values are short enough to be
+                  a number, the median is 31 characters and the longest is 51.
+                  A display size was designed for the 8% and broke the 92%.
+                  Hierarchy comes from contrast and position instead: the value
+                  is near-black, everything around it is muted. */}
+              <div className="gmc-t-lg leading-snug mt-1" style={{ color: "var(--gmc-ink)" }}>
                 {entry?.short ? (
                   <GlossaryText text={entry.short} glossary={glossary} />
                 ) : (

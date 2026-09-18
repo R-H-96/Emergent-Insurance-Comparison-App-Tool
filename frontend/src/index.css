@@ -556,21 +556,6 @@ select:focus-visible {
 .gmc-t-xl   { font-size: 22px; line-height: 1.25; }
 .gmc-t-2xl  { font-size: 28px; line-height: 1.15; }
 
-/* Eighth step, added deliberately rather than inline. It exists for ONE thing:
-   the policy value on ladder rungs 0 and 1, where a screen holds three or nine
-   of them and the number is what the reader came for. It is not a heading size
-   and must not be used as one. The full table (rung 2) stays on gmc-t-base:
-   25 features across 3 insurers is meant to be scanned, and this size would
-   turn one feature into a screenful.
-   Tighter tracking because large type at default tracking reads loose.
-
-   NOTE, this step breaks the scale's "mobile gets the larger size" rule, and
-   does so on purpose. That rule exists because reading conditions on a phone
-   are worse, which is a legibility argument and applies to body copy. This is
-   a display size, where the binding constraint is width, not legibility:
-   "Unlimited (prostheses limits apply)" at 32px wraps to three lines on a
-   390px screen. Every other step in the scale still follows the rule. */
-.gmc-t-value { font-size: 30px; line-height: 1.1; letter-spacing: -0.02em; }
 
 @media (min-width: 640px) {
   .gmc-t-xs   { font-size: 11px; }
@@ -580,7 +565,6 @@ select:focus-visible {
   .gmc-t-lg   { font-size: 17px; }
   .gmc-t-xl   { font-size: 20px; }
   .gmc-t-2xl  { font-size: 26px; }
-  .gmc-t-value { font-size: 32px; }
 }
 
 /* ─────────────────────────────────────────────────────────────────────────
