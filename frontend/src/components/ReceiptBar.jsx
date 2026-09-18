@@ -46,7 +46,7 @@ export default function ReceiptBar({ intake, insurers, onEditIntake, onEditInsur
     <div
       className="relative flex flex-wrap items-center gap-2 px-3 py-2.5 mb-3 rounded-[var(--gmc-r-ctl)]"
       style={{
-        background: personalised ? "var(--gmc-teal-tint)" : "var(--gmc-bg-alt)",
+        background: personalised ? "var(--gmc-teal-tint)" : "transparent",
         border: "1px solid var(--gmc-line)",
       }}
       data-testid="receipt-bar"

@@ -253,7 +253,7 @@ sub={`Pick up to ${MAX_PRIORITIES}. We'll put those first. You can still see eve
                         }`}
                         style={{
                           borderColor: isSel ? accent : "var(--gmc-line-soft)",
-                          background: isSel ? "var(--gmc-teal-tint-2)" : "var(--gmc-bg-alt)",
+                          background: isSel ? "var(--gmc-teal-tint-2)" : "transparent",
                           boxShadow: isSel ? `inset 0 0 0 2px ${accent}` : "none",
                         }}
                         data-testid={`intake-insurer-${ins.id}`}
@@ -370,7 +370,7 @@ function OptionRow({ selected, disabled, onClick, icon: Icon, label, blurb, badg
       }`}
       style={{
         borderColor: selected ? "var(--gmc-teal)" : "var(--gmc-line-soft)",
-        background: selected ? "var(--gmc-teal-tint-2)" : "var(--gmc-bg-alt)",
+        background: selected ? "var(--gmc-teal-tint-2)" : "transparent",
         boxShadow: selected ? "0 0 0 2px var(--gmc-teal)" : "none",
       }}
       data-testid={testId}

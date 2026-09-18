@@ -468,7 +468,7 @@ toast.error("Could not share, long-press the address bar instead.");
       {embed ? (
         <section
           className="py-6 border-t"
-          style={{ borderColor: "var(--gmc-line)", background: "var(--gmc-bg-alt)" }}
+          style={{ borderColor: "var(--gmc-line)", background: "transparent" }}
           data-testid="embed-disclaimer"
         >
           <div className="gmc-container">

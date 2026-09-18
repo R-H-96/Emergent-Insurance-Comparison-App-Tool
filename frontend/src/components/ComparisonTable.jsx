@@ -147,7 +147,7 @@ export default function ComparisonTable({
                 className="w-full grid text-left transition-colors"
                 style={{
                   gridTemplateColumns: gridTemplate,
-                  background: "var(--gmc-bg-alt)",
+                  background: "transparent",
                   borderBottom: "1px solid var(--gmc-line)",
                   borderLeft: "4px solid var(--gmc-teal)",
                 }}

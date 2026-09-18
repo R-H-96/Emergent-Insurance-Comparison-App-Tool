@@ -127,7 +127,7 @@ export default function DetailModal({ feature, insurers, lookup, glossary, expla
   const Footer = (
     <div
       className="p-5 sm:p-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3"
-      style={{ background: "var(--gmc-bg-alt)" }}
+      style={{ background: "transparent", borderTop: "1px solid var(--gmc-line)" }}
     >
       <p className="gmc-t-sm leading-relaxed max-w-md" style={{ color: "var(--gmc-body)" }}>
 Not sure how this applies to you? Ask an adviser, free.
@@ -183,7 +183,7 @@ Not sure how this applies to you? Ask an adviser, free.
         {Body}
         <div
           className="p-6 sm:p-8 pt-2 border-t flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
-          style={{ borderColor: "var(--gmc-line)", background: "var(--gmc-bg-alt)" }}
+          style={{ borderColor: "var(--gmc-line)", background: "transparent" }}
         >
           <p className="gmc-t-sm leading-relaxed max-w-md" style={{ color: "var(--gmc-body)" }}>
 Not sure how this applies to you? Ask an adviser, free.

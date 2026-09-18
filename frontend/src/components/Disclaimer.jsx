@@ -4,7 +4,7 @@ export default function Disclaimer() {
       className="border-t print:hidden"
       style={{
         borderColor: "var(--gmc-line)",
-        background: "var(--gmc-bg-alt)",
+        background: "transparent",
       }}
       data-testid="standing-disclaimer"
     >

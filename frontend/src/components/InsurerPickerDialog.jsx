@@ -49,7 +49,7 @@ export default function InsurerPickerDialog({
 
         <div
           className="p-6 pt-4 border-t flex items-center justify-between gap-4 flex-wrap"
-          style={{ borderColor: "var(--gmc-line)", background: "var(--gmc-bg-alt)" }}
+          style={{ borderColor: "var(--gmc-line)", background: "transparent" }}
         >
           <p className="gmc-t-sm leading-relaxed max-w-md" style={{ color: "var(--gmc-muted)" }}>
             Get My Cover is independent and is not affiliated with or endorsed by any insurer.

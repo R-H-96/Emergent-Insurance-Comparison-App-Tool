@@ -155,8 +155,11 @@ export default function InsurerRadar({
     </div>
   ) : null;
 
+  // No card. On a white page the border was drawing a box around a box: the
+  // heading and the space already separate this from what is above it, and the
+  // outline was what the chart's axis labels kept colliding with.
   return (
-    <div className="gmc-surface p-4 sm:p-6" data-testid="coverage-profile">
+    <div className="py-2" data-testid="coverage-profile">
       <div className="mb-1 flex items-start justify-between gap-2">
         <div className="min-w-0">
           <div
@@ -175,7 +178,6 @@ export default function InsurerRadar({
           side="bottom"
           align="end"
           triggerClassName="gmc-tap flex items-center justify-center w-9 h-9 rounded-full flex-shrink-0"
-          triggerStyle={{ background: "var(--gmc-bg-alt)" }}
           ariaLabel="How to read this chart"
           body={
             <>
@@ -195,7 +197,7 @@ export default function InsurerRadar({
         </InfoReveal>
       </div>
 
-      <div className="grid lg:grid-cols-[1.15fr_0.85fr] gap-4 items-start mt-3 -mx-5 sm:mx-0">
+      <div className="grid lg:grid-cols-[1.15fr_0.85fr] gap-6 lg:gap-8 items-start mt-5">
         <div className="relative">
           <svg
             viewBox={`${VB.ox} ${VB.oy} ${VB.w} ${VB.h}`}
@@ -370,9 +372,9 @@ export default function InsurerRadar({
           {active && isWide ? (
             AreaDetail
           ) : (
-            <div className="space-y-2.5">
+            <div>
               <div
-                className="gmc-t-xs gmc-w-strong uppercase tracking-[0.08em]"
+                className="gmc-t-xs gmc-w-strong uppercase tracking-[0.08em] mb-1"
                 style={{ color: "var(--gmc-muted)" }}
               >
                 Where each policy states its largest limits
@@ -383,12 +385,13 @@ export default function InsurerRadar({
                 return (
                   <div
                     key={ins.id}
+                    style={{ borderTop: "1px solid var(--gmc-line)" }}
                     role="button"
                     tabIndex={0}
                     onKeyDown={(e) => {
                       if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggleFocus(ins.id); }
                     }}
-                    className="gmc-inset gmc-tap w-full text-left flex items-start gap-2.5 p-3 transition-all cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gmc-teal)]"
+                    className="gmc-tap w-full text-left flex items-start gap-2.5 py-3 transition-all cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gmc-teal)]"
                     style={{
                       opacity: isDim(ins.id) ? 0.4 : 1,
                       boxShadow: on ? `inset 0 0 0 1.5px ${ins.accent}` : "none",
