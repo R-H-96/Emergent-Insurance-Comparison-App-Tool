@@ -1,6 +1,6 @@
 import { useMemo, useState, useEffect } from "react";
 import { ChevronDown, ChevronRight, Sparkles } from "lucide-react";
-import { VerifiedIcon } from "@/components/VerifiedBadge";
+import ProvenanceNote from "@/components/ProvenanceNote";
 import GlossaryText from "@/components/GlossaryText";
 import InsurerMark from "@/components/InsurerMark";
 import InsurerLogo from "@/components/InsurerLogo";
@@ -147,7 +147,7 @@ export default function ComparisonTable({
                 className="w-full grid text-left transition-colors"
                 style={{
                   gridTemplateColumns: gridTemplate,
-                  background: "linear-gradient(to right, var(--gmc-teal-tint-2) 0%, var(--gmc-bg-alt) 55%)",
+                  background: "var(--gmc-bg-alt)",
                   borderBottom: "1px solid var(--gmc-line)",
                   borderLeft: "4px solid var(--gmc-teal)",
                 }}
@@ -156,8 +156,8 @@ export default function ComparisonTable({
               >
                 <div className="p-3.5 flex items-center gap-2.5">
                   <div
-                    className="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0"
-                    style={{ background: "var(--gmc-teal-tint)", color: "var(--gmc-teal-deep)" }}
+                    className="flex items-center justify-center flex-shrink-0"
+                    style={{ color: "var(--gmc-muted)" }}
                   >
                     {isCollapsed
                       ? <ChevronRight className="w-3.5 h-3.5" strokeWidth={2.5} />
@@ -167,8 +167,8 @@ export default function ComparisonTable({
                     {groupLabel(group)}
                   </span>
                   <span
-                    className="inline-flex items-center rounded-full px-2 py-0.5 gmc-t-xs gmc-w-strong"
-                    style={{ background: "var(--gmc-teal-tint-2)", color: "var(--gmc-teal-deep)" }}
+                    className="inline-flex items-center gmc-t-sm"
+                    style={{ color: "var(--gmc-muted)" }}
                   >
                     {visibleFeats.length}
                   </span>
@@ -207,8 +207,8 @@ export default function ComparisonTable({
                             label="The insurers you're comparing say meaningfully different things on this line. Rows without this marker are broadly in agreement."
                           >
                             <span
-                              className="inline-flex items-center justify-center w-5 h-5 rounded-full flex-shrink-0"
-                              style={{ background: "var(--gmc-teal)", color: "white" }}
+                              className="inline-flex items-center justify-center flex-shrink-0"
+                              style={{ color: "var(--gmc-teal)" }}
                             >
                               <Sparkles className="w-2.5 h-2.5" strokeWidth={2.5} />
                             </span>
@@ -235,14 +235,24 @@ export default function ComparisonTable({
                           className="p-4 flex items-start gap-2"
                           style={{
                             borderLeft: "1px solid var(--gmc-line)",
-                            background: isNotablePair ? "transparent" : columnTints[i],
+                            /* Tint means insurer, always. It used to be applied
+                               only to non-notable rows, so the same device said
+                               "this is nib" and "this row is unremarkable", and
+                               the rows that mattered most had the least colour.
+                               Notability is the sparkle's job alone now. */
+                            background: columnTints[i],
                           }}
                           data-testid={`cell-${ins.id}-${f.feature.replace(/\s+/g, "-").toLowerCase()}`}
                         >
-                          <div className="gmc-t-sm gmc-w-strong leading-snug flex-1" style={{ color: "var(--gmc-ink-2)" }}>
+                          {/* Same provenance treatment as the mobile rows. Two
+                              different markers for the same fact was itself a
+                              device doing two jobs. */}
+                          <div className="flex-1 min-w-0">
+                            <div className="gmc-t-sm gmc-w-strong leading-snug" style={{ color: "var(--gmc-ink)" }}>
 {entry?.short ? <GlossaryText text={entry.short} glossary={glossary} />: <span style={{ color: "var(--gmc-muted)" }}>Not recorded</span>}
+                            </div>
+                            <ProvenanceNote verified={entry?.verified} className="block mt-1" />
                           </div>
-                          <VerifiedIcon verified={entry?.verified} />
                         </div>
                       );
                     })}
@@ -265,28 +275,19 @@ export default function ComparisonTable({
                 type="button"
                 onClick={() => toggleGroup(group)}
                 className="w-full flex items-center gap-2.5 p-4 gmc-tap text-left transition-colors"
-                style={{
-                  background: "linear-gradient(to right, var(--gmc-teal-tint-2), var(--gmc-bg-alt) 70%)",
-                  borderLeft: "4px solid var(--gmc-teal)",
-                }}
                 aria-expanded={!isCollapsed}
                 data-testid={`mobile-group-toggle-${group}`}
               >
-                <div
-                  className="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0"
-                  style={{ background: "var(--gmc-teal-tint)", color: "var(--gmc-teal-deep)" }}
-                >
-                  {isCollapsed
-                    ? <ChevronRight className="w-3.5 h-3.5" strokeWidth={2.5} />
-                    : <ChevronDown className="w-3.5 h-3.5" strokeWidth={2.5} />}
-                </div>
-                <span className="gmc-t-base gmc-w-strong" style={{ color: "var(--gmc-ink)" }}>
+                {/* One device for the heading: weight. The chevron is a plain
+                    glyph and the count is plain text, where they were a tinted
+                    circle and a filled pill saying the same two things. */}
+                {isCollapsed
+                  ? <ChevronRight className="w-4 h-4 flex-shrink-0" strokeWidth={2.5} style={{ color: "var(--gmc-muted)" }} />
+                  : <ChevronDown className="w-4 h-4 flex-shrink-0" strokeWidth={2.5} style={{ color: "var(--gmc-muted)" }} />}
+                <span className="gmc-t-md gmc-w-heavy" style={{ color: "var(--gmc-ink)" }}>
                   {groupLabel(group)}
                 </span>
-                <span
-                  className="ml-auto inline-flex items-center rounded-full px-2 py-0.5 gmc-t-xs gmc-w-strong"
-                  style={{ background: "var(--gmc-teal-tint-2)", color: "var(--gmc-teal-deep)" }}
-                >
+                <span className="ml-auto gmc-t-sm" style={{ color: "var(--gmc-muted)" }}>
                   {visibleFeats.length}
                 </span>
               </button>
@@ -318,12 +319,11 @@ export default function ComparisonTable({
                           title="These policies differ here"
                           label="The insurers you're comparing say meaningfully different things on this line. Rows without this marker are broadly in agreement."
                         >
-                          <span
-                            className="inline-flex items-center justify-center w-5 h-5 rounded-full flex-shrink-0"
-                            style={{ background: "var(--gmc-teal)", color: "white" }}
-                          >
-                            <Sparkles className="w-2.5 h-2.5" strokeWidth={2.5} />
-                          </span>
+                          <Sparkles
+                            className="w-3.5 h-3.5 flex-shrink-0"
+                            strokeWidth={2.5}
+                            style={{ color: "var(--gmc-teal)" }}
+                          />
                         </MarkerInfo>
                       )}
                     </div>
@@ -339,31 +339,34 @@ export default function ComparisonTable({
                       </div>
                     )}
                     <div className="mt-3 space-y-2">
-                      {insurers.map((ins) => {
+                      {insurers.map((ins, idx) => {
                         const entry = lookup[ins.id]?.[f.feature];
                         return (
+                          /* Direction A. The tinted, bordered card per insurer is
+                             gone: three of these stacked made four boxes around
+                             one number. A hairline separates them instead.
+
+                             Three devices, one job each.
+                               size   the value, largest thing in the row
+                               weight the value again, nothing else is strong
+                               mark   which insurer, so colour is not carrying
+                                      identity as text. That also retires the
+                                      insurer accent as a text colour, which
+                                      failed contrast for nib at 2.22 on every
+                                      background. */
                           <div
                             key={ins.id}
-                            className="rounded-[var(--gmc-r-ctl)] p-3 border"
-                            style={{
-                              background: hexToRgba(ins.accent, 0.05),
-                              borderColor: "var(--gmc-line)",
-                            }}
+                            className="py-2.5"
+                            style={{ borderTop: idx === 0 ? "none" : "1px solid var(--gmc-line)" }}
                           >
-                            <div className="flex items-center justify-between gap-2 mb-1">
-                              <div className="flex items-center gap-2">
-{/* Circular mark, replaces rectangular InsurerLogo */}
-                                <InsurerMark insurer={ins} size={28} />
-                                <div
-                                  className="gmc-t-sm gmc-w-strong"
-                                  style={{ color: ins.accent || "var(--gmc-teal-mid)" }}
-                                >
-                                  {ins.name}
-                                </div>
-                              </div>
-                              <VerifiedIcon verified={entry?.verified} />
+                            <div className="flex items-baseline justify-between gap-3">
+                              <span className="inline-flex items-center gap-1.5 gmc-t-sm flex-shrink-0" style={{ color: "var(--gmc-muted)" }}>
+                                <InsurerMark insurer={ins} size={18} />
+                                {ins.name}
+                              </span>
+                              <ProvenanceNote verified={entry?.verified} />
                             </div>
-                            <div className="gmc-t-base gmc-w-strong leading-snug" style={{ color: "var(--gmc-ink-2)" }}>
+                            <div className="gmc-t-md gmc-w-strong leading-snug mt-0.5" style={{ color: "var(--gmc-ink)" }}>
 {entry?.short ? <GlossaryText text={entry.short} glossary={glossary} />: <span style={{ color: "var(--gmc-muted)" }}>Not recorded</span>}
                             </div>
                           </div>

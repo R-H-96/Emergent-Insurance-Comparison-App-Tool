@@ -4,8 +4,8 @@ import InsurerMark from "@/components/InsurerMark";
 import GlossaryText from "@/components/GlossaryText";
 import TierBadge from "@/components/TierBadge";
 import MarkerInfo from "@/components/MarkerInfo";
+import ProvenanceNote from "@/components/ProvenanceNote";
 import InfoReveal from "@/components/InfoReveal";
-import { VerifiedIcon } from "@/components/VerifiedBadge";
 import { groupLabel, featureTitle } from "@/lib/personalisation";
 import { STATE_META, COVER_STATE } from "@/lib/gaps";
 
@@ -105,10 +105,10 @@ export default function FeatureCard({
             >
               <InsurerMark insurer={ins} size={30} />
               <div className="flex-1 min-w-0">
-                <div className="gmc-t-sm gmc-w-strong leading-tight" style={{ color: ins.accent || "var(--gmc-teal-mid)" }}>
+                <div className="gmc-t-sm leading-tight" style={{ color: "var(--gmc-muted)" }}>
                   {ins.name}
                 </div>
-                <div className="gmc-t-base gmc-w-strong leading-snug mt-0.5" style={{ color: "var(--gmc-ink-2)" }}>
+                <div className="gmc-t-md gmc-w-strong leading-snug mt-0.5" style={{ color: "var(--gmc-ink)" }}>
                   {entry?.short ? (
                     <GlossaryText text={entry.short} glossary={glossary} />
                   ) : (
@@ -134,9 +134,10 @@ export default function FeatureCard({
                   ) : (
                     <TierBadge band={b} />
                   )}
-                  <VerifiedIcon verified={entry?.verified} />
                 </div>
               )}
+
+              <ProvenanceNote verified={entry?.verified} className="flex-shrink-0" />
             </div>
           );
         })}
