@@ -98,46 +98,48 @@ export default function FeatureCard({
           const flagged = state && state !== COVER_STATE.COVERED;
           const b = band ? band(ins.id, f.group) : null;
           return (
+            /* Rung 0. The value is the thing the reader came for, so it gets
+               the display step and the room to be read. Name and provenance
+               are reference information and sit small above and below it.
+               No fill, no inner border: separation is space and one hairline,
+               which is why the page underneath can go back to white. */
             <div
               key={ins.id}
-              className="flex items-center gap-3 py-3"
-              style={{ borderTop: "1px solid var(--gmc-line)" }}
+              className="py-5 first:pt-0"
+              style={{ borderTop: i === 0 ? "none" : "1px solid var(--gmc-line)" }}
             >
-              <InsurerMark insurer={ins} size={30} />
-              <div className="flex-1 min-w-0">
-                <div className="gmc-t-sm leading-tight" style={{ color: "var(--gmc-muted)" }}>
-                  {ins.name}
-                </div>
-                <div className="gmc-t-md gmc-w-strong leading-snug mt-0.5" style={{ color: "var(--gmc-ink)" }}>
-                  {entry?.short ? (
-                    <GlossaryText text={entry.short} glossary={glossary} />
-                  ) : (
-                    <span style={{ color: "var(--gmc-muted)" }}>Not recorded</span>
-                  )}
-                </div>
+              <div className="flex items-center justify-between gap-3">
+                <span className="inline-flex items-center gap-2 gmc-t-sm min-w-0" style={{ color: "var(--gmc-muted)" }}>
+                  <InsurerMark insurer={ins} size={20} />
+                  <span className="truncate">{ins.name}</span>
+                </span>
+                {(flagged || b) && (
+                  <span className="flex-shrink-0">
+                    {flagged ? (
+                      <MarkerInfo title={meta.label} label={meta.help}>
+                        <span
+                          className="inline-block rounded-[var(--gmc-r-chip)] px-2 py-0.5 gmc-t-xs gmc-w-strong whitespace-nowrap"
+                          style={{ background: meta.fill, color: meta.text }}
+                        >
+                          {meta.label}
+                        </span>
+                      </MarkerInfo>
+                    ) : (
+                      <TierBadge band={b} />
+                    )}
+                  </span>
+                )}
               </div>
 
-              {(flagged || b) && (
-                <div
-                  className="flex items-center gap-2 pl-3 flex-shrink-0"
-                  style={{ borderLeft: "1px solid var(--gmc-line)" }}
-                >
-                  {flagged ? (
-                    <MarkerInfo title={meta.label} label={meta.help}>
-                      <span
-                        className="inline-block rounded-[var(--gmc-r-chip)] px-2 py-0.5 gmc-t-xs gmc-w-strong whitespace-nowrap"
-                        style={{ background: meta.fill, color: meta.text }}
-                      >
-                        {meta.label}
-                      </span>
-                    </MarkerInfo>
-                  ) : (
-                    <TierBadge band={b} />
-                  )}
-                </div>
-              )}
+              <div className="gmc-t-value mt-1.5" style={{ color: "var(--gmc-ink)" }}>
+                {entry?.short ? (
+                  <GlossaryText text={entry.short} glossary={glossary} />
+                ) : (
+                  <span className="gmc-t-md" style={{ color: "var(--gmc-muted)" }}>Not recorded</span>
+                )}
+              </div>
 
-              <ProvenanceNote verified={entry?.verified} className="flex-shrink-0" />
+              <ProvenanceNote verified={entry?.verified} className="block mt-1.5" />
             </div>
           );
         })}

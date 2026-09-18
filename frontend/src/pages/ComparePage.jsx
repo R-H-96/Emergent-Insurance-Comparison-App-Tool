@@ -91,12 +91,24 @@ export default function ComparePage({ embed = false, initialGroups = [] }) {
   // it currently says so.
   const [coachPicker, setCoachPicker] = useState(false);
 
-  // Show the intake unless they've already been through it (or skipped it),
-  // or unless a shared link already encodes an explicit selection.
-  const arrivedViaSharedLink = initial.level !== null || !!initial.featureSlug;
+  // The gate.
+  //
+  // This used to read `!embed && ...`, which meant the questions never ran as a
+  // front door on the embedded site: they only appeared as a fallback when
+  // fewer than two insurers were selected. Anyone landing on a URL that already
+  // carried ?insurers=sc,nib skipped them, and the tool writes exactly that
+  // URL itself on every load, so a copied link was indistinguishable from a
+  // deliberately shared one.
+  //
+  // A genuine shared link says something the tool would not say on its own.
+  // That is ?feature= alone: the tool only writes it while a detail view is
+  // open, so its presence in a pasted URL means someone chose to send that
+  // view. Both ?insurers= and ?level= are written on every single load, so
+  // neither is evidence of anything and neither counts as consent to skip.
+  const arrivedViaSharedLink = !!initial.featureSlug;
+  const beenThroughIt = savedIntake.completed || savedIntake.skipped;
   const [showIntake, setShowIntake] = useState(
-    (!embed && !savedIntake.completed && !savedIntake.skipped && !arrivedViaSharedLink) ||
-      initial.insurers.length < 2,
+    (!beenThroughIt && !arrivedViaSharedLink) || initial.insurers.length < 2,
   );
 
   const explanation = useMemo(() => explanationMode(intake.knowledge), [intake.knowledge]);

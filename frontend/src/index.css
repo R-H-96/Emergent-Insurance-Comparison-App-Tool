@@ -107,12 +107,18 @@
      at 5.6, technically passing but visibly washed out against a grey box.
      Now 7.77 on inset, 8.98 on white, so AAA on both. */
   --gmc-body:        #3A4A63;
-  --gmc-muted:       #64748B;
+  /* Darkened from #64748B, which failed WCAG 4.5 on any tinted surface.
+     This lived in the palette trial; it is a legibility fix, not a palette
+     choice, so it belongs here. */
+  --gmc-muted:       #4A5870;
   --gmc-faint:       #94A3B8;   /* decorative only. Fails AA on white at 2.56, never use for text */
 
   /* Surfaces */
-  --gmc-bg:          #F9F9FF;
-  --gmc-bg-alt:      #F1F3FF;
+  /* White, not a tint. The tint existed so white cards had a visible edge
+     against the page. Rungs 0 and 1 no longer have card fills, so separation
+     is space and hairline and the page can be white. */
+  --gmc-bg:          #FFFFFF;
+  --gmc-bg-alt:      #F4F6FA;
   --gmc-bg-soft:     #F0F4F8;
   --gmc-card:        #FFFFFF;
   --gmc-line:        #E4E8F4;
@@ -120,8 +126,8 @@
 
   /* Inset surfaces. Were hardcoded in .gmc-inset until the palette trial;
      they have to be tokens or a palette cannot move them. */
-  --gmc-inset-bg:    #EEF1F8;
-  --gmc-inset-line:  #DDE3F0;
+  --gmc-inset-bg:    #F4F6FA;
+  --gmc-inset-line:  #E6EAF2;
   --gmc-note-bg:     #E8F8F7;
   --gmc-note-line:   #BFE9E6;
 
@@ -550,6 +556,22 @@ select:focus-visible {
 .gmc-t-xl   { font-size: 22px; line-height: 1.25; }
 .gmc-t-2xl  { font-size: 28px; line-height: 1.15; }
 
+/* Eighth step, added deliberately rather than inline. It exists for ONE thing:
+   the policy value on ladder rungs 0 and 1, where a screen holds three or nine
+   of them and the number is what the reader came for. It is not a heading size
+   and must not be used as one. The full table (rung 2) stays on gmc-t-base:
+   25 features across 3 insurers is meant to be scanned, and this size would
+   turn one feature into a screenful.
+   Tighter tracking because large type at default tracking reads loose.
+
+   NOTE, this step breaks the scale's "mobile gets the larger size" rule, and
+   does so on purpose. That rule exists because reading conditions on a phone
+   are worse, which is a legibility argument and applies to body copy. This is
+   a display size, where the binding constraint is width, not legibility:
+   "Unlimited (prostheses limits apply)" at 32px wraps to three lines on a
+   390px screen. Every other step in the scale still follows the rule. */
+.gmc-t-value { font-size: 30px; line-height: 1.1; letter-spacing: -0.02em; }
+
 @media (min-width: 640px) {
   .gmc-t-xs   { font-size: 11px; }
   .gmc-t-sm   { font-size: 12px; }
@@ -558,6 +580,7 @@ select:focus-visible {
   .gmc-t-lg   { font-size: 17px; }
   .gmc-t-xl   { font-size: 20px; }
   .gmc-t-2xl  { font-size: 26px; }
+  .gmc-t-value { font-size: 32px; }
 }
 
 /* ─────────────────────────────────────────────────────────────────────────
@@ -616,47 +639,7 @@ select:focus-visible {
 }
 
 
-/* ─────────────────────────────────────────────────────────────────────────
-   PALETTE TRIAL, cool slate.  Option C from the surface review.
 
-   TO REVERT: delete this whole block. Nothing else references it.
-   TO COMPARE LIVE: add ?palette=lavender to the URL for the old palette,
-   or ?palette=slate to force this one. Default is slate while on trial.
-
-   Why it exists. Measured on the old palette, the white card sat at 1.049
-   against the page, which is no visible edge at all: the cards were held up
-   entirely by their border and shadow. Page against the lavender inset was
-   1.054, so two of the three background tones were doing nothing. Slate
-   widens both gaps.
-
-                       old            slate
-     page vs card      1.049          1.094
-     card vs inset     1.131          1.210
-     muted on inset    4.21 (fails)   4.61 (passes)
-
-   --gmc-muted is darkened here because #64748B failed WCAG 4.5 on a tinted
-   panel in BOTH palettes. That is a real fix, not a side effect of slate.
-
-   Known consequence, and the reason this is a trial. The tool does not paint
-   the page background on the Webflow site, it inherits it. So .gmc-app paints
-   it here to make the trial legible, which puts a visible seam where the embed
-   starts and stops. That seam is the point: it shows exactly what Webflow has
-   to change to match. Do not ship this to a live page without changing the
-   site background in the same release.
-   ───────────────────────────────────────────────────────────────────────── */
-.gmc-app[data-palette="slate"] {
-  --gmc-bg:          #F2F5F9;
-  --gmc-bg-alt:      #E9EEF5;
-  --gmc-bg-soft:     #EDF1F6;
-  --gmc-line:        #DFE6EF;
-  /* Lightened from #E4EAF2, which read as heavy behind the radar panel.
-     Still 1.155 against a white card, so the edge holds, and muted text
-     improves to 4.82. */
-  --gmc-inset-bg:    #EAEFF6;
-  --gmc-inset-line:  #DAE2ED;
-  --gmc-muted:       #4A5870;
-  background: var(--gmc-bg);
-}
 
 /* ─────────────────────────────────────────────────────────────────────────
    SCOPED RESET.
@@ -700,7 +683,13 @@ select:focus-visible {
   left: 50%;
   width: 100vw;
   transform: translateX(-50%);
-  background: var(--gmc-bg);
+  /* The one glass surface in the tool, and it earns it: this bar genuinely
+     floats over content scrolling beneath it, which is the only case where
+     translucency says something rather than just softening. Opaque-ish
+     fallback first for browsers without backdrop-filter. */
+  background: rgba(255, 255, 255, 0.82);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  backdrop-filter: saturate(180%) blur(20px);
   box-shadow: var(--gmc-shadow-sticky);
   z-index: -1;
   pointer-events: none;
