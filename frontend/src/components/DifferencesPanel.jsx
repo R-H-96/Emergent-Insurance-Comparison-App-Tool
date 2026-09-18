@@ -65,7 +65,7 @@ export default function DifferencesPanel({
         aria-pressed={active}
         className="gmc-tap inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full gmc-t-sm gmc-w-strong transition-all"
         style={{
-          background: active ? "var(--gmc-teal)" : "var(--gmc-bg-alt)",
+          background: active ? "var(--gmc-teal)" : "transparent",
           color: active ? "white" : "var(--gmc-body)",
           border: `1.5px solid ${active ? "var(--gmc-teal)" : "var(--gmc-line)"}`,
         }}

@@ -76,16 +76,15 @@ export default function PriorityCards({
 
   const bandFor = (insurerId, group) => bandForGroup(insurerId, group);
 
+  // Was an uppercase muted eyebrow doing a heading's job. A section with only
+  // an eyebrow over it has no title, which is why these read as captions.
   const SectionHeading = ({ children, sub }) => (
-    <div className="mb-3 mt-1">
-      <div
-        className="gmc-t-sm sm:gmc-t-xs gmc-w-strong uppercase tracking-[0.08em]"
-        style={{ color: "var(--gmc-muted)" }}
-      >
+    <div className="mb-3">
+      <div className="gmc-section-heading" style={{ marginBottom: sub ? 2 : undefined }}>
         {children}
       </div>
       {sub && (
-        <div className="gmc-t-sm mt-0.5" style={{ color: "var(--gmc-muted)" }}>
+        <div className="gmc-t-sm" style={{ color: "var(--gmc-muted)" }}>
           {sub}
         </div>
       )}

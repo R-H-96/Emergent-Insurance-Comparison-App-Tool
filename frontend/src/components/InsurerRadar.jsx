@@ -113,7 +113,7 @@ export default function InsurerRadar({
       ) : (
         <div className="space-y-2.5">
           {areaFeatures.map((f) => (
-            <div key={f.feature} className="gmc-inset p-3">
+            <div key={f.feature} className="py-3" style={{ borderTop: "1px solid var(--gmc-line)" }}>
               <button
                 type="button"
                 className="text-left w-full gmc-t-sm gmc-w-heavy leading-snug"
@@ -339,7 +339,12 @@ export default function InsurerRadar({
                   style={{
                     opacity: isDim(ins.id) ? 0.4 : 1,
                     background: on ? "var(--gmc-teal-tint)" : "transparent",
-                    boxShadow: on ? `inset 0 0 0 1.5px ${ins.accent}` : "none",
+                    /* Selection is a left rule in the insurer's own colour, not a
+                         rectangle drawn around the row. On a row with no fill a
+                         full inset ring reads as a stray box, and it fought the
+                         hairline separating the rows. */
+                      borderLeft: on ? `2px solid ${ins.accent}` : "2px solid transparent",
+                      paddingLeft: 10,
                   }}
                   onPointerEnter={() => setHoverInsurer(ins.id)}
                   onPointerLeave={() => setHoverInsurer(null)}
@@ -374,8 +379,7 @@ export default function InsurerRadar({
           ) : (
             <div>
               <div
-                className="gmc-t-xs gmc-w-strong uppercase tracking-[0.08em] mb-1"
-                style={{ color: "var(--gmc-muted)" }}
+                className="gmc-section-heading"
               >
                 Where each policy states its largest limits
               </div>
@@ -394,7 +398,12 @@ export default function InsurerRadar({
                     className="gmc-tap w-full text-left flex items-start gap-2.5 py-3 transition-all cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gmc-teal)]"
                     style={{
                       opacity: isDim(ins.id) ? 0.4 : 1,
-                      boxShadow: on ? `inset 0 0 0 1.5px ${ins.accent}` : "none",
+                      /* Selection is a left rule in the insurer's own colour, not a
+                         rectangle drawn around the row. On a row with no fill a
+                         full inset ring reads as a stray box, and it fought the
+                         hairline separating the rows. */
+                      borderLeft: on ? `2px solid ${ins.accent}` : "2px solid transparent",
+                      paddingLeft: 10,
                     }}
                     onPointerEnter={() => setHoverInsurer(ins.id)}
                     onPointerLeave={() => setHoverInsurer(null)}
@@ -418,11 +427,7 @@ export default function InsurerRadar({
                   </div>
                 );
               })}
-              <p className="gmc-t-xs leading-snug pt-1" style={{ color: "var(--gmc-muted)" }}>
-                Each policy is measured against its own other areas here, not against the other
-                insurers. Tap an insurer to isolate it, or an area on the chart to read the
-                wording.
-              </p>
+
             </div>
           )}
         </div>
@@ -442,10 +447,37 @@ export default function InsurerRadar({
         </MobileSheet>
       )}
 
-      <p className="mt-3 gmc-t-xs leading-relaxed italic" style={{ color: "var(--gmc-muted)" }}>
-        Reach reflects the size and breadth of each insurer&apos;s stated limits by area. A
-        factual orientation, not a recommendation. A wider shape isn&apos;t automatically better
-        for your situation.
+      {/* Two paragraphs of caveat were taking more vertical space than the
+          chart's own legend. They are not equal, though: one is an instruction
+          and a methodology note, the other carries the material claim. The
+          instruction moved into the info button. What stays visible is the bit
+          that matters if anyone ever asks what this chart is asserting.
+          NOT a compliance judgement on my part: the full text is one tap away
+          and unchanged, but an adviser should confirm the split. */}
+      <p className="mt-3 gmc-t-xs leading-relaxed" style={{ color: "var(--gmc-muted)" }}>
+        A factual orientation, not a recommendation.{" "}
+        <InfoReveal
+          title="How to read this chart"
+          testId="radar-method"
+          side="top"
+          align="start"
+          triggerClassName="underline decoration-dotted underline-offset-2 hover:decoration-solid"
+          triggerStyle={{ color: "var(--gmc-teal-deep)" }}
+          ariaLabel="How this chart is measured"
+          body={
+            <>
+              Reach reflects the size and breadth of each insurer&apos;s stated limits by
+              area. A wider shape isn&apos;t automatically better for your situation.
+              <br /><br />
+              Each policy is measured against its own other areas here, not against the
+              other insurers.
+              <br /><br />
+              Tap an insurer to isolate it, or an area on the chart to read the wording.
+            </>
+          }
+        >
+          How this is measured
+        </InfoReveal>
       </p>
     </div>
   );

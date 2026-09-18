@@ -59,7 +59,6 @@ export default function FeatureCard({
           title={title.secondary || title.primary}
           testId={`about-${f.feature.replace(/\s+/g, "-").toLowerCase()}`}
           triggerClassName="gmc-tap flex items-center justify-center w-8 h-8 rounded-[var(--gmc-r-chip)] flex-shrink-0"
-          triggerStyle={{ background: "var(--gmc-bg-alt)" }}
           ariaLabel={`About ${title.primary}`}
           body={
             <>
@@ -136,7 +135,7 @@ export default function FeatureCard({
                   A display size was designed for the 8% and broke the 92%.
                   Hierarchy comes from contrast and position instead: the value
                   is near-black, everything around it is muted. */}
-              <div className="gmc-t-lg leading-snug mt-1" style={{ color: "var(--gmc-ink)" }}>
+              <div className="gmc-t-lg gmc-w-strong leading-snug mt-1" style={{ color: "var(--gmc-ink)" }}>
                 {entry?.short ? (
                   <GlossaryText text={entry.short} glossary={glossary} />
                 ) : (

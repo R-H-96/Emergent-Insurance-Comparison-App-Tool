@@ -222,6 +222,25 @@ body {
   color: var(--gmc-muted);
 }
 
+/* Section heading.
+   The uppercase letterspaced eyebrow was being used for real section headings
+   ("What you told us matters", "Where each policy states its largest limits").
+   An eyebrow is a small label above a heading; using it AS the heading leaves a
+   section with nothing that reads as a title, which is why those bands looked
+   like captions floating over the content. Sentence case, darker, heavier, and
+   given room to sit apart from what follows. */
+.gmc-section-heading {
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: var(--gmc-ink);
+  margin-top: 8px;
+  margin-bottom: 14px;
+}
+@media (min-width: 640px) {
+  .gmc-section-heading { font-size: 20px; margin-top: 16px; margin-bottom: 18px; }
+}
+
 .gmc-h1 {
   font-family: 'Plus Jakarta Sans', sans-serif;
   font-weight: 800;

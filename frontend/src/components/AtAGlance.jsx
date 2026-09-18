@@ -97,19 +97,18 @@ export default function AtAGlance({
 
   return (
     <section className="pb-4 sm:pb-14" id="at-a-glance" data-testid="at-a-glance">
-      <div className="flex items-baseline gap-3 mb-1 flex-wrap">
-        <div className="gmc-eyebrow">Where these policies differ</div>
-        <span
-          className="gmc-badge-verified"
-          style={{ background: "var(--gmc-teal-tint-2)", color: "var(--gmc-teal-deep)" }}
-          data-testid="notable-count-chip"
-        >
-          {notableCount} notable difference{notableCount === 1 ? "" : "s"} found
-        </span>
-      </div>
-      <h2 className="gmc-h2 text-2xl sm:text-3xl mb-4 sm:mb-6">
+      {/* Was three stacked elements saying one thing: an eyebrow "Where these
+          policies differ", a filled chip "9 notable differences found", and a
+          heading "How these policies really compare". One heading, with the
+          count as plain supporting text under it. The rung's own tab already
+          carries the count, so a second filled chip for it was a third telling
+          of the same fact. */}
+      <h2 className="gmc-h2 text-2xl sm:text-3xl mb-1">
         How these policies really compare
       </h2>
+      <p className="gmc-t-sm mb-4 sm:mb-6" style={{ color: "var(--gmc-muted)" }} data-testid="notable-count-chip">
+        {notableCount} notable difference{notableCount === 1 ? "" : "s"} across these policies
+      </p>
 
       {notable.length === 0 ? (
         <div className="gmc-surface p-6 sm:p-8 text-center" data-testid="at-a-glance-empty">
