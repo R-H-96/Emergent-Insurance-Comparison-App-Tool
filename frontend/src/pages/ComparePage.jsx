@@ -121,6 +121,27 @@ export default function ComparePage({ embed = false, initialGroups = [] }) {
   // Only in the embed. Standalone has no host header to measure.
   useHostHeaderOffset(embed);
 
+  // The host site's quote modal is a sibling of the tool in <body>. Radix sets
+  // pointer-events: none on <body> while any of our dialogs is open, so the
+  // host modal inherits it and its close button and backdrop stop responding.
+  // Escape still worked, because that is a keyboard listener, which is exactly
+  // the shape of the bug reported.
+  //
+  // Closing our own overlays first is the right fix rather than forcing
+  // pointer-events back on: two stacked modals is not a state worth
+  // supporting. Capture phase, so it runs before the host's own handler.
+  useEffect(() => {
+    const onQuoteClick = (e) => {
+      if (!e.target.closest || !e.target.closest(".gmc-quote-trigger")) return;
+      setOpenFeature(null);
+      setAskOpen(false);
+      setPickerOpen(false);
+      setGlossaryOpen(false);
+    };
+    document.addEventListener("click", onQuoteClick, true);
+    return () => document.removeEventListener("click", onQuoteClick, true);
+  }, []);
+
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     params.set("product", productType);

@@ -35,9 +35,11 @@ export default function PrintSummary({ features, insurers, lookup, intake }) {
 
   return (
     <div className="hidden print:block" data-testid="print-summary">
-      <h1 style={{ fontSize: 22, fontWeight: 800, margin: 0 }}>
+      {/* h2, not h1. This block is hidden on screen but still in the DOM, so
+          an h1 here gives the host page a second one. */}
+      <h2 style={{ fontSize: 22, fontWeight: 800, margin: 0 }}>
         Health insurance comparison
-      </h1>
+      </h2>
       <p style={{ fontSize: 12, margin: "4px 0 0" }}>
         {insurers.map((i) => i.name).join(" vs ")} · prepared {today} · getmycover.co.nz
       </p>

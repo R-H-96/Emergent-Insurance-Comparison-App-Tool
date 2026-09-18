@@ -646,8 +646,11 @@ select:focus-visible {
   --gmc-bg-alt:      #E9EEF5;
   --gmc-bg-soft:     #EDF1F6;
   --gmc-line:        #DFE6EF;
-  --gmc-inset-bg:    #E4EAF2;
-  --gmc-inset-line:  #D2DCE9;
+  /* Lightened from #E4EAF2, which read as heavy behind the radar panel.
+     Still 1.155 against a white card, so the edge holds, and muted text
+     improves to 4.82. */
+  --gmc-inset-bg:    #EAEFF6;
+  --gmc-inset-line:  #DAE2ED;
   --gmc-muted:       #5A6980;
   background: var(--gmc-bg);
 }
