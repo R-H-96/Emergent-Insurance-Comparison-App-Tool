@@ -38,9 +38,11 @@ export default function InsurerPicker({ insurers: rawInsurers, selected, onToggl
               disabled={disabled}
               className="snap-start flex-shrink-0 flex flex-col items-center gap-2 pt-3 pb-2.5 px-3 w-[96px] rounded-[var(--gmc-r-ctl)] border-[1.5px] transition-all"
               style={{
+                /* Two devices, not five. The accent border and the tick say
+                   "selected"; the inset ring, the tint fill and the accent
+                   name were all saying it again. */
                 borderColor: isSelected ? accent : "var(--gmc-line-soft)",
-                background: isSelected ? "var(--gmc-teal-tint-2)" : "white",
-                boxShadow: isSelected ? `inset 0 0 0 2px ${accent}` : "none",
+                background: "white",
                 opacity: disabled ? 0.5 : 1,
               }}
               data-testid={`insurer-${ins.id}`}
@@ -58,7 +60,7 @@ export default function InsurerPicker({ insurers: rawInsurers, selected, onToggl
               </div>
               <div
                 className="gmc-t-sm gmc-w-strong text-center leading-tight w-full"
-                style={{ color: isSelected ? accent : "var(--gmc-ink)" }}
+                style={{ color: "var(--gmc-ink)" }}
               >
                 {ins.name}
               </div>
@@ -89,11 +91,12 @@ export default function InsurerPicker({ insurers: rawInsurers, selected, onToggl
                 disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"
               }`}
               style={{
+                /* Selected fired six devices at once: accent border, accent
+                   inset ring, teal tint fill, accent drop shadow, accent tick,
+                   accent name. Down to two. The tint was also the last of the
+                   grey-family fills in this modal. */
                 borderColor: isSelected ? accent : "var(--gmc-line-soft)",
-                background: isSelected ? "var(--gmc-teal-tint-2)" : "white",
-                boxShadow: isSelected
-                  ? `inset 0 0 0 2px ${accent}, 0 6px 20px -12px ${accent}`
-                  : "none",
+                background: "white",
               }}
               data-testid={`insurer-${ins.id}`}
             >
@@ -110,7 +113,7 @@ export default function InsurerPicker({ insurers: rawInsurers, selected, onToggl
               </div>
               <div
                 className="mt-3 gmc-w-heavy gmc-t-md leading-tight"
-                style={{ color: isSelected ? accent : "var(--gmc-ink)" }}
+                style={{ color: "var(--gmc-ink)" }}
               >
                 {ins.name}
               </div>

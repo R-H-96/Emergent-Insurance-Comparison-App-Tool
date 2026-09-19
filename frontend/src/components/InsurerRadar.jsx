@@ -175,6 +175,18 @@ export default function InsurerRadar({
     return { ins, pts, accent: ins.accent || "var(--gmc-teal)" };
   });
 
+  /**
+   * The band is shown in the standout list only when the selected insurers do
+   * not all share it.
+   *
+   * Three band-3 policies produced "Highest" on all three rows: a marker that
+   * fires on every row carries no information, and the panel's own heading
+   * already says "largest limits", so the word was the third thing saying one
+   * thing. Where a mid-band insurer IS in the set, Higher against Highest is a
+   * real difference and worth a column.
+   */
+  const bandsDiffer = new Set(insurers.map((ins) => standoutThemes(ins.id).band)).size > 1;
+
   const tipTheme = !openTheme && hoverTheme ? themes.find((t) => t.id === hoverTheme) : null;
   const tipAnchor = tipTheme ? axisPoint(themes.indexOf(tipTheme), N, R) : null;
 
@@ -515,18 +527,18 @@ export default function InsurerRadar({
                     data-testid={`radar-standout-${ins.id}`}
                   >
                     <InsurerMark insurer={ins} size={24} />
-                    <span className="min-w-0">
-                      <span
-                        className="flex items-center gap-1.5 gmc-t-base gmc-w-strong"
-                        style={{ color: "var(--gmc-ink)" }}
-                      >
+                    <span className="min-w-0 flex-1">
+                      <span className="block gmc-t-base gmc-w-strong" style={{ color: "var(--gmc-ink)" }}>
                         {ins.name}
-                        <TierBadge band={so.band} />
                       </span>
                       <span className="block gmc-t-base leading-snug mt-0.5" style={{ color: "var(--gmc-body)" }}>
                         Largest stated limits in {so.groups.map(groupLabel).join(", ")}
                       </span>
                     </span>
+                    {/* Right-aligned so the eye can run down the column, and
+                        plain rather than filled, which is the treatment the
+                        comparison rows already use. One meaning, one look. */}
+                    {bandsDiffer && <TierBadge band={so.band} plain className="mt-0.5" />}
                   </div>
                 );
               })}
