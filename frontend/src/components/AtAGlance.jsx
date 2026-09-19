@@ -203,8 +203,8 @@ function CollapsedPanel({ label, children }) {
         type="button"
         onClick={() => setOpen((o) => !o)}
         aria-expanded={open}
-        className="gmc-inset gmc-tap w-full flex items-center gap-2 px-4 py-3 text-left transition-colors"
-
+        className="gmc-tap w-full flex items-center gap-2 py-3 text-left transition-colors"
+        style={{ borderTop: "1px solid var(--gmc-line)", borderBottom: "1px solid var(--gmc-line)" }}
         data-testid="collapsed-panel-toggle"
       >
         {open

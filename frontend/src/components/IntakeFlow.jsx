@@ -90,9 +90,27 @@ export default function IntakeFlow({
 
   const back = () => setStep((s) => Math.max(0, s - 1));
 
+  /**
+   * "Skip, just compare" was a closed loop, found on the live build.
+   *
+   * The comparison gate opens only with two or more insurers selected. Skip
+   * wrote skipped:true and left, the gate saw an empty selection and put the
+   * reader straight back on this screen, and the only visible exit did it
+   * again. A first-time visitor who declined the questions could not reach the
+   * tool at all.
+   *
+   * So skip now does exactly what it says and nothing more: it drops the
+   * QUESTIONS and goes to the one step that is not optional. No insurer is
+   * preselected on the way through, so the fairness rule is untouched.
+   */
   const skip = () => {
-    pushEvent("gmc_intake_skip", { at_step: key });
-    onSkip();
+    const canLeave = selected.length >= 2;
+    pushEvent("gmc_intake_skip", { at_step: key, to: canLeave ? "exit" : "insurers" });
+    if (canLeave) {
+      onSkip();
+      return;
+    }
+    setStep(STEPS.length - 1);
   };
 
   return (
@@ -326,20 +344,25 @@ sub={`Pick up to ${MAX_PRIORITIES}. We'll put those first. You can still see eve
         {/* One exit under the divider, not two competing ones. The adviser CTA
             was doing the same job as the sticky one on the results and pulled
             attention out of a flow the reader has already started. */}
-        <div
-          className="mt-8 pt-6 text-center"
-          style={{ borderTop: "1px solid var(--gmc-line)" }}
-        >
-          <button
-            type="button"
-            onClick={skip}
-            className="gmc-tap gmc-t-sm gmc-w-strong underline decoration-dotted underline-offset-2 hover:decoration-solid"
-            style={{ color: "var(--gmc-muted)" }}
-            data-testid="intake-skip-footer"
+        {/* Hidden on the insurer step with nothing chosen, because there is
+            nothing left to skip and a link that visibly does nothing is worse
+            than no link. */}
+        {!(key === "insurers" && selected.length < 2) && (
+          <div
+            className="mt-8 pt-6 text-center"
+            style={{ borderTop: "1px solid var(--gmc-line)" }}
           >
-            Skip, just compare
-          </button>
-        </div>
+            <button
+              type="button"
+              onClick={skip}
+              className="gmc-tap gmc-t-sm gmc-w-strong underline decoration-dotted underline-offset-2 hover:decoration-solid"
+              style={{ color: "var(--gmc-muted)" }}
+              data-testid="intake-skip-footer"
+            >
+              {selected.length >= 2 ? "Skip, just compare" : "Skip the questions"}
+            </button>
+          </div>
+        )}
         </div>
       </div>
     </section>

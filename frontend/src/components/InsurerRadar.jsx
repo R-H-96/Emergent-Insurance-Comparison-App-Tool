@@ -14,37 +14,111 @@ import { isNotableForSelection } from "@/lib/notable";
 const CX = 130;
 const CY = 130;
 const R = 92;
-// Frame sized to the actual label extents rather than guessed at, so the plot
-// fills as much of the width as the longest label allows. Every label position
-// is checked against these bounds.
-// Approximate advance width of a label at 13px semibold Plus Jakarta Sans,
-// plus the pill's horizontal padding. The label set is fixed and known, so an
-// approximation is fine here.
-const labelWidth = (label) => label.length * 7.15 + 18;
 
-/**
- * Gap between the outer ring and a label, per axis.
+/* ─── Label geometry ────────────────────────────────────────────────────────
  *
- * This was a constant 34 for every axis, which is why "Everyday care" sat on
- * the plot while "Cancer" floated. A side label is anchored at its end and
- * grows back TOWARD the chart, so the clearance it needs depends on its own
- * width and on how horizontal its axis is. cos of the angle is exactly that
- * horizontal component.
+ * ONE measured input, everything else derived. Nothing here is a hand-tuned
+ * number, because hand-tuned numbers are what went wrong twice.
  *
- * Tuned so every label box clears the plot circle by at least 16px, measured
- * against the circle rather than eyeballed. That produces offsets of 33 to 46
- * across the six axes, where a single constant could only ever be right for
- * one of them. Minimum clearance lands on "Waiting periods", the vertical
- * label, whose tall pill needs the base value alone to carry it.
+ * The previous version approximated a label's width as `chars * 7.15 + 18`.
+ * Measured in a real browser, that guess is wrong by up to 11px: "Specialists"
+ * is 69.6px wide, the guess said 96.7. The pill was drawn from the guess while
+ * the text was drawn by the font, so the pill sat 11px off centre. The four
+ * side labels were all off, by 1.3, 11.1, 4.3 and 2.1px.
+ *
+ * It was also off vertically on EVERY label, including the two that looked
+ * symmetrical: a 28px pill hung from the text baseline leaves 7px above the
+ * caps and 11px below them.
  */
-const labelOffset = (label, angleRad) =>
-  33 + labelWidth(label) * Math.abs(Math.cos(angleRad)) * 0.13;
+
+// Advance width at 13px / weight 800 Plus Jakarta Sans, measured with canvas
+// measureText in a browser with the font actually loaded. If a label is added
+// or renamed, measure it and add it here rather than guessing.
+const LABEL_W = {
+  Surgery: 50.4,
+  Cancer: 46.2,
+  Specialists: 69.6,
+  "Waiting periods": 100.3,
+  "Everyday care": 90.7,
+  Switching: 64.3,
+};
+// Fallback only. 7.0 is the measured mean advance per character across the six.
+const labelWidth = (label) => LABEL_W[label] ?? label.length * 7.0;
+
+// Cap height at 13px, measured (actualBoundingBoxAscent). The pill is centred
+// on the CAP BOX, not on the baseline and not on the descenders: a 'g' hanging
+// below "Surgery" should not drag the pill down.
+const CAP = 10;
+const PAD_Y = 7;
+// Horizontal padding must be at least half the pill height, or the glyphs sit
+// inside the rounded cap and the label reads as cramped at both ends.
+const PILL_H = CAP + PAD_Y * 2; // 24, so rx 12
+const PAD_X = 13;
 
 const axisAngle = (idx, count) => ((-90 + (idx * 360) / count) * Math.PI) / 180;
+const anchorFor = (ang) => {
+  const c = Math.cos(ang);
+  return c > 0.05 ? "start" : c < -0.05 ? "end" : "middle";
+};
 
-// Frame computed from where the labels actually land, not guessed. Every label
-// box and the plot circle fit inside it with 10px to spare.
-const VB = { ox: -102, oy: -22, w: 448, h: 298 };
+// The pill, derived from the text box so it can never disagree with it.
+const pillBox = (label, px, py, anchor) => {
+  const tw = labelWidth(label);
+  const w = tw + PAD_X * 2;
+  const x = anchor === "start" ? px - PAD_X : anchor === "end" ? px - tw - PAD_X : px - w / 2;
+  return { x, y: py - CAP - PAD_Y, w, h: PILL_H };
+};
+
+/**
+ * Smallest offset at which a label's pill clears the plot circle by CLEAR px.
+ *
+ * Solved per axis rather than shared, because a side label is anchored at its
+ * end and grows back toward the chart: how much room it needs depends on its
+ * own width and on how horizontal its axis is. Measured box-to-circle, so the
+ * answer is a distance rather than an opinion.
+ */
+const CLEAR = 16;
+const solveOffset = (label, ang) => {
+  const anchor = anchorFor(ang);
+  for (let off = 18; off < 140; off += 0.25) {
+    const px = CX + (R + off) * Math.cos(ang);
+    const py = CY + (R + off) * Math.sin(ang);
+    const b = pillBox(label, px, py, anchor);
+    const nx = Math.max(b.x, Math.min(CX, b.x + b.w));
+    const ny = Math.max(b.y, Math.min(CY, b.y + b.h));
+    if (Math.hypot(nx - CX, ny - CY) - R >= CLEAR) return off;
+  }
+  return 46;
+};
+
+// Resolved once at module load. The theme list is static, so this is a
+// constant table that nobody has to maintain by hand.
+const AXES = RADAR_THEMES.map((t, i) => {
+  const ang = axisAngle(i, RADAR_THEMES.length);
+  const label = groupShortLabel(t.group);
+  const anchor = anchorFor(ang);
+  const off = solveOffset(label, ang);
+  const px = CX + (R + off) * Math.cos(ang);
+  const py = CY + (R + off) * Math.sin(ang);
+  return { id: t.id, label, anchor, px, py, box: pillBox(label, px, py, anchor) };
+});
+
+// Frame derived from where the pills actually land plus the plot circle, so it
+// is exactly as large as it needs to be and no larger.
+const VB = (() => {
+  const M = 6;
+  let x0 = CX - R;
+  let x1 = CX + R;
+  let y0 = CY - R;
+  let y1 = CY + R;
+  for (const a of AXES) {
+    x0 = Math.min(x0, a.box.x);
+    x1 = Math.max(x1, a.box.x + a.box.w);
+    y0 = Math.min(y0, a.box.y);
+    y1 = Math.max(y1, a.box.y + a.box.h);
+  }
+  return { ox: x0 - M, oy: y0 - M, w: x1 - x0 + M * 2, h: y1 - y0 + M * 2 };
+})();
 
 function hexToRgba(hex, a) {
   if (!hex || hex[0] !== "#") return `rgba(20,181,175,${a})`;
@@ -246,7 +320,13 @@ export default function InsurerRadar({
                 <polygon
                   key={ins.id}
                   points={pts}
-                  fill={hexToRgba(ins.accent, dim ? 0.03 : 0.14)}
+                  /* Three translucent fills stacked on each other average to
+                     grey. That muddy taupe in the middle of the chart was red,
+                     green and blue at 14% each, a colour nobody chose. So the
+                     fill stops being decoration on every shape and becomes the
+                     isolation state: nothing picked means outlines on white,
+                     picking one fills it. One device, one meaning. */
+                  fill={dimmed && !dim ? hexToRgba(ins.accent, 0.14) : "none"}
                   stroke={accent}
                   strokeWidth={dim ? 1.25 : 2.25}
                   strokeOpacity={dim ? 0.35 : 1}
@@ -261,16 +341,10 @@ export default function InsurerRadar({
             })}
 
             {themes.map((t, i) => {
-              const label0 = groupShortLabel(t.group);
-              const ang = axisAngle(i, N);
-              const [px, py] = axisPoint(i, N, R + labelOffset(label0, ang));
-              const ux = axisPoint(i, N, 1)[0] - CX;
-              const anchor = ux > 4 ? "start" : ux < -4 ? "end" : "middle";
+              const { label, anchor, px, py, box } = AXES[i];
               const [hx, hy] = axisPoint(i, N, R);
               const isOpen = openTheme === t.id;
               const isPicked = highlightGroups.includes(t.group);
-              const label = label0;
-              const w = labelWidth(label);
               return (
                 <g
                   key={t.id}
@@ -294,14 +368,16 @@ export default function InsurerRadar({
                     fill={isOpen || isPicked ? "var(--gmc-teal)" : "var(--gmc-line)"}
                     style={{ transition: "fill .15s" }}
                   />
+                  {/* Derived from the measured text box, so the padding is
+                      equal on all four sides by construction rather than by
+                      luck. Was teal-tint-2, which measures 1.09 against white
+                      and is effectively invisible. Inverted instead: 5.9. */}
                   <rect
-                    x={anchor === "start" ? px - 8 : anchor === "end" ? px - w + 8 : px - w / 2}
-                    y={py - 17}
-                    width={w}
-                    height="28"
-                    rx="14"
-                    /* Was teal-tint-2, which measures 1.09 against white and is
-                       effectively invisible. Inverted instead: 5.9. */
+                    x={box.x}
+                    y={box.y}
+                    width={box.w}
+                    height={box.h}
+                    rx={box.h / 2}
                     fill={isOpen ? "var(--gmc-teal-deep)" : "transparent"}
                     style={{ transition: "fill .15s" }}
                   />
