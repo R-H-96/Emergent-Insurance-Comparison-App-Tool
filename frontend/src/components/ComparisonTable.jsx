@@ -3,7 +3,6 @@ import { ChevronDown, ChevronRight, Sparkles } from "lucide-react";
 import ProvenanceNote from "@/components/ProvenanceNote";
 import GlossaryText from "@/components/GlossaryText";
 import InsurerMark from "@/components/InsurerMark";
-import InsurerLogo from "@/components/InsurerLogo";
 import SourceLink from "@/components/SourceLink";
 import FeatureIcon from "@/components/FeatureIcon";
 import WhyReveal from "@/components/WhyReveal";
@@ -113,13 +112,12 @@ export default function ComparisonTable({
               className="p-4"
               style={{
                 borderLeft: "1px solid var(--gmc-line)",
-                borderTop: `4px solid ${ins.accent || "var(--gmc-teal)"}`,
                 background: columnTints[i],
               }}
               data-testid={`header-${ins.id}`}
             >
               <div className="flex items-center gap-2.5">
-                <InsurerLogo insurer={ins} size={32} />
+                <InsurerMark insurer={ins} size={32} />
                 <div>
                   <div className="gmc-w-heavy gmc-t-md leading-tight" style={{ color: ins.accent || "var(--gmc-ink)" }}>
                     {ins.name}
