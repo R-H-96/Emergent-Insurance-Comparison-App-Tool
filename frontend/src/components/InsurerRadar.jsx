@@ -17,8 +17,34 @@ const R = 92;
 // Frame sized to the actual label extents rather than guessed at, so the plot
 // fills as much of the width as the longest label allows. Every label position
 // is checked against these bounds.
-const LABEL_OFFSET = 34;
-const VB = { ox: -89, oy: -19, w: 423, h: 292 };
+// Approximate advance width of a label at 13px semibold Plus Jakarta Sans,
+// plus the pill's horizontal padding. The label set is fixed and known, so an
+// approximation is fine here.
+const labelWidth = (label) => label.length * 7.15 + 18;
+
+/**
+ * Gap between the outer ring and a label, per axis.
+ *
+ * This was a constant 34 for every axis, which is why "Everyday care" sat on
+ * the plot while "Cancer" floated. A side label is anchored at its end and
+ * grows back TOWARD the chart, so the clearance it needs depends on its own
+ * width and on how horizontal its axis is. cos of the angle is exactly that
+ * horizontal component.
+ *
+ * Tuned so every label box clears the plot circle by at least 16px, measured
+ * against the circle rather than eyeballed. That produces offsets of 33 to 46
+ * across the six axes, where a single constant could only ever be right for
+ * one of them. Minimum clearance lands on "Waiting periods", the vertical
+ * label, whose tall pill needs the base value alone to carry it.
+ */
+const labelOffset = (label, angleRad) =>
+  33 + labelWidth(label) * Math.abs(Math.cos(angleRad)) * 0.13;
+
+const axisAngle = (idx, count) => ((-90 + (idx * 360) / count) * Math.PI) / 180;
+
+// Frame computed from where the labels actually land, not guessed. Every label
+// box and the plot circle fit inside it with 10px to spare.
+const VB = { ox: -102, oy: -22, w: 448, h: 298 };
 
 function hexToRgba(hex, a) {
   if (!hex || hex[0] !== "#") return `rgba(20,181,175,${a})`;
@@ -235,14 +261,16 @@ export default function InsurerRadar({
             })}
 
             {themes.map((t, i) => {
-              const [px, py] = axisPoint(i, N, R + LABEL_OFFSET);
+              const label0 = groupShortLabel(t.group);
+              const ang = axisAngle(i, N);
+              const [px, py] = axisPoint(i, N, R + labelOffset(label0, ang));
               const ux = axisPoint(i, N, 1)[0] - CX;
               const anchor = ux > 4 ? "start" : ux < -4 ? "end" : "middle";
               const [hx, hy] = axisPoint(i, N, R);
               const isOpen = openTheme === t.id;
               const isPicked = highlightGroups.includes(t.group);
-              const label = groupShortLabel(t.group);
-              const w = label.length * 7.15 + 18;
+              const label = label0;
+              const w = labelWidth(label);
               return (
                 <g
                   key={t.id}
@@ -272,7 +300,9 @@ export default function InsurerRadar({
                     width={w}
                     height="28"
                     rx="14"
-                    fill={isOpen ? "var(--gmc-teal-tint-2)" : "transparent"}
+                    /* Was teal-tint-2, which measures 1.09 against white and is
+                       effectively invisible. Inverted instead: 5.9. */
+                    fill={isOpen ? "var(--gmc-teal-deep)" : "transparent"}
                     style={{ transition: "fill .15s" }}
                   />
                   <text
@@ -283,10 +313,10 @@ export default function InsurerRadar({
                     fontWeight={isOpen || isPicked ? "800" : "700"}
                     fill={
                       isOpen
-                        ? "var(--gmc-teal-deep)"
+                        ? "#FFFFFF"
                         : isPicked
-                          ? "var(--gmc-teal-mid)"
-                          : "var(--gmc-muted)"
+                          ? "var(--gmc-teal-deep)"
+                          : "var(--gmc-body)"
                     }
                     style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
                   >
@@ -337,14 +367,10 @@ export default function InsurerRadar({
                   type="button"
                   className="gmc-tap flex items-center gap-2 rounded-full pl-1 pr-2.5 py-1 transition-all"
                   style={{
-                    opacity: isDim(ins.id) ? 0.4 : 1,
-                    background: on ? "var(--gmc-teal-tint)" : "transparent",
-                    /* Selection is a left rule in the insurer's own colour, not a
-                         rectangle drawn around the row. On a row with no fill a
-                         full inset ring reads as a stray box, and it fought the
-                         hairline separating the rows. */
-                      borderLeft: on ? `2px solid ${ins.accent}` : "2px solid transparent",
-                      paddingLeft: 10,
+                    /* Same rule as the rows above: isolating one insurer is
+                       already communicated by the others stepping back. No
+                       fill, no rule, nothing added. */
+                    opacity: isDim(ins.id) ? 0.35 : 1,
                   }}
                   onPointerEnter={() => setHoverInsurer(ins.id)}
                   onPointerLeave={() => setHoverInsurer(null)}
@@ -389,13 +415,12 @@ export default function InsurerRadar({
                 return (
                   <div
                     key={ins.id}
-                    style={{ borderTop: "1px solid var(--gmc-line)" }}
                     role="button"
                     tabIndex={0}
                     onKeyDown={(e) => {
                       if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggleFocus(ins.id); }
                     }}
-                    className="gmc-tap w-full text-left flex items-start gap-2.5 py-3 transition-all cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gmc-teal)]"
+                    className="gmc-tap w-full text-left flex items-start gap-2.5 py-3 transition-all cursor-pointer focus:outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--gmc-teal)]"
                     style={{
                       /* Selection adds nothing. Isolating one insurer IS pushing
                          the others back, so the interface does exactly that and
@@ -405,6 +430,7 @@ export default function InsurerRadar({
                          decoration standing in for a state that the dimming had
                          already expressed. */
                       opacity: isDim(ins.id) ? 0.35 : 1,
+                      borderTop: "1px solid var(--gmc-line)",
                     }}
                     onPointerEnter={() => setHoverInsurer(ins.id)}
                     onPointerLeave={() => setHoverInsurer(null)}

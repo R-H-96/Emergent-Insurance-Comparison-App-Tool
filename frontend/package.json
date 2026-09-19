@@ -64,8 +64,9 @@
   },
   "scripts": {
     "start": "craco start",
-    "build": "craco build && node scripts/build-loader.js",
-    "test": "craco test"
+    "build": "node scripts/design-guard.js && craco build && node scripts/build-loader.js",
+    "test": "craco test",
+    "guard": "node scripts/design-guard.js"
   },
   "browserslist": {
     "production": [

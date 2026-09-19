@@ -51,10 +51,7 @@ export default class ErrorBoundary extends Component {
       <section className="py-12 sm:py-20" data-testid="error-boundary">
         <div className="gmc-container" style={{ maxWidth: 640 }}>
           <div className="gmc-surface p-6 sm:p-8 text-center">
-            <span
-              className="inline-flex items-center justify-center w-12 h-12 rounded-full mb-4"
-              className="gmc-inset"
-            >
+            <span className="gmc-inset inline-flex items-center justify-center w-12 h-12 rounded-full mb-4">
               <AlertTriangle
                 className="w-6 h-6"
                 strokeWidth={2.2}
