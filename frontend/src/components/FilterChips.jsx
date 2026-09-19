@@ -40,7 +40,11 @@ export default function FilterChips({ groups, activeGroups, onToggle, onClear, f
   return (
     <div className="relative" data-testid="filter-chips">
       <div
-        className="flex items-center gap-1.5 overflow-x-auto pb-0.5 thin-scrollbar sm:flex-wrap sm:overflow-visible"
+        /* One line at every width. sm:flex-wrap used to let this fall onto two
+           rows on desktop, which is what made nine categories look like a
+           paragraph of buttons. Nine will never fit at any width worth
+           designing for, so it scrolls instead of wrapping. */
+        className="flex items-center gap-1.5 overflow-x-auto pb-0.5 thin-scrollbar"
         style={{ WebkitOverflowScrolling: "touch" }}
       >
         <InlineChip
@@ -59,11 +63,11 @@ export default function FilterChips({ groups, activeGroups, onToggle, onClear, f
           />
         ))}
         {/* Spacer so the last chip doesn’t sit behind the right-fade gradient */}
-        <div className="w-8 flex-shrink-0 sm:hidden" aria-hidden="true" />
+        <div className="w-10 flex-shrink-0" aria-hidden="true" />
       </div>
       {/* Right-edge fade to hint at overflow */}
       <div
-        className="pointer-events-none absolute right-0 inset-y-0 w-10 sm:hidden"
+        className="pointer-events-none absolute right-0 inset-y-0 w-12"
         style={{ background: "linear-gradient(to right, transparent, var(--gmc-bg))" }}
         aria-hidden="true"
       />
@@ -79,9 +83,9 @@ function InlineChip({ active, onClick, label, testid }) {
       aria-pressed={active}
       className="gmc-tap inline-flex items-center px-3 py-1.5 gmc-t-sm gmc-w-strong rounded-full flex-shrink-0 whitespace-nowrap transition-all"
       style={{
-        background: active ? "var(--gmc-teal-tint-2)" : "var(--gmc-bg-alt)",
+        background: active ? "var(--gmc-teal-tint-2)" : "transparent",
         color: active ? "var(--gmc-teal-deep)" : "var(--gmc-body)",
-        border: `1.5px solid ${active ? "var(--gmc-teal)" : "var(--gmc-line)"}`,
+        border: `1px solid ${active ? "var(--gmc-teal)" : "var(--gmc-line)"}`,
       }}
       data-testid={testid}
     >

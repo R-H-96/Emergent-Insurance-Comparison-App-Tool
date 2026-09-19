@@ -397,13 +397,14 @@ export default function InsurerRadar({
                     }}
                     className="gmc-tap w-full text-left flex items-start gap-2.5 py-3 transition-all cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--gmc-teal)]"
                     style={{
-                      opacity: isDim(ins.id) ? 0.4 : 1,
-                      /* Selection is a left rule in the insurer's own colour, not a
-                         rectangle drawn around the row. On a row with no fill a
-                         full inset ring reads as a stray box, and it fought the
-                         hairline separating the rows. */
-                      borderLeft: on ? `2px solid ${ins.accent}` : "2px solid transparent",
-                      paddingLeft: 10,
+                      /* Selection adds nothing. Isolating one insurer IS pushing
+                         the others back, so the interface does exactly that and
+                         no more. Two previous attempts here added a device on
+                         top of a state that was already being communicated: an
+                         inset rectangle, then a coloured left bar. Both were
+                         decoration standing in for a state that the dimming had
+                         already expressed. */
+                      opacity: isDim(ins.id) ? 0.35 : 1,
                     }}
                     onPointerEnter={() => setHoverInsurer(ins.id)}
                     onPointerLeave={() => setHoverInsurer(null)}
@@ -414,13 +415,13 @@ export default function InsurerRadar({
                     <InsurerMark insurer={ins} size={24} />
                     <span className="min-w-0">
                       <span
-                        className="flex items-center gap-1.5 gmc-t-sm gmc-w-heavy"
-                        style={{ color: ins.accent || "var(--gmc-ink)" }}
+                        className="flex items-center gap-1.5 gmc-t-base gmc-w-strong"
+                        style={{ color: "var(--gmc-ink)" }}
                       >
                         {ins.name}
                         <TierBadge band={so.band} />
                       </span>
-                      <span className="block gmc-t-sm leading-snug" style={{ color: "var(--gmc-body)" }}>
+                      <span className="block gmc-t-base leading-snug mt-0.5" style={{ color: "var(--gmc-body)" }}>
                         Largest stated limits in {so.groups.map(groupLabel).join(", ")}
                       </span>
                     </span>
